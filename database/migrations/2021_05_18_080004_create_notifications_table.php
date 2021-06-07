@@ -21,7 +21,6 @@ class CreateNotificationsTable extends Migration
             $table->unsignedBigInteger('causable_id')->nullable();
             $table->string('causable_type')->nullable();
             $table->string('notification_url');
-           // TODO //new colunms
             $table->timestamps();
         });
     }

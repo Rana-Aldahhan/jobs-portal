@@ -8,6 +8,8 @@ use App\Models\Company;
 use App\Models\Report;
 use App\Models\School;
 use App\Models\Industry;
+use App\Models\Message;
+
 //TODO check if logged as comapny or as user <and redirect back where not allowed
 class UserServices extends Controller
 {
@@ -139,20 +141,24 @@ class UserServices extends Controller
         $searchResults = User:: where ('name' , $request->input('peopleSearchName'))->get();
         return view('people_search_results', ['searchResults',$searchResults]);
     }
+    //user-company functualities
     public function getNotified($id){
         $user= auth()->user();
-        $company= Company :: find($id);
-        $user->notifyingCompanies()->attach($company);
-        return redirect()->route('companyProfile',['id',$id]);
+        //$company= Company :: find($id);
+        $user->notifyingCompanies()->attach($id);
+        return redirect('/companies/{id}',['id',$id]);
     }
     public function stopNotification($id){
         $user= auth()->user();
-        $company= Company :: find($id);
-        $user->notifyingCompanies()->detach($company);
-        return redirect()->route('companyProfile',['id',$id]);
+       // $company= Company :: find($id);
+        $user->notifyingCompanies()->detach($id);
+        return redirect('/companies/{id}',['id',$id]);//TODO other probable sytax is /companies/.$id. ,,, or redirect to action
     }
     public function reportCompany($id){
-       // TODO if we are logged in as a company we can't report another company:redirect + message
+       if(auth()->user()->logged_as_company==true)
+       {
+           return redirect()->back();
+       }
         return view('report',['id'=>$id]);
     }
     public function sendCompanyReport($request,$id){
@@ -171,6 +177,31 @@ class UserServices extends Controller
         return redirect('companies\{id}');
 
     }
+    public function showMessagesWithCompany($id){
+        if(auth()->user()->logged_as_company==true)
+        {
+            return redirect()->back();
+        }
+        $messages=[];
+        $user=auth()->user();
+        $messages=$user->sentMessages()->find($id);
+        $messages->push($user->recievedMessages()->find($id));
+        $messages=$messages->flatten();
+        $messages=$messages->sortBy('created_at');
+        return view('conversation', ['messages'=>$messages,'user'=>$user]);
+    }
+    public function sendMessageToCompany($request,$id){
+        $message= new Message();
+        $message->body=$request->input('messageBody');
+        $message->sendable_id=auth()->user()->id;
+        $message->recievable_id=$id;
+        $message->sendable_type='App\Models\User';
+        $message->recivable_type='App\Models\Company';
+        $message->save();
+    }
+    //user-user functionalities
+    
+
 
 
 

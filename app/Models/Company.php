@@ -48,6 +48,10 @@ class Company extends Model
     {
         return $this->belongsToMany(User:: class,'company_user_views','viewing_id','viewer_id');
     }
+    public function useracceptants()
+    {
+        return $this->belongsToMany(User :: class ,'company_user_acceptants','acceptant_id','acceptor_id');
+    }
     
    
 

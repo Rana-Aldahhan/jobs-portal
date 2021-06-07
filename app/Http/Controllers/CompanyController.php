@@ -46,38 +46,47 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        
         $company = Company :: find($id);
         $compayJobs = $company->publishedJobs;
         $companyEmployees= $company->employees;
 
-        //check if user is getting notified from this company or not
-        $user= auth()->user();
-        $notified=false;
-        $notifyingCompanies=$user->notifyingCompanies;
-        foreach($notifyingCompanies as $company)
+        $user=auth()->user();//can be null if not signed in 
+
+        $showNotifyButton=false;
+        $showReportButton=false;
+        $showMessageButton=false;
+
+        //case logged in
+        if(Auth :: check())
         {
-            if($company->id == $id)
-            $notified=true;
-        }
-        //checking if user can message this company
-        $canMessage=false;
-        $userAppliedjobs=$user->appliedJobs;
-        foreach($userAppliedjobs as $job)
-        {
-            if($job->publishable_type="App\Models\Company")
+            if($user->logged_as_company==false)// case  logged as user
             {
-                if($job->publishable_id==$id )
+                $showReportButton=true;
+                //check if user is getting notified from this company or not
+                $notifyingCompany=$user->notifyingCompanies()->find($id);//find company in the notifying list
+                if(is_null($notifyingCompany))//case the user doesn't get notified by this company
                 {
-                    if($job->pivot->approved==true)
-                          $canMessage=true;
+                    $showNotifyButton=true;
                 }
-                  
+                //check if user is approved in any of company's job , so the user can message the company
+                $approvedCompany=$user->companyAcceptors()->find($id);
+                if(!is_null($notifyingCompany))//case the user can message the company
+                {
+                    $showMessageButton=true;
+                }   
             }
+            // case logged as company: nothing should change from default values
+            
+        }
+        else //case not logged in
+        {
+            $showNotifyButton=true;
+            $showReportButton=true;
         }
         return view('show_company', ['company' =>  $company ,
-        'compayJobs'=> $compayJobs ,'companyEmployees' => $companyEmployees
-        ,'notified' => $notified , 'canMessage' => $canMessage]);
+        'compayJobs'=> $compayJobs ,'companyEmployees' => $companyEmployees,
+        'user' => $user, 'showNotifyButton'=>$showNotifyButton,
+        'showReportButton'=>$showReportButton,'showMessageButton'=>$showMessageButton]);
     }
 
     /**

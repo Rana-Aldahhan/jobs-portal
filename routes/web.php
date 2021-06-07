@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserServices;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,23 +36,20 @@ Route :: get ('/create-company',[UserServices :: class , 'showCreateCompany'])->
 
 Route :: get('/profile' , [UserController :: class , 'showProfile'])->middleware('auth');
 Route::get('/profile/edit',[UserController::class,'edit'])->middleware('auth');
-Route:: put ('/profile/edit',[UserController::class,'update'])->middleware('auth');
+Route:: put ('/profile/edit',[UserController::class,'update'])->middleware('auth');//save edit changes
 
 Route :: get ('/saved-jobs',[UserServices:: class ,'savedJobs'])->middleware('auth');
 Route :: get ('/published-jobs',[UserServices:: class ,'publishedJobs'])->middleware('auth');
 Route :: get ('/applied-jobs',[UserServices:: class ,'appliedJobs'])->middleware('auth');
 Route :: get ('/notifications',[UserServices:: class ,'notifications'])->middleware('auth');
-
-Route :: get('companies/{id}',[CompanyController :: class,'show'])->name('companyProfile');//show company
-Route :: post('companies/{id}' , [UserServices :: class ,'getNotified'])
-->middleware('auth');//start getting notifications from a company
-Route :: delete('companies/{id}' , [UserServices :: class ,'stopNotification'])
-->middleware('auth');//stop getting notifications from a company
-
-Route::get('companies/{id}/report', [UserServices :: class ,'reportCompany'])
-->middleware('auth');//report company
-Route :: post('companies/{id}/report', [UserServices :: class ,'sendCompanyReport'])
-->middleware('auth');//make a report and save it to DB
+//company and its related functionalities
+Route :: get('companies/{id}',[CompanyController :: class,'show']);//show company
+Route :: post('companies/{id}' , [UserServices :: class ,'getNotified'])->middleware('auth');//start getting notifications from a company
+Route :: delete('companies/{id}' , [UserServices :: class ,'stopNotification'])->middleware('auth');//stop getting notifications from a company
+Route::get('companies/{id}/report', [UserServices :: class ,'reportCompany'])->middleware('auth');//report company
+Route :: post('companies/{id}/report', [UserServices :: class ,'sendCompanyReport'])->middleware('auth');//make a report and save it to DB
+Route ::get('/companies/{id}/messages',[UserServices :: class ,'showMessagesWithCompany'])->middleware('auth');//show messages between user and company
+Route ::post('/companies/{id}/messages',[UserServices :: class ,'sendMessageToCompany'])->middleware('auth');//send message to company
 
 Route::get('/jobs/{id}',[JobOpportunityController :: class ,'show']);
 

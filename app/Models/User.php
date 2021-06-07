@@ -46,11 +46,11 @@ class User extends Authenticatable
     }
     public function sentColleagues()
     {
-        return $this->belongsToMany(User :: class,'colleagues','user1_id','user2_id');
+        return $this->belongsToMany(User :: class,'colleagues','user1_id','user2_id')->withPivot('approved');
     }
     public function recievedColleagues()
     {
-        return $this->belongsToMany(User :: class,'colleagues','user2_id','user1_id');
+        return $this->belongsToMany(User :: class,'colleagues','user2_id','user1_id')->withPivot('approved');
     }
     public function industry()
     {
@@ -99,7 +99,7 @@ class User extends Authenticatable
     }
     public function appliedJobs()
     {
-        return $this->belongsToMany(JobOpportuniity  :: class,'applications','user_id','job_id');
+        return $this->belongsToMany(JobOpportuniity  :: class,'applications','user_id','job_id')->withPivot('approved');
     }
     public function incomingReports()
     {
@@ -129,7 +129,18 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User:: class,'user_job_views','viewer_id','viewing_id');
     }
-
+    public function userAcceptant()
+    {
+        return $this->belongsToMany(User :: class ,'user_user_acceptants','acceptant_id','acceptor_id');
+    }
+    public function userAcceptors()
+    {
+        return $this->belongsToMany(User :: class ,'user_user_acceptants','acceptor_id','acceptant_id');
+    }
+    public function companyAcceptors()
+    {
+        return $this->belongsToMany(User :: class ,'company_user_acceptants','acceptor_id','acceptant_id');
+    }
 
 
 
