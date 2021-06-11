@@ -54,7 +54,7 @@ class User extends Authenticatable
     }
     public function industry()
     {
-        return $this->belongsTo(Field :: class);
+        return $this->belongsTo(Industry :: class);
     }
     public function skills()
     {
@@ -87,7 +87,7 @@ class User extends Authenticatable
     }
     public function savedJobs()
     {
-        return $this->belongToMany(JobOpportuniity :: class,'saved_jobs','user_id','job_id');
+        return $this->belongToMany(JobOpportunity :: class,'saved_jobs','user_id','job_id');
     }
     public function notifyingCompanies()
     {
@@ -99,7 +99,7 @@ class User extends Authenticatable
     }
     public function appliedJobs()
     {
-        return $this->belongsToMany(JobOpportuniity  :: class,'applications','user_id','job_id')->withPivot('approved');
+        return $this->belongsToMany(JobOpportunity  :: class,'applications','user_id','job_id')->withPivot('approved');
     }
     public function incomingReports()
     {

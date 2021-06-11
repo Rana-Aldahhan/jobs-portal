@@ -10,6 +10,6 @@ class PositionType extends Model
     use HasFactory;
     public function jobs()
     {
-        return $this->hasMany(JobOppotunity :: class );
+        return $this->hasMany(JobOpportunity :: class );
     }
 }

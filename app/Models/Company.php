@@ -18,7 +18,7 @@ class Company extends Model
     }
     public function publishedJobs()
     {
-        return $this->morphMany(JobOpportuniity  :: class,'publishable');
+        return $this->morphMany(JobOpportunity  :: class,'publishable');
     }
     public function managingUsers()
     {

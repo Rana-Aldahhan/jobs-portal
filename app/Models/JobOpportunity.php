@@ -26,7 +26,7 @@ class JobOpportunity extends Model
     }
     public function applicants()
     {
-        return $this->belongsToMany(User :: class,'applications','job_id','user_id')->withPivot('approved');;
+        return $this->belongsToMany(User :: class,'applications','job_id','user_id')->withPivot('approved');
     }
     public function publishable()
     {
