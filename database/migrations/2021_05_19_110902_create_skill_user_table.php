@@ -18,7 +18,7 @@ class CreateSkillUserTable extends Migration
             $table->unsignedBigInteger('skill_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
-            //forgein keys
+            //foreign keys
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('skill_id')->references('id')->on('skills');
         });

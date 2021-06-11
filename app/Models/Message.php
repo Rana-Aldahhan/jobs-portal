@@ -12,7 +12,7 @@ class Message extends Model
     {
         return $this->morphTo();
     }
-    public function recievable()
+    public function receivable()
     {
         return $this->morphTo();
     }

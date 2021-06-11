@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
@@ -17,7 +18,7 @@ class CompanyController extends Controller
         $publishedJobs=$company->publishedJobs;
 
         return view('company-profile',['company'=>$company,'industry'=>$industry,
-        'empolyees'=>$employees, 'publishedJobs'=>$publishedJobs]);
+        'employees'=>$employees, 'publishedJobs'=>$publishedJobs]);
     }
     /**
      * Display a listing of the resource.
@@ -59,10 +60,10 @@ class CompanyController extends Controller
     public function show($id)
     {
         $company = Company :: find($id);
-        $compayJobs = $company->publishedJobs;
+        $companyJobs = $company->publishedJobs;
         $companyEmployees= $company->employees;
 
-        $user=auth()->user();//can be null if not signed in 
+        $user=auth()->user();//can be null if not signed in
 
         $showNotifyButton=false;
         $showReportButton=false;
@@ -85,10 +86,10 @@ class CompanyController extends Controller
                 if(!is_null($notifyingCompany))//case the user can message the company
                 {
                     $showMessageButton=true;
-                }   
+                }
             }
             // case logged as company: nothing should change from default values
-            
+
         }
         else //case not logged in
         {
@@ -96,7 +97,7 @@ class CompanyController extends Controller
             $showReportButton=true;
         }
         return view('show_company', ['company' =>  $company ,
-        'compayJobs'=> $compayJobs ,'companyEmployees' => $companyEmployees,
+        'companyJobs'=> $companyJobs ,'companyEmployees' => $companyEmployees,
         'user' => $user, 'showNotifyButton'=>$showNotifyButton,
         'showReportButton'=>$showReportButton,'showMessageButton'=>$showMessageButton]);
     }

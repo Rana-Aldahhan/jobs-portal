@@ -39,7 +39,7 @@ class CreateUsersTable extends Migration
             $table ->string('profile_thumbnail')->nullable();
             $table->timestamps();
 
-            //forgein keys
+            //foreign keys
             $table->foreign('current_company_id')->references('id')->on('companies');
             $table->foreign('school_id')->references('id')->on('schools');
             $table->foreign('managing_company_id')->references('id')->on('companies');

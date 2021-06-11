@@ -17,8 +17,8 @@ class CreateMessagesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('sendable_id')->nullable();
             $table->string('sendable_type')->nullable();
-            $table->unsignedBigInteger('recievable_id')->nullable();
-            $table->string('recievable_type')->nullable();
+            $table->unsignedBigInteger('receivable_id')->nullable();
+            $table->string('receivable_type')->nullable();
             $table->string('body');
             $table->timestamps();
         });

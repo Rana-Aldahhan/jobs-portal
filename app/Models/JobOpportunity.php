@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class JobOpportunity extends Model
 {
     use HasFactory;
-    public function industry()//moph later
+    public function industry()//morph later
     {
         return $this->belongsTo(Industry:: class,'industry_job','job_id','industry_id');
     }
@@ -22,7 +22,7 @@ class JobOpportunity extends Model
     }
     public function incomingReports()
     {
-        return $this->morphMany(Report :: class,'recievable');
+        return $this->morphMany(Report :: class,'receivable');
     }
     public function applicants()
     {

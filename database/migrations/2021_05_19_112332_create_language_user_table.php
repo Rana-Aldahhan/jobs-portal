@@ -18,7 +18,7 @@ class CreateLanguageUserTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('language_id')->nullable();
             $table->timestamps();
-            //forgein keys
+            //foreign keys
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('language_id')->references('id')->on('languages');
         });

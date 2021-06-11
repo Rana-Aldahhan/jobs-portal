@@ -19,8 +19,8 @@ class CreateReportsTable extends Migration
             $table->text('information');
             $table->unsignedBigInteger('sendable_id')->nullable();
             $table->string('sendable_type')->nullable();
-            $table->unsignedBigInteger('recievable_id')->nullable();
-            $table->string('recievable_type')->nullable();
+            $table->unsignedBigInteger('receivable_id')->nullable();
+            $table->string('receivable_type')->nullable();
             $table->timestamps();
               //forgein keys
               //$table->foreign('current_company_id')->references('id')->on('companies');

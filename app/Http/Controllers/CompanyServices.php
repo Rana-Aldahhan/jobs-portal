@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\JobOpportunity;
+use App\Models\User;
+
 
 class CompanyServices extends Controller
 {
@@ -16,9 +18,10 @@ class CompanyServices extends Controller
                 $user->logged_as_company=false;
                 $user->save();
                 return redirect('/home');
+
             }
         else//user doesn't have a company account
-        {//TODO proccess message in view
+        {//TODO process message in view
             redirect()->back()->with('warning','you already are in user account!');
         }
     }
@@ -42,7 +45,7 @@ class CompanyServices extends Controller
         if($user->logged_as_company==false)
             return redirect()->back();
         $messegingUsers=$company->acceptants;
-        
+
         return view('companyMesseging',['company'=>$company, 'messegingUsers'=>$messegingUsers]);
     }
     public function postJob($request){
@@ -85,6 +88,8 @@ class CompanyServices extends Controller
         $job->publishable_type='App\Models\Company';
 
         $job->save();
+        //TODO make a new notification to users that are interested in this company
+
         return redirect('/manage-company-jobs');
     }
 }

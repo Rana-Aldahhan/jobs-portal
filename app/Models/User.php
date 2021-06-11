@@ -48,7 +48,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User :: class,'colleagues','user1_id','user2_id')->withPivot('approved');
     }
-    public function recievedColleagues()
+    public function receivedColleagues()
     {
         return $this->belongsToMany(User :: class,'colleagues','user2_id','user1_id')->withPivot('approved');
     }
@@ -64,9 +64,9 @@ class User extends Authenticatable
     {
         return $this->morphMany(Message :: class,'sendable');
     }
-    public function recievedMessages()
+    public function receivedMessages()
     {
-        return $this->morphMany(Message :: class,'recievable');
+        return $this->morphMany(Message :: class,'receivable');
     }
 
     public function school()
@@ -77,7 +77,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany( WorkPlace:: class,'user_workplace','user_id','workplace_id');
     }
-    public function languages() 
+    public function languages()
     {
         return $this->belongsToMany(Language :: class,'language_user','user_id','language_id');
     }
@@ -103,7 +103,7 @@ class User extends Authenticatable
     }
     public function incomingReports()
     {
-        return $this->morphMany(Report :: class,'recievable');
+        return $this->morphMany(Report :: class,'receivable');
     }
     public function outcomingReports()
     {
@@ -111,7 +111,7 @@ class User extends Authenticatable
     }
     public function notifications()
     {
-        return $this->morphMany(Notification :: class,'notifable');
+        return $this->morphMany(Notification :: class,'notifiable');
     }
     public function userViewers()
     {

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     use HasFactory;
-    public function recievable()
+    public function receivable()
     {
         return $this->morphTo();
     }

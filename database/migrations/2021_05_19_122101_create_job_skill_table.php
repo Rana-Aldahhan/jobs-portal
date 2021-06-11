@@ -18,7 +18,7 @@ class CreateJobSkillTable extends Migration
             $table->unsignedBigInteger('job_id')->nullable();
             $table->unsignedBigInteger('skill_id')->nullable();
             $table->timestamps();
-            //forgein keys
+            //foreign keys
             $table->foreign('skill_id')->references('id')->on('skill')->onDelete('cascade');
             $table->foreign('job_id')->references('id')->on('job_opportunities')->onDelete('cascade');
         });

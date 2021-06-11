@@ -20,9 +20,9 @@ class UserController extends Controller
         $languages=$user->languages;
         $workplaces=$user->workPlaces;
         $colleagues=$user->colleagues;
-        
-        return view('user-profile', ['user' => $user,'school'=>$school,'skills'=> $skills,
-        'languages'=>$languages,'workplaces'=>$workPlaces,'colleagues'=>$colleagues]);
+
+        return view('user-profile', ['user' => $user,'school'=>$school,'skills'=> $skills,'industry'=>$industry,
+        'languages'=>$languages,'workplaces'=>$workplaces,'colleagues'=>$colleagues]);
     }
 
     /**
@@ -80,28 +80,28 @@ class UserController extends Controller
         $showCancelRequest=false;
         $showApproveButton=false;//show remove request
         $showMessage=false;
-       
-        
-        if(Auth :: check())//case logged in     
+
+
+        if(Auth :: check())//case logged in
         {
             if($user->logged_as_company==false)//logged as user
             {
                 //show colleagues states
                 $sender=$loggedUser->sentColleagues()->find($id);
-                $recieved=$loggedUser->recievedColleagues()->find($id);
-                if(!is_null($sender) || !is_null($recieved))// case a user has sent a colleague request to another
+                $received=$loggedUser->recievedColleagues()->find($id);
+                if(!is_null($sender) || !is_null($received))// case a user has sent a colleague request to another
                 {
                     $showAddColleagues=false;
                     if(!is_null($sender))
                     {
                         $showCancelRequest=true;
                     }
-                    if(!is_null($recieved))
+                    if(!is_null($received))
                     {
                         $showApproveButton=true;
                     }
                 }
-                //show message in case a user has applied and has been aprroved to another user job
+                //show message in case a user has applied and has been approved to another user job
                 $acceptor=$loggedUser->userAcceptors()->find($id);
                 $acceptant=$loggedUser->userAcceptants()->find($id);
                 if(!is_null($acceptor) || !is_null($acceptant))
@@ -111,7 +111,7 @@ class UserController extends Controller
             }
             else//logged as company
             {
-                //show message in case a user has applied and has been aprroved to a company's job
+                //show message in case a user has applied and has been approved to a company's job
                 $company = Company::find($loggedUser->managing_company_id);
                 $companyAcceptor=$user->companyAcceptors()->find($company->id);
                 if(!is_null($companyAcceptor))
@@ -119,10 +119,10 @@ class UserController extends Controller
                     $showMessage=true;
                 }
             }
-        }  
+        }
         return view('showUser',['loggedUser'=>$loggedUser,'user'=>$user,'school'=>$school,'skills'=>$skills, 'workPlaces'=>$workPlaces,
         'languages'=>$languages, 'colleagues'=>$colleagues,'userPublishedJobs'=> $userPublishedJobs,
-        'showAddColleagues'=>$showAddColleagues,'showCancelRequest'=>$showCancelRequest,'showApprovedButton'=>$showApproveButton
+        'showAddColleagues'=>$showAddColleagues,'showCancelRequest'=>$showCancelRequest,'showApprovedButton'=>$showApproveButton,
         'showMessage'=>$showMessage]) ;
     }
 
@@ -133,7 +133,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit()//edit's form
-    { 
+    {
         $id= auth()->user()->id;
         $user= User :: find( $id);
         $skills = Skill :: all();
@@ -145,7 +145,7 @@ class UserController extends Controller
         $user_workplaces=$user->workPlaces;
 
         return view('profile-edit', ['user' => $user , 'skills' => $skills ,'languages' => $languages,
-                                     'user_languages' => $user_languages , 'user_skills' =>$user_skills
+                                     'user_languages' => $user_languages , 'user_skills' =>$user_skills,
                                      'school'=>$user_school,'workplaces'=>$user_workplaces]);
     }
 
@@ -161,10 +161,10 @@ class UserController extends Controller
         $id= auth()->user()->id;
         $user= User :: find( $id);
 
-        //validition
+        //validation
         $this->validate ($request , [
-            'name' => 'requied | alpha' ,
-            'email' => 'requied | unique |email',
+            'name' => 'required | alpha' ,
+            'email' => 'required | unique |email',
             'birth-date' => 'date' ,
             'phone-number' => 'numeric' ,
             'city' => 'alpha' ,
@@ -177,12 +177,12 @@ class UserController extends Controller
         ]);
 
         // TODO image process
-        //TODO work places prossecing
+        //TODO work places processing
 
         //edit
-        $user->name= $request()->input('name');
-        $user->current_job_title=$request()->input('current_job_title');
-        //process current company 
+        $user->name= $request->input('name');
+        $user->current_job_title=$request->input('current_job_title');
+        //process current company
         $company=Company :: find(request()->input('current_company_name'));
         if(!is_null($company))
         {
@@ -206,8 +206,8 @@ class UserController extends Controller
                 { $user->current_school_id = $school->id;
                 }
             //school is set before
-            else 
-            {    //set school is diffrent from input
+            else
+            {    //set school is different from input
                 if($user->school->name != $school->name)
                 {
                     $user->current_school_id = $school->id;

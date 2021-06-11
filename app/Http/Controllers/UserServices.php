@@ -12,7 +12,7 @@ use App\Models\JobOpportunity;
 use App\Models\Message;
 use App\Models\Notification;
 
-//TODO check if logged as comapny or as user <and redirect back where not allowed
+//TODO check if logged as company or as user <and redirect back where not allowed
 class UserServices extends Controller
 {
     public function switchToCompanyAccount(){
@@ -27,7 +27,7 @@ class UserServices extends Controller
                 return redirect('/company_home');//TODO add a company  home URL
             }
         else//user have not created a company
-        {//TODO proccess message in view
+        {//TODO process message in view
             redirect()->back()->with('warning','you don\'t have a company account yet!');
         }
     }
@@ -46,7 +46,7 @@ class UserServices extends Controller
             //the industry in the profile is set
             if(!is_null(auth()->user()->industry) )
             {
-               $recomendedCompanies = Company :: where('industry' , auth()->user()->industry)->get(); 
+               $recomendedCompanies = Company :: where('industry' , auth()->user()->industry)->get();
                $recomendedPeople = User::where('industry',auth()->user()->industry)->get();
             }
             if(!is_null(auth()->user()->school_id))
@@ -57,11 +57,11 @@ class UserServices extends Controller
                 $recomendedPeople = $recomendedPeople->flatten();
             }
         }
-        else//case not logged in, recommend people and companies of the selected industy ,school
+        else//case not logged in, recommend people and companies of the selected industry ,school
         {
             if(!is_null($request->companyIndustry))
             {
-                $recomendedCompanies = Company :: where('industry' , $request->companyIndustry) ->get(); 
+                $recomendedCompanies = Company :: where('industry' , $request->companyIndustry) ->get();
             }
             if(!is_null($request->peopleIndustry )){
                 $recomendedPeople = User::where('industry',$request->peopleIndustry)->get();
@@ -161,7 +161,7 @@ class UserServices extends Controller
         $company->slogan=$request->input('slogan');
         $company->about=$request->input('about');
 
-        //TODO image proccessing 
+        //TODO image processing
 
         //company's relations
         $company->industry()->attach($request->input('industry'));
@@ -207,13 +207,13 @@ class UserServices extends Controller
         $messegingUsers=$user->userAcceptors;
         $messegingUsers->push($user->acceptants);
         $messegingUsers = $messegingUsers->flatten();
-        
+
         return view('userMesseging',['user'=>$user, 'messegingCompanies'=>$messegingCompanies,
         'messegingUsers'=>$messegingUsers]);
     }
     public function companySearchResults($request){
         if(Auth :: check())
-        { 
+        {
             if (auth()->user()->logged_as_company==true)
                 return redirect()->back();
         }
@@ -222,14 +222,14 @@ class UserServices extends Controller
     }
     public function peopleSearchResults($request){
         if(Auth :: check())
-        { 
+        {
             if (auth()->user()->logged_as_company==true)
                 return redirect()->back();
         }
         $searchResults = User:: where ('name' , $request->input('peopleSearchName'))->get();
         return view('people_search_results', ['searchResults',$searchResults]);
     }
-    //user-company functualities
+    //user-company functionalities
     public function getNotified($id){
         $user= auth()->user();
         //$company= Company :: find($id);
@@ -240,7 +240,7 @@ class UserServices extends Controller
         $user= auth()->user();
        // $company= Company :: find($id);
         $user->notifyingCompanies()->detach($id);
-        return redirect('/companies/{id}',['id',$id]);//TODO other probable sytax is /companies/.$id. ,,, or redirect to action
+        return redirect('/companies/{id}',['id',$id]);//TODO other probable syntax is /companies/.$id. ,,, or redirect to action
     }
     public function reportCompany($id){
        if(auth()->user()->logged_as_company==true)
@@ -272,7 +272,7 @@ class UserServices extends Controller
         }
         $messages=[];
         $user=auth()->user();
-        $messages=$user->sentMessages()->find($id);//TODO check recievable and sendable type
+        $messages=$user->sentMessages()->find($id);//TODO check receivable and sendable type
         $messages->push($user->recievedMessages()->find($id));
         $messages=$messages->flatten();
         $messages=$messages->sortBy('created_at');
@@ -288,7 +288,7 @@ class UserServices extends Controller
         $message->save();
         //send a notification of a new message to a company
         $notification = new Notification();
-        $notification->body='You recieved a new message of this user: '.auth()->user()->name;
+        $notification->body='You received a new message of this user: '.auth()->user()->name;
         $notification->recievable_id=$id;
         $notification->recievable_type='App\Models\Company';
         $notification->causable_id=auth()->user()->id;
@@ -326,8 +326,8 @@ class UserServices extends Controller
         //TODO delete related  notification
         $notification=Notification::where ('causable_id',$user->id)
                                     ->where('causable_type','App\Models\User')
-                                    ->where('recievable_id',$job->publishable_id)
-                                    ->where('recievable_type',$job->publishable_type)
+                                    ->where('receivable_id',$job->publishable_id)
+                                    ->where('receivable_type',$job->publishable_type)
                                     ->get();
         $notification->delete();
         return redirect('\jobs\{id}',['id',$id]);
@@ -370,15 +370,15 @@ class UserServices extends Controller
         $user=auth()->user();
         if(auth()->user()->logged_as_company==false)//case logged in as user
         {
-            $messages=$user->sentMessages()->where('recievable_type','App\Models\User')
-                                            ->where('recievable_id',$id);//TODO delete the ()
+            $messages=$user->sentMessages()->where('receivable_type','App\Models\User')
+                                            ->where('receivable_id',$id);//TODO delete the ()
             $messages->push($user->recievedMessages()->where('sendable_type','App\Models\User')
                                                      ->where('sendable_id',$id));//TODO delete the ()
         }
         else //case logged in as company
         {
-            $messages=$user->sentMessages()->where('recievable_type','App\Models\Company')
-                                            ->where('recievable_id',$id);//TODO delete the ()
+            $messages=$user->sentMessages()->where('receivable_type','App\Models\Company')
+                                            ->where('receivable_id',$id);//TODO delete the ()
             $messages->push($user->recievedMessages()->where('sendable_type','App\Models\Company')
                                                      ->where('sendable_id',$id));//TODO delete the ()
         }
@@ -394,9 +394,9 @@ class UserServices extends Controller
         {
             $message->sendable_id=auth()->user()->id;
             $message->sendable_type='App\Models\User';
-            //send a notification of a new message to the recieving user
+            //send a notification of a new message to the receiving user
             $notification = new Notification();
-            $notification->body='You recieved a new message of this user: '.auth()->user()->name;
+            $notification->body='You received a new message of this user: '.auth()->user()->name;
             $notification->recievable_id=$id;
             $notification->recievable_type='App\Models\User';
             $notification->causable_id=auth()->user()->id;
@@ -410,9 +410,9 @@ class UserServices extends Controller
             $message->sendable_id=auth()->user()->managing_company_id;
             $message->sendable_type='App\Models\Company';
             $company=auth()->user()->managingCompany;
-            //send a notification of a new message to the recieving user
+            //send a notification of a new message to the receiving user
             $notification = new Notification();
-            $notification->body='You recieved a new message of this company: '.$company->name;
+            $notification->body='You received a new message of this company: '.$company->name;
             $notification->recievable_id=$id;
             $notification->recievable_type='App\Models\User';
             $notification->causable_id=$company->id;
@@ -450,7 +450,6 @@ class UserServices extends Controller
 
     }
 
-    
 
 
 
@@ -458,7 +457,8 @@ class UserServices extends Controller
 
 
 
-    
+
+
 
 
 

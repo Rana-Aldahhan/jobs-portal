@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     use HasFactory;
-    public function notifable()
+    public function notifiable()
     {
         return $this->morphTo();
     }

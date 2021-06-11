@@ -26,11 +26,11 @@ class Company extends Model
     }
     public function notifications()
     {
-        return $this->morphMany(Notification :: class,'notifable');
+        return $this->morphMany(Notification :: class,'notifiable');
     }
     public function incomingReports()
     {
-        return $this->morphMany(Report :: class,'recievable');
+        return $this->morphMany(Report :: class,'receivable');
     }
     public function outcomingReports()
     {
@@ -42,17 +42,17 @@ class Company extends Model
     }
     public function incomingMessages()
     {
-        return $this->morphMany(Message :: class,' recievable');
+        return $this->morphMany(Message :: class,' receivable');
     }
     public function userViewings()
     {
         return $this->belongsToMany(User:: class,'company_user_views','viewing_id','viewer_id');
     }
-    public function useracceptants()
+    public function userAcceptants()
     {
         return $this->belongsToMany(User :: class ,'company_user_acceptants','acceptant_id','acceptor_id');
     }
-    
-   
+
+
 
 }
