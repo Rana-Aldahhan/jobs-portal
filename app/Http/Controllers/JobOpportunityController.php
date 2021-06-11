@@ -9,6 +9,59 @@ use App\Models\Company;
 
 class JobOpportunityController extends Controller
 {
+    public function showApplicants($id){
+        $user=auth()->user();
+        $job=JobOpportunity :: find($id);
+        $applicants=$job->applicants;
+        return view('applicants', ['user'=> $user , 'job'=>$job, 'applicants'=>$applicants]);
+    }
+    public function approveApplicant($jobID, $userID){
+        $approvingUser=auth()->user();
+        $approvedUser=User:: find($userID);
+        $job=JobOpportunity :: find($jobID);
+        if($approvingUser->logged_as_company==false)//case a user is accepting another user 
+        {
+            $approvedUser->appliedJobs()->updateExistingPivot($jobID,['approved'=>true]);
+            //add a new acceptant-acceptor relation
+            $approvedUser->userAcceptors()->attach($approvingUser);
+            //notification
+            $notification = new Notification();
+            $notification->body= 'The user ' + $approvingUser->name + ' has approved your job application to the job with the title' + $job->title + 'of the ID '+ $job->id;
+            $notification->causable_id=$approvingUser->id;
+            $notification->causable_type='App\Models\User';
+            $notification->recievable_id=$userID;
+            $notification->recievable_type='App\Models\User';
+            $notification->save();  
+            return redirect('/profile/published-jobs');
+        }
+        else // case logged as company
+        {
+            $approvingCompany=Company :: find($approvingUser->managing_company_id);
+            $approvedUser->appliedJobs()->updateExistingPivot($jobID,['approved'=>true]);
+            //add a new acceptant-acceptor relation
+            $approvedUser->companyAcceptors()->attach($approvingCompany->id);
+             //notification
+             $notification = new Notification();
+             $notification->body= 'The company ' + $approvingCompany->name + ' has approved your job application to the job with the title' + $job->title + 'of the ID '+ $job->id;
+             $notification->causable_id=$approvingCompany->id;
+             $notification->causable_type='App\Models\Company';
+             $notification->recievable_id=$userID;
+             $notification->recievable_type='App\Models\User';
+             $notification->save();  
+             return redirect('/company/manage-jobs');
+        }
+        
+    }
+    public function ignoreApplicant($jobID,$userID){
+        $ignoredUser=User::find($userID);
+        $ignoredUser->appliedJobs()->detach($jobID);
+        $user=auth()->user();
+        if($user->logged_as_company==true)
+            return redirect('/profile/published-jobs');
+        else 
+            return redirect('/company/manage-jobs');
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -48,7 +101,7 @@ class JobOpportunityController extends Controller
      */
     public function show($id)
     {
-        $user=auth()->user();
+        $user=auth()->user();//can be null
         $showSaveButton=true;
         $showApplyButton=true;
         $showWithDrawApplicationButton=false;
@@ -60,10 +113,12 @@ class JobOpportunityController extends Controller
         $publisher=null;
         $publishableIndustry=null;
 
-        //logged as user
-        if($user->logged_as_company==false)
+        if(Auth :: check())//case logged in
+        {
+        
+        if($user->logged_as_company==false)//logged as user
         {  
-             ////////////////views tests////////////////////////////
+            ////////////////views tests////////////////////////////
             if(!is_null($user->publishedJobs()->find($id)))
             {
                 $showSaveButton=false;//and don't show unsave button
@@ -74,13 +129,13 @@ class JobOpportunityController extends Controller
             {
                 $showSaveButton=false;//and show unsave button
             }
-            $appliedJob=$user->savedJobs()->find($id);
+            $appliedJob=$user->appliedJobs()->find($id);
             if(!is_null($appliedJob))//the user already applied 
             {
                 $showApplyButton=false; //show withdraw button instead
                 $showWithDrawApplicationButton=true;
                 // the application is approved 
-                if($appliedJob->pivot->approved==true)
+                if($user->appliedJobs()->find($id)->pivot->approved==true)
                     $showWithDrawApplicationButton=false;        
             }
             //////////////bring recruiter information///////////////
@@ -109,6 +164,7 @@ class JobOpportunityController extends Controller
             $show_edit_delete_applicants_buttons=true;
 
         }
+    
 
         return view('show_job' , ['user'=>$user , 'job'=>$job , 'publisher'=>$publisher,
         'requiredSkills'=>$requiredSkills,'jobIndustry'=>$jobIndustry,
@@ -129,7 +185,12 @@ class JobOpportunityController extends Controller
      */
     public function edit($id)
     {
-        //
+        $job=JobOpportunity :: find($id);
+        $requiredSkills=$job->requiredSkills;
+        $typeOfPosition=$job->typeOfPosition;
+        $industry=$job->industry;
+        return view('editJob',['job'=> $job, 'requiredSkills'=> $requiredSkills,
+        'typeOfPosition'=>$typeOfPosition, 'industry'=>$industry]);
     }
 
     /**
@@ -141,7 +202,35 @@ class JobOpportunityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //validtion
+        $this->validate ($request , [
+            'title' => 'requied | alpha' ,
+            'description' => 'requied',
+            'remote' =>'boolean | required',
+            'city' => 'alpha ' ,
+            'country' => 'alpha ' ,
+            'transportation' =>'boolean',
+            'salary'=>'numeric | required',
+            'required_experience' => 'numeric | required ',
+            'role'=>'alpha | required'
+
+        ]);
+        $job=JobOpportunity :: find($id);
+        $job->title=$request->input('title');
+        $job->description=$request->input('description');
+        $job->remote=$request->input('remote');
+        $job->transportation=$request->input('transportation');
+        $job->salary=$request->input('salary');
+        $job->city=$request->input('city');
+        $job->country=$request->input('country');
+        $job->role=$request->input('role');
+        $job->requiredExperience->$request->input('requiredExperience');
+        //TODO  deatch old skills,industry,type of position && attach new ones
+        $job->requiredSkills()->saveMany($request->input('requiredSkills'));//
+        $job->typeOfPosition()->save($request->input('typeOfPosition'));
+        $job->industry->save($request->input('industry'));
+        $job->save();
+        return redirect('jobs/{id}',['id'=>$id]);
     }
 
     /**
@@ -152,6 +241,14 @@ class JobOpportunityController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $job=JobOpportunity :: find($id);
+        $job->delete();
+        if(auth()->user()->logged_as_company==false)
+        {
+            return redirect('/profile/published_jobs')
+        }
+        else {
+            return redirect('/company/manage-jobs');
+        }
     }
 }

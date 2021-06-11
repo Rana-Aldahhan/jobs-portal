@@ -7,6 +7,18 @@ use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
+    public function showProfile()
+    {
+        if (auth()->user()->logged_as_company==false)
+            return redirect()->back();
+        $company=auth()->user()->managingCompany;
+        $industry=$company->industry;
+        $employees=$company->employees;
+        $publishedJobs=$company->publishedJobs;
+
+        return view('company-profile',['company'=>$company,'industry'=>$industry,
+        'empolyees'=>$employees, 'publishedJobs'=>$publishedJobs]);
+    }
     /**
      * Display a listing of the resource.
      *

@@ -25,7 +25,7 @@ class CreateCompaniesTable extends Migration
             $table ->string('country');
             $table ->string('slogan')->nullable();
             $table->longText('about')->nullable();
-            $table ->string('profile_thumbnail');
+            $table ->string('profile_thumbnail')->nullable();
             $table->timestamps();
             //forgein keys
             $table->foreign('industry_id')->references('id')->on('industries');

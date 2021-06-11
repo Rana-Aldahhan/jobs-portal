@@ -14,7 +14,15 @@ class UserController extends Controller
         if (auth()->user()->logged_as_company==true)
             return redirect()->back();
         $user= auth()->user();
-        return view('profile', ['user' => $user]);
+        $school=$user->school;
+        $skills=$user->skills;
+        $industry=$user->industry;
+        $languages=$user->languages;
+        $workplaces=$user->workPlaces;
+        $colleagues=$user->colleagues;
+        
+        return view('user-profile', ['user' => $user,'school'=>$school,'skills'=> $skills,
+        'languages'=>$languages,'workplaces'=>$workPlaces,'colleagues'=>$colleagues]);
     }
 
     /**
@@ -57,7 +65,65 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $loggedUser=auth()->user();//can be null
+        $user=User::find($id);
+        $school=$user->school;
+        $skills=$user->skills;
+        $workPlaces=$user->workPlaces;
+        $languages=$user->languages;
+        $colleagues=$user->sentColleagues()->where('approved',true)->get();
+        $colleagues=$colleagues->push($user->recievedColleagues()->where('approved',true)->get());
+        $colleagues=$colleagues->flatten();
+        $userPublishedJobs=$user->publishedJobs;
+
+        $showAddColleagues=true;// cancel colleagues request
+        $showCancelRequest=false;
+        $showApproveButton=false;//show remove request
+        $showMessage=false;
+       
+        
+        if(Auth :: check())//case logged in     
+        {
+            if($user->logged_as_company==false)//logged as user
+            {
+                //show colleagues states
+                $sender=$loggedUser->sentColleagues()->find($id);
+                $recieved=$loggedUser->recievedColleagues()->find($id);
+                if(!is_null($sender) || !is_null($recieved))// case a user has sent a colleague request to another
+                {
+                    $showAddColleagues=false;
+                    if(!is_null($sender))
+                    {
+                        $showCancelRequest=true;
+                    }
+                    if(!is_null($recieved))
+                    {
+                        $showApproveButton=true;
+                    }
+                }
+                //show message in case a user has applied and has been aprroved to another user job
+                $acceptor=$loggedUser->userAcceptors()->find($id);
+                $acceptant=$loggedUser->userAcceptants()->find($id);
+                if(!is_null($acceptor) || !is_null($acceptant))
+                {
+                    $showMessage=true;
+                }
+            }
+            else//logged as company
+            {
+                //show message in case a user has applied and has been aprroved to a company's job
+                $company = Company::find($loggedUser->managing_company_id);
+                $companyAcceptor=$user->companyAcceptors()->find($company->id);
+                if(!is_null($companyAcceptor))
+                {
+                    $showMessage=true;
+                }
+            }
+        }  
+        return view('showUser',['loggedUser'=>$loggedUser,'user'=>$user,'school'=>$school,'skills'=>$skills, 'workPlaces'=>$workPlaces,
+        'languages'=>$languages, 'colleagues'=>$colleagues,'userPublishedJobs'=> $userPublishedJobs,
+        'showAddColleagues'=>$showAddColleagues,'showCancelRequest'=>$showCancelRequest,'showApprovedButton'=>$showApproveButton
+        'showMessage'=>$showMessage]) ;
     }
 
     /**
@@ -66,7 +132,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit()//edit's form
     { 
         $id= auth()->user()->id;
         $user= User :: find( $id);
@@ -75,8 +141,12 @@ class UserController extends Controller
         //fetch user skills and languages
         $user_skills= $user ->skills;
         $user_languages = $user->languages;
+        $user_school=$user->school;
+        $user_workplaces=$user->workPlaces;
+
         return view('profile-edit', ['user' => $user , 'skills' => $skills ,'languages' => $languages,
-                                     'user_languages' => $user_languages , 'user_skills' =>$user_skills]);
+                                     'user_languages' => $user_languages , 'user_skills' =>$user_skills
+                                     'school'=>$user_school,'workplaces'=>$user_workplaces]);
     }
 
     /**
