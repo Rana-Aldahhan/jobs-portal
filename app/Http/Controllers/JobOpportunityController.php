@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Company;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class JobOpportunityController extends Controller
 {
@@ -34,6 +35,9 @@ class JobOpportunityController extends Controller
             $notification->recievable_id=$userID;
             $notification->recievable_type='App\Models\User';
             $notification->save();
+
+            $job->expired=true;
+            $job->save();
             return redirect('/profile/published-jobs');
         }
         else // case logged as company
@@ -50,6 +54,10 @@ class JobOpportunityController extends Controller
              $notification->recievable_id=$userID;
              $notification->recievable_type='App\Models\User';
              $notification->save();
+
+            $job->expired=true;
+            $job->save();
+
              return redirect('/company/manage-jobs');
         }
 
@@ -99,7 +107,7 @@ class JobOpportunityController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+
      */
     public function show($id)
     {
@@ -114,6 +122,7 @@ class JobOpportunityController extends Controller
         $typeOfPosition=$job->typeOfPosition;
         $publisher=null;
         $publishableIndustry=null;
+        $reachCount=0;
 
         if(Auth :: check())//case logged in
         {
@@ -121,10 +130,23 @@ class JobOpportunityController extends Controller
             if ($user->logged_as_company == false)//logged as user
             {
                 ////////////////views tests////////////////////////////
-                if (!is_null($user->publishedJobs()->find($id))) {
+                if (!is_null($user->publishedJobs()->find($id)))//case the logged user is the publisher of this job
+                {
                     $showSaveButton = false;//and don't show unsave button
                     $showApplyButton = false;
                     $show_edit_delete_applicants_buttons = true;
+                    //count the last month's reaches
+                    //delete every reach created before a month
+                    $expired_reaches=$job->userViewers()->where('created_at', '>',now()->subDays(30))->get();
+                    $expired_reaches->delete();
+                    //count this month reaches with distinct viewers
+                    $reachCount=DB :: table('user_job_views')->select('user_id')->where('job_id',$job->id)->distinct()->get()->count();
+
+                }
+                else//the logged user is not the publisher of the job
+                {
+                    // increment the job's reaches
+                    $job->userViewers()->attach($user);
                 }
                 if (!is_null($user->savedJobs()->find($id)))//the user already saved the job
                 {
@@ -151,7 +173,6 @@ class JobOpportunityController extends Controller
                     $publishableIndustry = $publisher->industry;
                 }
 
-
             } //logged as company
             else {
                 //hide all apply save buttons
@@ -159,8 +180,17 @@ class JobOpportunityController extends Controller
                 $showSaveButton = false;
                 //check if the company published the job
                 $company = Company:: find($user->managing_company_id);
-                if (!is_null($company->publishedJobs()->find($id)))
+                if (!is_null($company->publishedJobs()->find($id))) //case the logged company is the job's publisher
+                {
                     $show_edit_delete_applicants_buttons = true;
+                    //count the last month's reaches
+                    //delete every reach created before a month
+                    $expired_reaches=$job->userViewers()->where('created_at', '>',now()->subDays(30))->get();
+                    $expired_reaches->delete();
+                    //count this month reaches with distinct viewers
+                    $reachCount=DB :: table('user_job_views')->select('viewing_id')->where('viewer_id',$job->id)->distinct()->get()->count();
+
+                }
 
             }
         }
@@ -173,6 +203,7 @@ class JobOpportunityController extends Controller
         'showSaveButton'=>$showSaveButton, 'showApplyButton'=>$showApplyButton,
         'showWithDrawApplicationButton'=>$showWithDrawApplicationButton,
         'show_edit_delete_applicants_buttons'=>$show_edit_delete_applicants_buttons,
+        'reachCount'=>$reachCount
         ]);
     }
 

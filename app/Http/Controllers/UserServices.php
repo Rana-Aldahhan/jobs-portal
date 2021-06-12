@@ -449,6 +449,66 @@ class UserServices extends Controller
         return redirect('/users/{id}',['id'=>$id]);
 
     }
+    //website admin functionalities
+    public function manageReports(){
+        $user=auth()->user();
+        if($user->logged_as_company==true)
+        {
+            return redirect()->back();
+        }
+        if($user->admin==false)
+        {
+            return redirect()->back();
+        }
+        $companiesReports=Report :: where('receivable_type','App\Models\Company')->get();
+        $usersReports=Report ::where('receivable_type','App\Models\User')->get();
+        $companiesReports=$companiesReports->groupBy('receivable_id');
+        $usersReports=$usersReports->groupBy('receivable_id');
+        $companiesReports=$companiesReports->sortByDesc(function($companyReports){
+            return count($companyReports);
+        });
+        $usersReports=$usersReports->sortByDesc(function($userReports){
+            return count($userReports);
+        });
+        $companiesIDs= $companiesReports->keys();
+        $usersIDs=$usersReports->keys();
+        $reportedCompanies=Company::find($companiesIDs);
+        $reportedUsers=User::find($usersIDs);
+
+        return view ('manageReports',['user'=>$user,'companiesReports'=>$companiesReports,'companiesIds'=>$companiesIDs,
+            'usersReports'=>$usersReports,'usersIds'=>$usersIDs,
+            'reportedCompanies'=>$reportedCompanies,'reportedUsers'=>$reportedUsers]);
+    }
+    public function showCompanyReports($id){
+        $user=auth()->user();
+        if($user->logged_as_company==true)
+        {
+            return redirect()->back();
+        }
+        if($user->admin==false)
+        {
+            return redirect()->back();
+        }
+        $reportedCompany=Company :: find($id);
+        $reports=$reportedCompany->incomingReports;
+
+        return view('show_company_reports',['user'=>$user,'reportedCompany'=>$reportedCompany,'reports'=>$reports]);
+    }
+    public function showUserReports($id){
+        $user=auth()->user();
+        if($user->logged_as_company==true)
+        {
+            return redirect()->back();
+        }
+        if($user->admin==false)
+        {
+            return redirect()->back();
+        }
+        $reportedUser=User :: find($id);
+        $reports=$reportedUser->incomingReports;
+
+        return view('show_company_reports',['user'=>$user,'reportedUser'=>$reportedUser,'reports'=>$reports]);
+    }
 
 
 

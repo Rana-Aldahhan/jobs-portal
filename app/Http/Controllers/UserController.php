@@ -8,6 +8,8 @@ use App\Models\Company;
 use App\Models\Skill;
 use App\Models\School;
 use App\Models\Language;
+use Illuminate\Support\Facades\DB;
+
 class UserController extends Controller
 {
     public function showProfile(){
@@ -20,9 +22,29 @@ class UserController extends Controller
         $languages=$user->languages;
         $workplaces=$user->workPlaces;
         $colleagues=$user->colleagues;
+        $usersReachCount=0;
+        $companiesReachCount=0;
+        //count users reaches to this profile of the last month
+
+        //delete every reach created before a month
+        $expired_reaches=$user->userViewers()->where('created_at', '>',now()->subDays(30))->get();
+        $expired_reaches->delete();
+        //count this month reaches with distinct viewers
+        $usersReachCount=DB :: table('user_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();
+
+        //count company reaches to this profile of the last month
+
+        //delete every reach created before a month
+        $expired_reaches=$user->companyViewers()->where('created_at', '>',now()->subDays(30))->get();
+        $expired_reaches->delete();
+        //count this month reaches with distinct viewers
+        $companyReachCount=DB :: table('user_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();
+
+
 
         return view('user-profile', ['user' => $user,'school'=>$school,'skills'=> $skills,'industry'=>$industry,
-        'languages'=>$languages,'workplaces'=>$workplaces,'colleagues'=>$colleagues]);
+        'languages'=>$languages,'workplaces'=>$workplaces,'colleagues'=>$colleagues,'usersReachCount'=>$usersReachCount,
+        'companiesReachCount'=>$companiesReachCount]);
     }
 
     /**
@@ -108,6 +130,9 @@ class UserController extends Controller
                 {
                     $showMessage=true;
                 }
+                // increment the showed user's reaches by users
+                $user->userViewers()->attach($loggedUser);
+
             }
             else//logged as company
             {
@@ -118,6 +143,8 @@ class UserController extends Controller
                 {
                     $showMessage=true;
                 }
+                // increment the showed user's reaches by companies
+                $user->companyViewers()->attach($company);
             }
         }
         return view('showUser',['loggedUser'=>$loggedUser,'user'=>$user,'school'=>$school,'skills'=>$skills, 'workPlaces'=>$workPlaces,
@@ -236,10 +263,13 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+
      */
     public function destroy($id)
     {
-        //
+        //case of website's admin deleting a user
+        $user=User::find($id);
+        $user->delete();
+        return redirect('manage-reports');
     }
 }

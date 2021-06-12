@@ -33,6 +33,7 @@ class CreateJobOpportunitiesTable extends Migration
             //foreign keys
             $table->foreign('positionType_id')->references('id')->on('position_types');
             $table->foreign('industry_id')->references('id')->on('industries');
+            //TODO on delete publishable
         });
     }
 

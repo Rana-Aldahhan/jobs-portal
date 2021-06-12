@@ -124,10 +124,13 @@ class CompanyController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+
      */
     public function destroy($id)
     {
-        //
+        //case of website's admin deleting a company
+     $company=Company::find($id);
+     $company->delete();
+     return redirect('manage-reports');
     }
 }

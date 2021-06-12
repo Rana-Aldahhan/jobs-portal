@@ -87,6 +87,11 @@ Route::get('/users/{id}/messages',[UserServices::class , 'showMessagesWithUser']
 Route::post('/users/{id}/messages',[UserServices::class , 'sendMessageToUser'])->middleware('auth');
 Route::get('/users/{id}/report',[UserServices::class , 'reportUser'])->middleware('auth');
 Route::post('/users/{id}/report',[UserServices::class , 'sendUserReport'])->middleware('auth');
-
+//website admin functionalities
+Route::get('/manage-reports',[UserServices::class , 'manageReports'])->middleware('auth');
+Route::get('/manage-reports/companies/{id}',[UserServices::class , 'showCompanyReports'])->middleware('auth');
+Route::delete('/manage-reports/companies/{id}/delete',[CompanyController::class , 'destroy'])->middleware('auth');
+Route::get('/manage-reports/users/{id}',[UserServices::class , 'showUserReports'])->middleware('auth');
+Route::delete('/manage-reports/users/{id}/delete',[UserController::class , 'destroy'])->middleware('auth');
 
 
