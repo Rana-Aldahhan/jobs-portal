@@ -28,6 +28,10 @@ class Company extends Model
     {
         return $this->morphMany(Notification :: class,'notifiable');
     }
+    public function notifiedUsers()
+    {
+        return $this->belongsToMany(User :: class,'user_notifying_company','company_id','user_id');
+    }
     public function incomingReports()
     {
         return $this->morphMany(Report :: class,'receivable');

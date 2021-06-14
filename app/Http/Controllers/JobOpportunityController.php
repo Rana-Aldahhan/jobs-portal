@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Company;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class JobOpportunityController extends Controller
 {
@@ -166,12 +167,11 @@ class JobOpportunityController extends Controller
                 if ($job->publishable_type == 'App\Models\User')//recruiter is user
                 {
                     $publisher = User::find($job->publishable_id);
-                    $publishableIndustry = $publisher->industry;
                 } else //recruiter is company
                 {
                     $publisher = Company::find($job->publishable_id);
-                    $publishableIndustry = $publisher->industry;
                 }
+                $publishableIndustry = $publisher->industry;
 
             } //logged as company
             else {
@@ -233,18 +233,21 @@ class JobOpportunityController extends Controller
     public function update(Request $request, $id)
     {
         //validation
-        $this->validate ($request , [
-            'title' => 'required | alpha' ,
-            'description' => 'required',
-            'remote' =>'boolean | required',
-            'city' => 'alpha ' ,
-            'country' => 'alpha ' ,
-            'transportation' =>'boolean',
-            'salary'=>'numeric | required',
-            'required_experience' => 'numeric | required ',
-            'role'=>'alpha | required'
+        try {
+            $this->validate($request, [
+                'title' => 'required | alpha',
+                'description' => 'required',
+                'remote' => 'boolean | required',
+                'city' => 'alpha ',
+                'country' => 'alpha ',
+                'transportation' => 'boolean',
+                'salary' => 'numeric | required',
+                'required_experience' => 'numeric | required ',
+                'role' => 'alpha | required'
 
-        ]);
+            ]);
+        } catch (ValidationException $e) {
+        }
         $job=JobOpportunity :: find($id);
         $job->title=$request->input('title');
         $job->description=$request->input('description');

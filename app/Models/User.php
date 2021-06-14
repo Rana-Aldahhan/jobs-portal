@@ -91,7 +91,7 @@ class User extends Authenticatable
     }
     public function notifyingCompanies()
     {
-        return $this->belongsToMany(Company :: class,'user_notifying_company','user_id','job_id');
+        return $this->belongsToMany(Company :: class,'user_notifying_company','user_id','company_id');
     }
     public function publishedJobs()
     {

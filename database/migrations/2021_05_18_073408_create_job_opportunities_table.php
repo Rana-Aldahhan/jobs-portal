@@ -30,9 +30,11 @@ class CreateJobOpportunitiesTable extends Migration
             $table->string('role');
             $table->integer('required_experience');
             $table->timestamps();
-            //foreign keys
+            //foreign key
+
             $table->foreign('positionType_id')->references('id')->on('position_types');
             $table->foreign('industry_id')->references('id')->on('industries');
+
             //TODO on delete publishable
         });
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\JobOpportunity;
 use App\Models\User;
@@ -48,7 +49,7 @@ class CompanyServices extends Controller
 
         return view('companyMesseging',['company'=>$company, 'messegingUsers'=>$messegingUsers]);
     }
-    public function postJob($request){
+    public function postJob(Request $request){
         $user=auth()->user();
         //if logged as a company redirect back
         if($user->logged_as_company==false)
@@ -88,7 +89,18 @@ class CompanyServices extends Controller
         $job->publishable_type='App\Models\Company';
 
         $job->save();
-        //TODO make a new notification to users that are interested in this company
+        //TOD8O make a new notification to users that are interested in this company
+        $notifiedUsers=$company->notifiedUsers;
+        foreach ($notifiedUsers as $user)
+        {
+            $notification=new Notification();
+            $notification->body='A company you are intrested in : '.$company->name.' has posted a new job opportunity,check it out!';
+            $notification->notifable_id=$user->id;
+            $notification->notifable_type='App\Models\User';
+            $notification->causable_id=$company->id;
+            $notification->causable_type='App\Models\Company';
+            $notification->save();
+        }
 
         return redirect('/manage-company-jobs');
     }

@@ -12,7 +12,7 @@ use App\Models\JobOpportunity;
 use App\Models\Message;
 use App\Models\Notification;
 
-//TODO check if logged as company or as user <and redirect back where not allowed
+//TODO check if logged as company or as user <and redirect back where not allowed>.
 class UserServices extends Controller
 {
     public function switchToCompanyAccount(){
@@ -24,14 +24,14 @@ class UserServices extends Controller
                 $user=auth()->user();
                 $user->logged_as_company=true;
                 $user->save();
-                return redirect('/company_home');//TODO add a company  home URL
+                return redirect('/company_home');
             }
         else//user have not created a company
         {//TODO process message in view
             redirect()->back()->with('warning','you don\'t have a company account yet!');
         }
     }
-    public function explore($request){
+    public function explore(Request $request){
         //if logged as company redirect to back
         if(Auth :: check)
         {
@@ -85,7 +85,7 @@ class UserServices extends Controller
                                 'industries' => $industries]);
 
     }
-    public function postJob($request){
+    public function postJob(Request $request){
         $user=auth()->user();
         //if logged as a company redirect back
         if($user->logged_as_company==true)
@@ -138,7 +138,7 @@ class UserServices extends Controller
         return view('create-company',['is_managing_company'=> $is_managing_company]);
 
     }
-    public function postCompany($request){
+    public function postCompany(Request $request){
         //validation
         $this->validate($request , [
             'name'=>'required',
@@ -211,7 +211,7 @@ class UserServices extends Controller
         return view('userMesseging',['user'=>$user, 'messegingCompanies'=>$messegingCompanies,
         'messegingUsers'=>$messegingUsers]);
     }
-    public function companySearchResults($request){
+    public function companySearchResults(Request $request){
         if(Auth :: check())
         {
             if (auth()->user()->logged_as_company==true)
@@ -220,7 +220,7 @@ class UserServices extends Controller
         $searchResults = Company:: where ('name' , $request->input('companySearchName'))->get();
         return view('company_search_results', ['searchResults',$searchResults]);
     }
-    public function peopleSearchResults($request){
+    public function peopleSearchResults(Request $request){
         if(Auth :: check())
         {
             if (auth()->user()->logged_as_company==true)
@@ -228,6 +228,62 @@ class UserServices extends Controller
         }
         $searchResults = User:: where ('name' , $request->input('peopleSearchName'))->get();
         return view('people_search_results', ['searchResults',$searchResults]);
+    }
+    public function filterJobs(Request  $request){
+        $user=auth()->user();
+        $jobSearchResults=JobOpportunity:: where('expired',false);
+
+        //filter results to match the request
+
+        $jobSearchResults=$jobSearchResults->when($request->input('remote'),function($jobSearchResults, $request){
+            $jobSearchResults->filter(function ($job , $request){
+                return $job->remote == $request->input('remote');
+            });
+        });
+        $jobSearchResults=$jobSearchResults->when($request->input('city'),function($jobSearchResults, $request){
+            $jobSearchResults->filter(function ($job , $request){
+                return $job->city == $request->input('city');
+            });
+        });
+        $jobSearchResults=$jobSearchResults->when($request->input('country'),function($jobSearchResults, $request){
+            $jobSearchResults->filter(function ($job , $request){
+                return $job->country == $request->input('country');
+            });
+        });
+        $jobSearchResults=$jobSearchResults->when($request->input('industry'),function($jobSearchResults, $request){
+            $jobSearchResults->filter(function ($job , $request){
+                return $job->industry == $request->input('industry');
+            });
+        });
+        $jobSearchResults=$jobSearchResults->when($request->input('typeOfPosition'),function($jobSearchResults, $request){
+            $jobSearchResults->filter(function ($job , $request){
+                return $job->typeOfPosition == $request->input('typeOfPosition');
+            });
+        });
+        $jobSearchResults=$jobSearchResults->when($request->input('required_experience'),function($jobSearchResults, $request){
+            $jobSearchResults->filter(function ($job , $request){
+                return $job->required_experience == $request->input('required_experience');
+            });
+        });
+        $jobSearchResults=$jobSearchResults->when($request->input('salary'),function($jobSearchResults, $request){
+            $jobSearchResults->filter(function ($job , $request){
+                return $job->salary == $request->input('salary');
+            });
+        });
+        $jobSearchResults=$jobSearchResults->when($request->input('transportation'),function($jobSearchResults, $request){
+            $jobSearchResults->filter(function ($job , $request){
+                return $job->transportation == $request->input('transportation');
+            });
+        });
+        if(!is_null($request->input('skills') )) {//TODO sort by request's specification
+            $jobSearchResults = $jobSearchResults->sortBy(function ($job, $request) {
+                return count($request->input('skills')->diff($job->requiredSkills));
+            });
+        }
+
+        $jobSearchResults->load(['industry','typeOfPosition','requiredSkills','publishable']);
+
+        return view('job_search_results',['user'=>$user,'jobSearchResults'=>$jobSearchResults]);
     }
     //user-company functionalities
     public function getNotified($id){
@@ -249,7 +305,7 @@ class UserServices extends Controller
        }
         return view('report',['id'=>$id]);
     }
-    public function sendCompanyReport($request,$id){
+    public function sendCompanyReport(Request $request,$id){
         $report = new Report();
         $report->reason=$request->input('reportReason');
         $report->information=$request->input('reportInformation');
@@ -270,7 +326,7 @@ class UserServices extends Controller
         {
             return redirect()->back();
         }
-        $messages=[];
+        $messages=collect();
         $user=auth()->user();
         $messages=$user->sentMessages()->find($id);//TODO check receivable and sendable type
         $messages->push($user->recievedMessages()->find($id));
@@ -278,7 +334,7 @@ class UserServices extends Controller
         $messages=$messages->sortBy('created_at');
         return view('conversation', ['messages'=>$messages,'user'=>$user]);
     }
-    public function sendMessageToCompany($request,$id){
+    public function sendMessageToCompany(Request $request,$id){
         $message= new Message();
         $message->body=$request->input('messageBody');
         $message->sendable_id=auth()->user()->id;
@@ -371,23 +427,23 @@ class UserServices extends Controller
         if(auth()->user()->logged_as_company==false)//case logged in as user
         {
             $messages=$user->sentMessages()->where('receivable_type','App\Models\User')
-                                            ->where('receivable_id',$id);//TODO delete the ()
+                                            ->where('receivable_id',$id)->get();//TODO delete the ()
             $messages->push($user->recievedMessages()->where('sendable_type','App\Models\User')
-                                                     ->where('sendable_id',$id));//TODO delete the ()
+                                                     ->where('sendable_id',$id))->get();//TODO delete the ()
         }
         else //case logged in as company
         {
             $messages=$user->sentMessages()->where('receivable_type','App\Models\Company')
-                                            ->where('receivable_id',$id);//TODO delete the ()
+                                            ->where('receivable_id',$id)->get();//TODO delete the ()
             $messages->push($user->recievedMessages()->where('sendable_type','App\Models\Company')
-                                                     ->where('sendable_id',$id));//TODO delete the ()
+                                                     ->where('sendable_id',$id))->get();//TODO delete the ()
         }
         $messages=$messages->flatten();
         $messages=$messages->sortBy('created_at');
 
         return view('conversation', ['messages'=>$messages,'user'=>$user]);
     }
-    public function sendMessageToUser($request,$id){
+    public function sendMessageToUser(Request $request,$id){
         $message= new Message();
         $message->body=$request->input('messageBody');
         if(auth()->user()->logged_as_company==false)//logged as user
@@ -429,7 +485,7 @@ class UserServices extends Controller
     public function reportUser($id){
          return view('report',['id'=>$id]);
     }
-    public function sendUserReport($request,$id){
+    public function sendUserReport(Request $request,$id){
         $report = new Report();
         $report->reason=$request->input('reportReason');
         $report->information=$request->input('reportInformation');
