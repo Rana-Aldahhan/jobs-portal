@@ -1,0 +1,24 @@
+div ul {
+    padding-right: 70px;
+    padding-bottom: 20px;
+}
+
+.ddrop {
+    color: black;
+    font-size: 18px;
+}
+.ddrop:hover {
+    background-color: #70b9b0;
+    color: black;
+    border-radius: 30px;
+    text-decoration: none;
+}
+button {
+    background-color: #343a40;
+    margin-right: 70px;
+}
+.imgprofile {
+    max-width: 200px;
+    max-height: 50px;
+    margin-top: 10px;
+}

@@ -1,0 +1,91 @@
+@import url("https://fonts.google.com/specimen/Roboto+Slab?query=roboto+slab");
+
+.styleform {
+    background: #027676;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 90px;
+}
+
+.card {
+    border: none;
+    border-radius: 0;
+    width: 550px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.text-muted {
+    font-weight: 500 !important;
+    font-size: 12px;
+    color: #6c757dcc !important;
+}
+
+h2 {
+    color: #028282;
+    padding: 10px 0 20px;
+    font-family: Roboto Slab !important;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-top: 20px;
+}
+
+.first {
+    margin-top: 0 !important;
+}
+
+.form-control {
+    border-radius: 0;
+}
+
+.form-group label {
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.form-group span {
+    color: rgb(255, 0, 0);
+}
+
+.form-control:focus {
+    border: 1.5px solid #adb5bd;
+    border-radius: 0;
+    box-shadow: none;
+    background: #ff000012;
+    letter-spacing: 1px;
+    color: #000;
+}
+
+.form-check-label {
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.btn-block {
+    border-radius: 0;
+    border: none;
+    background: blue;
+    margin-top: 10px;
+    padding-top: 0px;
+    background: #027676;
+}
+
+.btn-block:hover {
+    background: #027676;
+}
+
+.btn-block:focus {
+    box-shadow: none;
+    background: #018080 !important;
+}
+
+.btn-primary span {
+    font-size: 12px;
+}
+
+.val_error {
+    color: #dc3545;
+    font-size: 10px;
+    padding-top: 5px;
+    font-weight: bold;
+}

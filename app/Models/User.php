@@ -115,7 +115,7 @@ class User extends Authenticatable
     }
     public function userViewers()
     {
-        return $this->belongsToMany(User:: class,'user_user_views','viewing_id','viewer_id' );
+        return $this->belongsToMany(User:: class,'user_user_views','viewing_id','viewer_id' )->withTimestamps;
     }
     public function companyViewers()
     {

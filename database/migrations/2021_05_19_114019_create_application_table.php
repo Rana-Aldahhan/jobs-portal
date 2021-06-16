@@ -20,8 +20,8 @@ class CreateApplicationTable extends Migration
             $table->boolean('approved');
             $table->timestamps();
             //foreign keys
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('job_id')->references('id')->on('job_opportunities')->onDelete('cascade');
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('job_id')->references('id')->on('job_opportunities')->onDelete('cascade');
         });
     }
 

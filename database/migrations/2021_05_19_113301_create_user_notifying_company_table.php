@@ -19,8 +19,8 @@ class CreateUserNotifyingCompanyTable extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->timestamps();
             //foreign keys
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
         });
     }
 

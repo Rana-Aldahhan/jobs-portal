@@ -1,0 +1,27 @@
+.bbb {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: #009688;
+    text-align: center;
+    font-size: 20px;
+}
+.cardsearch {
+    margin-top: 97px;
+    background-color: #fafafa;
+    border-style: solid;
+    border-left-color: #009688;
+    border-left-width: 30px;
+    border-right-color: #009688;
+    border-right-width: 30px;
+}
+
+@media (max-width: 768px) {
+    .bbb {
+        margin-top: 70px;
+    }
+}
+.page {
+    margin-left: 20px;
+}
+.pagination a {
+    color: #009688;
+}

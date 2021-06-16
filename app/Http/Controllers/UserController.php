@@ -27,7 +27,7 @@ class UserController extends Controller
         //count users reaches to this profile of the last month
 
         //delete every reach created before a month
-        $expired_reaches=$user->userViewers()->where('created_at', '>',now()->subDays(30))->get();
+        $expired_reaches=$user->userViewers()->where('created_at','>',now()->subDays(30))->get();//
         $expired_reaches->delete();
         //count this month reaches with distinct viewers
         $usersReachCount=DB :: table('user_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();

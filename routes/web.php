@@ -21,17 +21,16 @@ use Illuminate\Support\Facades\Route;
 Route :: get('/', function () {
     return view('welcome');
 });
+Route::get('/1',function (){return view('chosenwork');});
 Route :: put('/switch-to-company-account',[UserServices :: class ,'switchToCompanyAccount'])->middleware('auth');
 Route :: put('/switch-to-user-account',[CompanyServices :: class ,'switchToUserAccount'])->middleware('auth');
-Route :: get('/home',function (){
-    return view ('home');
-});
+Route :: get('/home',function (){if(Auth::check()) return view('withAuthHome'); else return view ('withoutAuthHome');});
 Route :: get ('/explore',[UserServices :: class , 'explore']);
 Route :: get ('/explore/company-search-results',[UserServices:: class ,'companySearchResults']);
 Route :: get ('/explore/people-search-results',[UserServices:: class ,'peopleSearchResults']);
-Route :: get('/job-search', function (){ return view ('job-search');});
+Route :: get('/job-search',  [UserServices:: class ,'showJobSearch']);
 Route :: get ('/job-search-results', [UserServices::class ,'filterJobs' ]);
-Route :: get ('/create-job', function (){ return view ('create-job');})->middleware('auth');
+Route :: get ('/create-job', [UserServices:: class ,'showCreateJob'])->middleware('auth');
 Route :: post('/create-job',[UserServices :: class , 'postJob']);
 Route :: get ('/create-company',[UserServices :: class , 'showCreateCompany'])->middleware('auth');
 Route :: post('/create-company',[UserServices :: class , 'postCompany'])->middleware('auth');
@@ -55,7 +54,7 @@ Route :: get('/companies/{id}/report', [UserServices :: class ,'reportCompany'])
 Route :: post('/companies/{id}/report', [UserServices :: class ,'sendCompanyReport'])->middleware('auth');//make a report and save it to DB
 Route :: get('/companies/{id}/messages',[UserServices :: class ,'showMessagesWithCompany'])->middleware('auth');//show messages between user and company
 Route :: post('/companies/{id}/messages',[UserServices :: class ,'sendMessageToCompany'])->middleware('auth');//send message to company
-//jobs and its related funtionalities
+//jobs and its related functionalities
 Route :: get('/jobs/{id}',[JobOpportunityController :: class ,'show']);
 Route :: get ('/jobs/{id}/edit',[JobOpportunityController :: class ,'edit'])->middleware('auth');
 Route :: put ('/jobs/{id}/edit',[JobOpportunityController :: class ,'update'])->middleware('auth');
@@ -69,7 +68,7 @@ Route :: delete('/job/{id}/unsave',[UserServices :: class ,'unsaveJob'])->middle
 Route :: get('/jobs/{id}/applicants',[JobOpportunityController :: class ,'showApplicants'])->middleware('auth');//show job's applicants
 Route :: put('/jobs/{jobID}/applicants/{userID}',[JobOpportunityController :: class ,'approveApplicant'])->middleware('auth');//approve a user application
 Route :: delete('/jobs/{jobID}/applicants/{userID}',[JobOpportunityController :: class ,'ignoreApplicant'])->middleware('auth');//ignore a user application
-//user and its related funtionalities
+//user and its related functionalities
 
 //logged user routes
 Route ::  get('/profile' , [UserController :: class , 'showProfile'])->middleware('auth');
@@ -97,3 +96,7 @@ Route :: get('/manage-reports/users/{id}',[UserServices::class , 'showUserReport
 Route :: delete('/manage-reports/users/{id}/delete',[UserController::class , 'destroy'])->middleware('auth');
 
 
+
+Auth::routes();
+
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -22,8 +22,8 @@ class CreateUserWorkplaceTable extends Migration
             $table->string('user_job_title')->nullable();
             $table->timestamps();
             //foreign keys
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('workplace_id')->references('id')->on('work_places');
+            //$table->foreign('user_id')->references('id')->on('users');
+            //$table->foreign('workplace_id')->references('id')->on('work_places');
         });
     }
 

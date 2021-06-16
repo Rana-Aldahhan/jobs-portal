@@ -1,0 +1,225 @@
+.jumbotron {
+    background-image: url("../img/header-img2.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    color: #ecf0f1;
+    margin-bottom: 0px;
+    /* margin-top: 50px; */
+    min-height: 100%;
+}
+
+.mylead {
+    background-color: rgba(52, 73, 94, 0.53);
+}
+
+.my-warning {
+    /* background-color: rgba(231, 74, 60, 0.53) */
+}
+
+.myfontColor {
+    color: #868e96;
+}
+
+#product {
+    background-color: #ecf0f1;
+}
+
+.mypadding {
+    padding-top: 40px;
+}
+
+.myimage {
+    margin-left: 30%;
+}
+
+.mylist {
+    list-style-type: none;
+}
+
+.myText {
+    text-align: center;
+}
+
+.myMargin {
+    margin-top: 100px;
+}
+
+.myPaddingMedia {
+    padding-top: 20px;
+    padding: 35px;
+}
+
+#price {
+    background-color: #ecf0f1;
+    padding-top: 100px;
+}
+
+.mycard2 {
+    padding-top: 80px;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-bottom: 50px;
+}
+
+.business-class {
+    background-image: url("../img/buss1.jpg");
+    min-height: 600px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* color: #ecf0f1;   */
+    padding-top: 1px;
+}
+
+.my-text {
+    font-size: 12px;
+    text-align: justify;
+}
+
+.myBtoo {
+    padding-bottom: 60px;
+}
+
+.business {
+    background: #fff;
+    padding: 10px 10px;
+    border: 1px solid #ececec;
+    box-shadow: 2px 2px 5px 0 rgba(55, 50, 40, 0.2);
+    -webkit-box-shadow: 2px 2px 5px 0 rgba(55, 50, 40, 0.2);
+    -moz-box-shadow: 2px 2px 5px 0 rgba(55, 50, 40, 0.2);
+    -o-box-shadow: 2px 2px 5px 0 rgba(55, 50, 40, 0.2);
+    -ms-box-shadow: 2px 2px 5px 0 rgba(55, 50, 40, 0.2);
+    transition: 0.3s ease-in-out;
+    -moz-transition: 0.3s ease-in-out;
+    -webkit-transition: 0.3s ease-in-out;
+}
+.business:hover {
+    background: #82ca9c;
+    color: #fff;
+}
+.business:hover i {
+    color: #fff;
+}
+.business:hover h4 {
+    color: #fff;
+}
+.business:hover p {
+    color: #fff;
+}
+
+.business i {
+    font-size: 60px;
+    color: #82ca9c;
+    margin-bottom: 20px;
+}
+.business h4 {
+    font-size: 16px;
+    color: #000;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-top: 15px;
+}
+.business p {
+    font-size: 12px;
+    color: #777777;
+}
+
+.myspan {
+    background-color: #34495e;
+    color: #ecf0f1;
+}
+
+#contact {
+    padding-top: 100px;
+    background-color: #ecf0f1;
+}
+
+#footer {
+    padding-top: 80px;
+    padding-bottom: 20px;
+    background-color: #34495e;
+    color: #ecf0f1;
+}
+
+.fixUl {
+    padding-left: 0;
+}
+
+#myinfo {
+    /* background-color: #bdc3c7;
+     padding-top: 100px;
+     padding-bottom: 100px; */
+}
+
+#myteam {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+/*a:hover {
+    color: #B1DBB3;
+}*/
+
+a {
+    color: #8e44ad;
+}
+
+.navbar-light .navbar-nav .active > .nav-link,
+.navbar-light .navbar-nav .nav-link.active,
+.navbar-light .navbar-nav .nav-link.show,
+.navbar-light .navbar-nav .show > .nav-link {
+    color: #2c3e50;
+}
+
+.mysize {
+    width: 100px;
+    height: 600px;
+}
+
+#btnScroll {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 40px;
+    z-index: 99;
+    cursor: pointer;
+    padding: 16px;
+}
+
+@media (max-width: 575px) {
+    h1 {
+        font-size: 16px;
+    }
+    p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 767px) {
+    h1 {
+        font-size: 16px;
+    }
+    p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 991px) {
+    h1 {
+        font-size: 16px;
+    }
+    p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 1199px) {
+    h1 {
+        font-size: 16px;
+    }
+    p {
+        font-size: 16px;
+    }
+}

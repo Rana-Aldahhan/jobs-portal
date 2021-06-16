@@ -15,7 +15,7 @@ class CreateWorkPlacesTable extends Migration
     {
         Schema::create('work_places', function (Blueprint $table) {
             $table->id();
-            $table->string('company_name ');
+            $table->string('company_name');
             $table->timestamps();
         });
     }

@@ -19,8 +19,8 @@ class CreateCompanyUserTable extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->timestamps();
             //foreign keys
-            $table->foreign('company_id')->references('id')->on('companies');
-            $table->foreign('user_id')->references('id')->on('users');
+            //$table->foreign('company_id')->references('id')->on('companies');
+            //$table->foreign('user_id')->references('id')->on('users');
         });
     }
 

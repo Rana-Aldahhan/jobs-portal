@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PositionType;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Company;
@@ -11,6 +12,7 @@ use App\Models\Industry;
 use App\Models\JobOpportunity;
 use App\Models\Message;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 
 //TODO check if logged as company or as user <and redirect back where not allowed>.
 class UserServices extends Controller
@@ -33,7 +35,7 @@ class UserServices extends Controller
     }
     public function explore(Request $request){
         //if logged as company redirect to back
-        if(Auth :: check)
+        if(Auth :: check())
         {
             if (auth()->user()->logged_as_company==true)
             return redirect()->back();
@@ -85,7 +87,14 @@ class UserServices extends Controller
                                 'industries' => $industries]);
 
     }
+    public function showCreateJob(){
+        $skills=\App\Models\Skill::all();
+        $industries =Industry::all();
+        $typeOfPosition=PositionType::all();
+        return view ('create-job',['skills'=>$skills , 'typeOfPosition'=>$typeOfPosition,'industries'=>$industries]);
+    }
     public function postJob(Request $request){
+        dd($request);
         $user=auth()->user();
         //if logged as a company redirect back
         if($user->logged_as_company==true)
@@ -125,6 +134,12 @@ class UserServices extends Controller
 
         $job->save();
         return redirect('/published-jobs');
+    }
+    public function showJobSearch(){
+        $skills=\App\Models\Skill::all();
+        $industries =Industry::all();
+        $typeOfPosition=PositionType::all();
+        return view ('job-search',['skills'=>$skills , 'industries'=>$industries,'typeOfPosition'=>$typeOfPosition]);
     }
     public function showCreateCompany() {
         if (auth()->user()->logged_as_company==true)
@@ -230,6 +245,8 @@ class UserServices extends Controller
         return view('people_search_results', ['searchResults',$searchResults]);
     }
     public function filterJobs(Request  $request){
+        dd(Request());
+        dd($request);
         $user=auth()->user();
         $jobSearchResults=JobOpportunity:: where('expired',false);
 

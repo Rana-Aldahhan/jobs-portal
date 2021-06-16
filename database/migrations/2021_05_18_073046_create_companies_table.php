@@ -28,7 +28,7 @@ class CreateCompaniesTable extends Migration
             $table ->string('profile_thumbnail')->nullable();
             $table->timestamps();
             //foreign keys
-            $table->foreign('industry_id')->references('id')->on('industries');
+            //$table->foreign('industry_id')->references('id')->on('industries');
         });
     }
 

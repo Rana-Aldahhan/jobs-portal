@@ -20,8 +20,8 @@ class CreateColleaguesTable extends Migration
             $table->boolean('approved');
             $table->timestamps();
             //foreign keys
-            $table->foreign('user1_id')->references('id')->on('users');
-            $table->foreign('user2_id')->references('id')->on('users');
+            //$table->foreign('user1_id')->references('id')->on('users');
+            //$table->foreign('user2_id')->references('id')->on('users');
         });
     }
 

@@ -40,10 +40,10 @@ class CreateUsersTable extends Migration
             $table->timestamps();
 
             //foreign keys
-            $table->foreign('current_company_id')->references('id')->on('companies');
-            $table->foreign('school_id')->references('id')->on('schools');
-            $table->foreign('managing_company_id')->references('id')->on('companies');
-            $table->foreign('industry_id')->references('id')->on('industries');
+            //$table->foreign('current_company_id')->references('id')->on('companies');
+            //$table->foreign('school_id')->references('id')->on('schools');
+            //$table->foreign('managing_company_id')->references('id')->on('companies');
+            //$table->foreign('industry_id')->references('id')->on('industries');
         });
     }
 

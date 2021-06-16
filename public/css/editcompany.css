@@ -1,0 +1,27 @@
+.sp {
+    padding-left: 70px;
+}
+.bc {
+    padding-top: 20px;
+    background-color: #f5f5f5;
+}
+/*.bc1{
+
+    background-color: #00838F;
+}*/
+.sp1 {
+    padding-top: 170px;
+    margin-bottom: 20px;
+}
+.sp11 {
+    padding-top: 170px;
+    margin-left: -280px;
+}
+@media (max-width: 800px) {
+    .sp11 {
+        margin-left: 0px;
+    }
+}
+.fc {
+    background-color: #f5f5f5;
+}
