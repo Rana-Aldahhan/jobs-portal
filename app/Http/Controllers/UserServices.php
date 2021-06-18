@@ -94,7 +94,7 @@ class UserServices extends Controller
         return view ('create-job',['skills'=>$skills , 'typeOfPosition'=>$typeOfPosition,'industries'=>$industries]);
     }
     public function postJob(Request $request){
-        dd($request);
+
         $user=auth()->user();
         //if logged as a company redirect back
         if($user->logged_as_company==true)
@@ -102,17 +102,19 @@ class UserServices extends Controller
             return redirect()->back();
         }
         //validation
-        $this->validate($request, [
-            'title' => 'required|alpha',
-            'remote'=>'boolean|required',
+
+       $this->validate($request, [
+            'title' => 'required|string',
+            'remote'=>'required',
             'transport'=>'boolean',
-            'city'=>'alpha',
-            'country'=>'alpha',
+            'city'=>'alpha|nullable',
+            'country'=>'alpha|nullable',
             'role'=> 'required|alpha',
             'experience'=>'required|numeric',
             'salary'=>'required|numeric',
-            'description'=>'required'
+            'description'=>'required',
         ]);
+
         //make an new instance
         //job attributes
         $job = new JobOpportunity();
@@ -122,12 +124,12 @@ class UserServices extends Controller
         $job->city=$request->input('city');
         $job->country=$request->input('country');
         $job->role=$request->input('role');
-        $job->required_experience=$request->inut('experience');
+        $job->required_experience=$request->input('experience');
         $job->salary=$request->input('salary');
         $job->description=$request->input('description');
         //job relations
-        $job->industry()->attach($request->input('industry'));
-        $job->typeOfPosition()->attach($request->input('position'));
+        $job->industry()->associate($request->input('industries'));
+        $job->typeOfPosition()->associate($request->input('position'));
         $job->requiredSkills()->attach($request->input('skills'));
         $job->publishable_id=$user->id;
         $job->publishable_type='App\Models\User';
@@ -142,6 +144,7 @@ class UserServices extends Controller
         return view ('job-search',['skills'=>$skills , 'industries'=>$industries,'typeOfPosition'=>$typeOfPosition]);
     }
     public function showCreateCompany() {
+        $industries=Industry::all();
         if (auth()->user()->logged_as_company==true)
             return redirect()->back();
         $is_managing_company =false;
@@ -150,10 +153,11 @@ class UserServices extends Controller
             $is_managing_company = true;
             return view('/home',['is_managing_company'=> $is_managing_company])->with ('warning','you can only create one company');
         }
-        return view('create-company',['is_managing_company'=> $is_managing_company]);
+        return view('create-company',['is_managing_company'=> $is_managing_company,'industries'=>$industries]);
 
     }
     public function postCompany(Request $request){
+        dd($request);
         //validation
         $this->validate($request , [
             'name'=>'required',
@@ -162,7 +166,7 @@ class UserServices extends Controller
             'phone_number'=>'unique|required|numeric',
             'employees_count'=>'numeric|required',
             'city'=>'alpha|required',
-            'country'=>'alpha| required',
+            'country'=>'alpha|required',
         ]);
         //company's attributes
         $company= new Company();
@@ -183,6 +187,9 @@ class UserServices extends Controller
         $managing_users= User :: whereIn('email',$request->input('managing_users_emails'))->get();
         $company-> managingUsers()->attach($managing_users);
         $company->save();
+
+        $user=auth()->user()->logged_as_company=true;
+        $user->save();
 
         return redirect('/company-home');
     }
@@ -245,8 +252,8 @@ class UserServices extends Controller
         return view('people_search_results', ['searchResults',$searchResults]);
     }
     public function filterJobs(Request  $request){
-        dd(Request());
-        dd($request);
+
+        dd($request->isNotFilled('city'));
         $user=auth()->user();
         $jobSearchResults=JobOpportunity:: where('expired',false);
 

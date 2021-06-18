@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Skill;
 use App\Models\School;
 use App\Models\Language;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -27,16 +28,21 @@ class UserController extends Controller
         //count users reaches to this profile of the last month
 
         //delete every reach created before a month
-        $expired_reaches=$user->userViewers()->where('created_at','>',now()->subDays(30))->get();//
-        $expired_reaches->delete();
+        //$expired_reaches=$user->userViewers()->wherePivot('created_at','<',now()->subDays(30))->delete();//
+        //TODO edited warning
+        $user->userViewers()->detach($user->userViewers()->wherePivot('created_at','<',now()->subDays(30))->get());
+        //$expired_reaches->delete();
+
         //count this month reaches with distinct viewers
         $usersReachCount=DB :: table('user_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();
 
         //count company reaches to this profile of the last month
 
         //delete every reach created before a month
-        $expired_reaches=$user->companyViewers()->where('created_at', '>',now()->subDays(30))->get();
-        $expired_reaches->delete();
+        //$expired_reaches=$user->companyViewers()->where('created_at', '<',now()->subDays(30))->get();
+        $user->companyViewers()->detach($user->companyViewers()->wherePivot('created_at','<',now()->subDays(30))->get());
+        //$expired_reaches->delete();
+
         //count this month reaches with distinct viewers
         $companyReachCount=DB :: table('user_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();
 
@@ -87,14 +93,17 @@ class UserController extends Controller
      */
     public function show($id)
     {
+
         $loggedUser=auth()->user();//can be null
+        if($id == $loggedUser->id)
+            return redirect('/profile');
         $user=User::find($id);
         $school=$user->school;
         $skills=$user->skills;
         $workPlaces=$user->workPlaces;
         $languages=$user->languages;
         $colleagues=$user->sentColleagues()->where('approved',true)->get();
-        $colleagues=$colleagues->push($user->recievedColleagues()->where('approved',true)->get());
+        $colleagues=$colleagues->push($user->receivedColleagues()->where('approved',true)->get());
         $colleagues=$colleagues->flatten();
         $userPublishedJobs=$user->publishedJobs;
 
@@ -110,7 +119,7 @@ class UserController extends Controller
             {
                 //show colleagues states
                 $sender=$loggedUser->sentColleagues()->find($id);
-                $received=$loggedUser->recievedColleagues()->find($id);
+                $received=$loggedUser->receivedColleagues()->find($id);
                 if(!is_null($sender) || !is_null($received))// case a user has sent a colleague request to another
                 {
                     $showAddColleagues=false;
@@ -126,6 +135,7 @@ class UserController extends Controller
                 //show message in case a user has applied and has been approved to another user job
                 $acceptor=$loggedUser->userAcceptors()->find($id);
                 $acceptant=$loggedUser->userAcceptants()->find($id);
+
                 if(!is_null($acceptor) || !is_null($acceptant))
                 {
                     $showMessage=true;
@@ -147,7 +157,7 @@ class UserController extends Controller
                 $user->companyViewers()->attach($company);
             }
         }
-        return view('showUser',['loggedUser'=>$loggedUser,'user'=>$user,'school'=>$school,'skills'=>$skills, 'workPlaces'=>$workPlaces,
+        return view('show-user',['loggedUser'=>$loggedUser,'user'=>$user,'school'=>$school,'skills'=>$skills, 'workPlaces'=>$workPlaces,
         'languages'=>$languages, 'colleagues'=>$colleagues,'userPublishedJobs'=> $userPublishedJobs,
         'showAddColleagues'=>$showAddColleagues,'showCancelRequest'=>$showCancelRequest,'showApprovedButton'=>$showApproveButton,
         'showMessage'=>$showMessage]) ;
@@ -157,7 +167,6 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit()//edit's form
     {

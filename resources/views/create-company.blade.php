@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="{{asset('css/createacompany.css')}}">
 
 
-    
+
 </head>
 <body>
 
 
  <!--navbar user-->
- 
+
  @extends('headerwithsigin')
 
  @section('cont')
@@ -33,7 +33,8 @@
 
 
 
-<form class="needs-validation formstyle" novalidate>
+<form enctype="multipart/form-data" class="needs-validation formstyle" novalidate method="post" action="\create-company" >
+    @csrf
 <h4 class="hstyle">welcome to the create company wizard</h4>
 <div class="container">
   <div class="form-row  ">
@@ -42,7 +43,7 @@
     </div>
     <div class="col-md-3 mb-2">
     <label class="custom-file">
-        <input type="file" id="file" class="custom-file-input">
+        <input type="file" id="file" class="custom-file-input" name="company-logo">
         <span class="custom-file-control"></span>
       </label>
     </div>
@@ -90,10 +91,9 @@
   </div>
     <div class="col-md-3 mb-3">
     <select class="custom-select" required>
-      <option value="">Open this select menu</option>
-      <option value="1">One</option>
-      <option value="2">Two</option>
-      <option value="3">Three</option>
+        @foreach($industries as $industry)
+            <option value="{{$industry->id}}"> {{$industry->title}} </option>
+        @endforeach
     </select>
     </div>
   </div>
@@ -163,7 +163,7 @@
       </div>
     </div>
     <button class="btn btn-outline-info" type="submit">create the company</button>
-  
+
 </div>
 </form>
 <!--end create a company account -->

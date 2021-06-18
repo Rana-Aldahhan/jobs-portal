@@ -50,7 +50,7 @@ class Company extends Model
     }
     public function userViewings()
     {
-        return $this->belongsToMany(User:: class,'company_user_views','viewing_id','viewer_id');
+        return $this->belongsToMany(User:: class,'company_user_views','viewing_id','viewer_id')->withTimestamps();
     }
     public function userAcceptants()
     {

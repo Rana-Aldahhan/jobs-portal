@@ -121,10 +121,17 @@
 .nav-menu .stylego h6 {
     display: flex;
     align-items: center;
-    color: #686565;
+    color: #9c27b0;
     padding: 10px 12px;
     margin-bottom: 5px;
     font-size: 15px;
+}
+.nav-menu .stylego svg {
+    color: #9c27b0;
+}
+.nav-menu .stylego :hover h6,
+.nav-menu .stylego :hover svg {
+    color: #ce93d8;
 }
 
 .styleabout h4 {
@@ -140,7 +147,7 @@
 
 .styleabout .styleh {
     font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+    "Lucida Sans", Arial, sans-serif;
     font-size: 25px;
     color: #546e7a;
     padding-bottom: 10px;
@@ -151,7 +158,7 @@
 
 .styleabout h6 {
     font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+    "Lucida Sans", Arial, sans-serif;
     font-size: 18px;
     color: #757575;
     padding-bottom: 10px;
@@ -213,7 +220,6 @@
 .contact .info .social-links {
     padding-left: 60px;
 }
-
 .contact .info .social-links a {
     font-size: 18px;
     display: inline-block;
@@ -243,8 +249,8 @@
 /********************chosenwork****************************/
 .stylechosen h6 {
     font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
-    font-size: 25;
+    "Lucida Sans", Arial, sans-serif;
+    font-size:25px;
     color: #455a64;
 }
 .stylechosen p {

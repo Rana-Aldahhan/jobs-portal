@@ -87,7 +87,7 @@ class User extends Authenticatable
     }
     public function savedJobs()
     {
-        return $this->belongToMany(JobOpportunity :: class,'saved_jobs','user_id','job_id');
+        return $this->belongsToMany(JobOpportunity :: class,'saved_jobs','user_id','job_id');
     }
     public function notifyingCompanies()
     {
@@ -115,23 +115,23 @@ class User extends Authenticatable
     }
     public function userViewers()
     {
-        return $this->belongsToMany(User:: class,'user_user_views','viewing_id','viewer_id' )->withTimestamps;
+        return $this->belongsToMany(User:: class,'user_user_views','viewing_id','viewer_id' )->withTimestamps();
     }
     public function companyViewers()
     {
-        return $this->belongsToMany(User:: class,'company_user_views','viewing_id','viewer_id' );
+        return $this->belongsToMany(User:: class,'company_user_views','viewing_id','viewer_id' )->withTimestamps();
     }
     public function userViewings()
     {
-        return $this->belongsToMany(User:: class,'user_user_views','viewer_id','viewing_id');
+        return $this->belongsToMany(User:: class,'user_user_views','viewer_id','viewing_id')->withTimestamps();
     }
     public function jobViewings()
     {
-        return $this->belongsToMany(User:: class,'user_job_views','viewer_id','viewing_id');
+        return $this->belongsToMany(User:: class,'user_job_views','viewer_id','viewing_id')->withTimestamps();
     }
-    public function userAcceptant()
+    public function userAcceptants()
     {
-        return $this->belongsToMany(User :: class ,'user_user_acceptants','acceptant_id','acceptor_id');
+        return $this->belongsToMany(User :: class ,'user_user_acceptants','acceptant_id','acceptor_id')->withTimestamps();
     }
     public function userAcceptors()
     {

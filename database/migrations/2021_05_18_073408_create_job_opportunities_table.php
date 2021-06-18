@@ -23,7 +23,7 @@ class CreateJobOpportunitiesTable extends Migration
             $table->string('title');
             $table->longText('description');
             $table->boolean('remote');
-            $table->boolean('transportation');
+            $table->boolean('transportation')->nullable();
             $table->integer('salary');
             $table->string('city')->nullable();
             $table->string('country')->nullable();

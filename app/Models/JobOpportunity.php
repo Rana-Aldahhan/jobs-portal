@@ -10,11 +10,11 @@ class JobOpportunity extends Model
     use HasFactory;
     public function industry()//morph later
     {
-        return $this->belongsTo(Industry:: class,'industry_job','job_id','industry_id');
+        return $this->belongsTo(Industry:: class);//'job_id','industry_id');
     }
     public function typeOfPosition()
     {
-        return $this->belongsTo(PositionType :: class);
+        return $this->belongsTo(PositionType :: class,'positionType_id',);
     }
     public function requiredSkills()//morph later
     {

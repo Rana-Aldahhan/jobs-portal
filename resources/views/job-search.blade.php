@@ -25,7 +25,11 @@
 
 
  <!--navbar user-->
- @extends('headerwithsigin')
+ @if(Auth:: check())
+     @extends('headerwithsigin')
+ @else
+     @extends('userheader')
+ @endif
 
  @section('cont')
 
@@ -65,7 +69,7 @@
                 <div class="sss">
                     <select data-placeholder="Job industry" class="chosen-select form-select mt-3"name="industries[]"  required>
                         @foreach($industries as $industry)
-                            <option value="{{$industry->id}}">{{$industry->name}}</option>
+                            <option value="{{$industry->id}}">{{$industry->title}}</option>
                         @endforeach
                     </select>
                 </div>
