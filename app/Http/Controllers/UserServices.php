@@ -105,11 +105,11 @@ class UserServices extends Controller
 
        $this->validate($request, [
             'title' => 'required|string',
-            'remote'=>'required',
+            'remote'=>'nullable',
             'transport'=>'boolean',
             'city'=>'alpha|nullable',
             'country'=>'alpha|nullable',
-            'role'=> 'required|alpha',
+            'role'=> 'required|string',
             'experience'=>'required|numeric',
             'salary'=>'required|numeric',
             'description'=>'required',
@@ -127,14 +127,16 @@ class UserServices extends Controller
         $job->required_experience=$request->input('experience');
         $job->salary=$request->input('salary');
         $job->description=$request->input('description');
-        //job relations
-        $job->industry()->associate($request->input('industries'));
-        $job->typeOfPosition()->associate($request->input('position'));
-        $job->requiredSkills()->attach($request->input('skills'));
         $job->publishable_id=$user->id;
         $job->publishable_type='App\Models\User';
 
         $job->save();
+
+        //job relations
+        $job->industry()->associate($request->input('industries'));
+        $job->typeOfPosition()->associate($request->input('position'));
+        $job->requiredSkills()->attach($request->input('skills'));
+
         return redirect('/published-jobs');
     }
     public function showJobSearch(){
@@ -203,9 +205,12 @@ class UserServices extends Controller
     public function publishedJobs(){
         if (auth()->user()->logged_as_company==true)
             return redirect()->back();
-        $user = auth()->user();
-        $publishedJobs=$user->publishedJobs;
-        return view('user_published_jobs',['user' => $user , 'publishedJobs' => $publishedJobs]);
+        $user = auth()->user()->load(['publishedJobs.requiredSkills','publishedJobs.industry']);
+       //$publishedJobs=$user->publishedJobs;
+      // $publishedJobs->load(['requiredSkills','industry']);
+        //TODO see why not sorting wel
+        $user->publishedJobs->sortByDesc('updated_at');
+        return view('user_published_jobs',['user' => $user]);//,'publishedJobs' => $publishedJobs]);
     }
     public function appliedJobs(){
         if (auth()->user()->logged_as_company==true)

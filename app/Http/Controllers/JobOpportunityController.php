@@ -270,15 +270,15 @@ class JobOpportunityController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $job=JobOpportunity :: find($id);
         $job->delete();
+
         if(auth()->user()->logged_as_company==false)
         {
-            return redirect('/profile/published_jobs');
+            return redirect('/published-jobs');
         }
         else {
             return redirect('/company/manage-jobs');

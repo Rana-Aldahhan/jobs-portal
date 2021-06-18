@@ -58,7 +58,7 @@ Route :: post('/companies/{id}/messages',[UserServices :: class ,'sendMessageToC
 Route :: get('/jobs/{id}',[JobOpportunityController :: class ,'show']);
 Route :: get ('/jobs/{id}/edit',[JobOpportunityController :: class ,'edit'])->middleware('auth');
 Route :: put ('/jobs/{id}/edit',[JobOpportunityController :: class ,'update'])->middleware('auth');
-Route :: delete('/jobs/{id}/delete',[JobOpportunityController :: class ,'destroy'])->middleware('auth');
+Route :: get('/jobs/{id}/delete',[JobOpportunityController :: class ,'destroy'])->middleware('auth');//TODO stupid move changed from delete to get method
 
 Route :: post('/jobs/{id}/apply',[UserServices :: class ,'applyJob'])->middleware('auth');//apply to a job
 Route :: delete('/job/{id}/withdraw-application',[UserServices :: class ,'withdrawApplication'])->middleware('auth');//apply to a job
