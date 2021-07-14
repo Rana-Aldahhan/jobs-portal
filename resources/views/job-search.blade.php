@@ -25,11 +25,9 @@
 
 
  <!--navbar user-->
- @if(Auth:: check())
-     @extends('headerwithsigin')
- @else
-     @extends('userheader')
- @endif
+
+ @extends('userheader')
+
 
  @section('cont')
 
@@ -67,7 +65,8 @@
 
             <div class="col-md-12 space">
                 <div class="sss">
-                    <select data-placeholder="Job industry" class="chosen-select form-select mt-3"name="industries[]"  required>
+                    <select data-placeholder="Job industry" class="chosen-select form-select mt-3"name="industries"  >
+                        <option hidden disabled selected value> -- select an option -- </option>
                         @foreach($industries as $industry)
                             <option value="{{$industry->id}}">{{$industry->title}}</option>
                         @endforeach
@@ -78,7 +77,8 @@
 
             <div class="col-md-12 space">
               <div class="sss">
-                <select multiple data-placeholder="Your Skills" class="chosen-select form-select mt-3" name="skills[]"  required>
+                <select multiple data-placeholder="Your Skills" class="chosen-select form-select mt-3" name="skills[]"  >
+
                     @foreach($skills as $skill)
                       <option value="{{$skill->id}}">{{$skill->title}}</option>
                     @endforeach
@@ -90,7 +90,8 @@
 
             <div class="col-md-12 space">
               <div class="sss">
-            <select data-placeholder="Type of job position" class="chosen-select form-select mt-3"name="typeOfPosition[]"  required>
+            <select data-placeholder="Type of job position" class="chosen-select form-select mt-3"name="typeOfPosition"  >
+                <option hidden disabled selected value> -- select an option -- </option>
                 @foreach($typeOfPosition as $position)
                     <option value="{{$position->id}}">{{$position->name}}</option>
                 @endforeach

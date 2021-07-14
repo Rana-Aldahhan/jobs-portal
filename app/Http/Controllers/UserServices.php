@@ -136,7 +136,8 @@ class UserServices extends Controller
         $job->industry()->associate($request->input('industries'));
         $job->typeOfPosition()->associate($request->input('position'));
         $job->requiredSkills()->attach($request->input('skills'));
-
+        $job->save();
+        //TODO added save to the end
         return redirect('/published-jobs');
     }
     public function showJobSearch(){
@@ -258,59 +259,82 @@ class UserServices extends Controller
     }
     public function filterJobs(Request  $request){
 
-        dd($request->isNotFilled('city'));
         $user=auth()->user();
-        $jobSearchResults=JobOpportunity:: where('expired',false);
+        $jobSearchResults=JobOpportunity:: where('expired',false)->get();
 
         //filter results to match the request
+        //dd($request);
+        /*$jobSearchResults=$jobSearchResults->when(!$request->isNotFilled('remote'),function($jobSearchResults){
+            $jobSearchResults=$jobSearchResults->filter(function ($job ){
+                return $job->remote == request('remote');
+            });
+        });*/
 
-        $jobSearchResults=$jobSearchResults->when($request->input('remote'),function($jobSearchResults, $request){
-            $jobSearchResults->filter(function ($job , $request){
-                return $job->remote == $request->input('remote');
+        if(!$request->isNotFilled('remote'))
+        {
+            $jobSearchResults=$jobSearchResults->filter(function ($job ){
+                return $job->remote == request('remote');
             });
-        });
-        $jobSearchResults=$jobSearchResults->when($request->input('city'),function($jobSearchResults, $request){
-            $jobSearchResults->filter(function ($job , $request){
-                return $job->city == $request->input('city');
+        }
+        if(!$request->isNotFilled('city'))
+        {
+            $jobSearchResults=$jobSearchResults->filter(function ($job ){
+                return $job->city == request('city');
             });
-        });
-        $jobSearchResults=$jobSearchResults->when($request->input('country'),function($jobSearchResults, $request){
-            $jobSearchResults->filter(function ($job , $request){
-                return $job->country == $request->input('country');
+        }
+        if(!$request->isNotFilled('country'))
+        {
+            $jobSearchResults=$jobSearchResults->filter(function ($job ){
+                return $job->country == request('country');
             });
-        });
-        $jobSearchResults=$jobSearchResults->when($request->input('industry'),function($jobSearchResults, $request){
-            $jobSearchResults->filter(function ($job , $request){
-                return $job->industry == $request->input('industry');
+        }
+        if(!$request->isNotFilled('industries'))
+        {
+            $jobSearchResults=$jobSearchResults->filter(function ($job ){
+                //dd($job->industry);
+                return $job->industry->id == request('industries');
             });
-        });
-        $jobSearchResults=$jobSearchResults->when($request->input('typeOfPosition'),function($jobSearchResults, $request){
-            $jobSearchResults->filter(function ($job , $request){
-                return $job->typeOfPosition == $request->input('typeOfPosition');
+        }
+        if(!$request->isNotFilled('typeOfPosition'))
+        {
+            $jobSearchResults=$jobSearchResults->filter(function ($job ){
+
+                return $job->typeOfPosition->id == request('typeOfPosition');
             });
-        });
-        $jobSearchResults=$jobSearchResults->when($request->input('required_experience'),function($jobSearchResults, $request){
-            $jobSearchResults->filter(function ($job , $request){
-                return $job->required_experience == $request->input('required_experience');
+        }
+        if(!$request->isNotFilled('required_experience'))
+        {
+            $jobSearchResults=$jobSearchResults->filter(function ($job ){
+                return $job->required_experience == request('required_experience');
             });
-        });
-        $jobSearchResults=$jobSearchResults->when($request->input('salary'),function($jobSearchResults, $request){
-            $jobSearchResults->filter(function ($job , $request){
-                return $job->salary == $request->input('salary');
+        }
+        if(!$request->isNotFilled('salary'))
+        {
+            $jobSearchResults=$jobSearchResults->filter(function ($job ){
+                return $job->salary == request('salary');
             });
-        });
-        $jobSearchResults=$jobSearchResults->when($request->input('transportation'),function($jobSearchResults, $request){
-            $jobSearchResults->filter(function ($job , $request){
-                return $job->transportation == $request->input('transportation');
-            });
-        });
-        if(!is_null($request->input('skills') )) {//TODO sort by request's specification
-            $jobSearchResults = $jobSearchResults->sortBy(function ($job, $request) {
-                return count($request->input('skills')->diff($job->requiredSkills));
+        }
+        if(!$request->isNotFilled('transport'))
+        {
+            $jobSearchResults=$jobSearchResults->filter(function ($job ){
+                return $job->transportation == request('transport');
             });
         }
 
+        if(!is_null($request->input('skills') )) {//TODO sort by request's specification
+            //TODO explain the changes
+            $jobSearchResults = $jobSearchResults->sortBy([
+                function ($job){
+                    return count( collect( request('skills') )->diff( $job->requiredSkills ->modelKeys() )  );
+                },
+                function ($job) {
+                return count( collect( $job->requiredSkills ->modelKeys() )->diff( request('skills')));
+            }
+                ]);
+        }
         $jobSearchResults->load(['industry','typeOfPosition','requiredSkills','publishable']);
+        //dd($jobSearchResults);
+        //TODO reject all jobs published by user
 
         return view('job_search_results',['user'=>$user,'jobSearchResults'=>$jobSearchResults]);
     }
@@ -394,15 +418,17 @@ class UserServices extends Controller
         $notification->body= 'The user ' . $user->name .' has applied to a job you published ,with the title'  .$job->title . 'of the ID '.$job->id;
         $notification->causable_id=$user->id;
         $notification->causable_type='App\Models\User';
-        $notification->recievable_id=$job->publishable_id;
+        $notification->notifiable_id=$job->publishable_id;
         if($job->publishable_type=='App\Models\User')//case the publisher is a user
         {
-            $notification->recievable_type='App\Models\User';
+            $notification->notifiable_type='App\Models\User';
         }
         else {
-            $notification->recievable_type='App\Models\Company';
+            $notification->notifiable_type='App\Models\Company';
         }
-        return redirect ('/jobs/{id}' ,['id'=>$id]);
+        $notification->notification_url='/users/'.$user->id;
+        $notification->save();
+        return redirect ('/jobs/'.$id);
     }
     public function withdrawApplication($id){
         $user=auth()->user();
@@ -411,22 +437,31 @@ class UserServices extends Controller
         //TODO delete related  notification
         $notification=Notification::where ('causable_id',$user->id)
                                     ->where('causable_type','App\Models\User')
-                                    ->where('receivable_id',$job->publishable_id)
-                                    ->where('receivable_type',$job->publishable_type)
-                                    ->get();
-        $notification->delete();
-        return redirect('\jobs\{id}',['id',$id]);
+                                    ->where('notifiable_id',$job->publishable_id)
+                                    ->where('notifiable_type',$job->publishable_type)
+                                    ->delete();
+        $previousPath =str_replace(url('/'), '', url()->previous());
+        if ( $previousPath == '/jobs/'.$id)//TODO mention changes
+            return redirect('/jobs/'.$id);
+        else
+            return redirect('/applied-jobs');
+
     }
     public function saveJob($id){
         //TODO check if logged as company
         $user=auth()->user();
         $user->savedJobs()->attach($id);
-        return redirect('/jobs/{id}',['id',$id]);
+        return redirect('/jobs/'.$id);//,['id',$id]);
     }
     public function unsaveJob($id){
         $user=auth()->user();
         $user->savedJobs()->detach($id);
-        return redirect('/jobs/{id}',['id',$id]);
+        $previousPath =str_replace(url('/'), '', url()->previous());
+        if ($previousPath == '/jobs/'.$id )//TODO mention changes
+            return redirect('/jobs/'.$id);
+        else
+            return redirect('/saved-jobs');
+
     }
     public function addColleague ($id){
         $loggedUser=auth()->user;

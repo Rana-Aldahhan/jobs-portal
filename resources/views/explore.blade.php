@@ -21,11 +21,13 @@
 
 
 <!--navbar user-->
-@if(Auth:: check())
-@extends('headerwithsigin')
-@else
-@extends('userheader')
-@endif
+
+
+    @extends('userheader')
+
+
+
+
 
 @section('cont')
 

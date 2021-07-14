@@ -17,7 +17,7 @@ class CreateColleaguesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user1_id')->nullable();
             $table->unsignedBigInteger('user2_id')->nullable();
-            $table->boolean('approved');
+            $table->boolean('approved')->default(false);
             $table->timestamps();
             //foreign keys
             //$table->foreign('user1_id')->references('id')->on('users');

@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route :: get('/', function () {
-    return view('welcome');
+    return redirect('/home');
 });
-Route::get('/1',function (){return view('show-user');});
+Route::get('/1',function (){return view('');});
 Route :: put('/switch-to-company-account',[UserServices :: class ,'switchToCompanyAccount'])->middleware('auth');
 Route :: put('/switch-to-user-account',[CompanyServices :: class ,'switchToUserAccount'])->middleware('auth');
 Route :: get('/home',function (){if(Auth::check()) return view('withAuthHome'); else return view ('withoutAuthHome');});
@@ -58,12 +58,12 @@ Route :: post('/companies/{id}/messages',[UserServices :: class ,'sendMessageToC
 Route :: get('/jobs/{id}',[JobOpportunityController :: class ,'show']);
 Route :: get ('/jobs/{id}/edit',[JobOpportunityController :: class ,'edit'])->middleware('auth');
 Route :: put ('/jobs/{id}/edit',[JobOpportunityController :: class ,'update'])->middleware('auth');
-Route :: get('/jobs/{id}/delete',[JobOpportunityController :: class ,'destroy'])->middleware('auth');//TODO stupid move changed from delete to get method
+Route :: delete('/jobs/{id}/delete',[JobOpportunityController :: class ,'destroy'])->middleware('auth');//TODO stupid move changed from delete to get method
 
 Route :: post('/jobs/{id}/apply',[UserServices :: class ,'applyJob'])->middleware('auth');//apply to a job
-Route :: delete('/job/{id}/withdraw-application',[UserServices :: class ,'withdrawApplication'])->middleware('auth');//apply to a job
+Route :: delete('/jobs/{id}/withdraw-application',[UserServices :: class ,'withdrawApplication'])->middleware('auth');//apply to a job
 Route :: post('/jobs/{id}/save',[UserServices :: class ,'saveJob'])->middleware('auth');//add job to save list
-Route :: delete('/job/{id}/unsave',[UserServices :: class ,'unsaveJob'])->middleware('auth');//delete a job from saved list
+Route :: delete('/jobs/{id}/unsave',[UserServices :: class ,'unsaveJob'])->middleware('auth');//delete a job from saved list
 
 Route :: get('/jobs/{id}/applicants',[JobOpportunityController :: class ,'showApplicants'])->middleware('auth');//show job's applicants
 Route :: put('/jobs/{jobID}/applicants/{userID}',[JobOpportunityController :: class ,'approveApplicant'])->middleware('auth');//approve a user application

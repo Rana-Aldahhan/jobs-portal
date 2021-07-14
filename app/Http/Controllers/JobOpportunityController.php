@@ -138,10 +138,12 @@ class JobOpportunityController extends Controller
                     $show_edit_delete_applicants_buttons = true;
                     //count the last month's reaches
                     //delete every reach created before a month
-                    $expired_reaches=$job->userViewers()->where('created_at', '>',now()->subDays(30))->get();
-                    $expired_reaches->delete();
+                    //TODO edits
+                    $job->userViewers()->detach($job->userViewers()->wherePivot('created_at','<',now()->subDays(30))->get());
+                    //$expired_reaches=$job->userViewers()->where('created_at', '>',now()->subDays(30))->get();
+                    //$expired_reaches->delete();
                     //count this month reaches with distinct viewers
-                    $reachCount=DB :: table('user_job_views')->select('user_id')->where('job_id',$job->id)->distinct()->get()->count();
+                    $reachCount=DB :: table('user_job_views')->select('viewing_id')->where('viewer_id',$job->id)->distinct()->get()->count();
 
                 }
                 else//the logged user is not the publisher of the job

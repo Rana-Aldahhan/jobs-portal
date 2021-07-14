@@ -17,7 +17,7 @@ class CreateApplicationTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('job_id')->nullable();
-            $table->boolean('approved');
+            $table->boolean('approved')->default(false);
             $table->timestamps();
             //foreign keys
             //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

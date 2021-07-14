@@ -94,7 +94,7 @@
              </div>
 
              <div class="form-group col-md-6 first">
-                 <label for="inputLastName">Field<span>*</span>  </label>
+                 <label for="inputLastName">Industry field<span>*</span>  </label>
 
                  <select data-placeholder="Job industry"  class="chosen-select  form-select mt-3 form-control" name="industries" >
                      @foreach($industries as $industry)
@@ -125,7 +125,7 @@
 
 
              <div class="form-group col-md-6 first">
-                 <label for="inputLastName">type of job position <span>*</span>  </label>
+                 <label for="inputLastName">Type of job position <span>*</span>  </label>
 
                  <select   class="chosen-select  form-select mt-3 form-control" name="position" required="">
                      @foreach($typeOfPosition as $position)
@@ -142,7 +142,7 @@
              </div>
 
             <div class="form-group col-md-6 first">
-             <label for="inputLastName">Required Experience<span>*</span>
+             <label for="inputLastName">Required years of  experience<span>*</span>
             </label> <input type="text" class="form-control @error('experience') is-invalid @enderror" id="inputrequiredexperience" name="experience" value="{{old('experience')}}">
                 @error('experience')
                 <p class="help-block is-invalid">{{$errors->first('experience')}}</p>
@@ -154,7 +154,7 @@
 
 
          <div class="form-group col-md-6 first">
-             <label for="inputLastName">Salary<span>*</span>
+             <label for="inputLastName">Salary estimated in k$:<span>*</span>
             </label> <input type="text" class="form-control @error('salary') is-invalid @enderror" id="inputsalary" name="salary" value="{{old('salary')}}">
              @error('salary')
              <p class="help-block is-invalid">{{$errors->first('salary')}}</p>
