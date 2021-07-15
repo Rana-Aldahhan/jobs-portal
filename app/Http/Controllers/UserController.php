@@ -10,6 +10,7 @@ use App\Models\School;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -179,7 +180,6 @@ class UserController extends Controller
         $user_languages = $user->languages;
         $user_school=$user->school;
         $user_workplaces=$user->workPlaces;
-
         return view('profile-edit', ['user' => $user , 'skills' => $skills ,'languages' => $languages,
                                      'user_languages' => $user_languages , 'user_skills' =>$user_skills,
                                      'school'=>$user_school,'workplaces'=>$user_workplaces]);
@@ -194,22 +194,22 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
+        //dd($request);
         $id= auth()->user()->id;
         $user= User :: find( $id);
 
         //validation
-        $this->validate ($request , [
-            'name' => 'required | alpha' ,
-            'email' => 'required | unique |email',
-            'birth-date' => 'date' ,
-            'phone-number' => 'numeric' ,
-            'city' => 'alpha' ,
-            'country' => 'alpha' ,
-            'looking-for-job' => 'boolean',
-            'years-of-experience' => 'numeric',
-            'role'=>'alpha',
-            'current-job-title' => 'alpha',
-            'current-company-name' => 'alpha',
+        $this->validate($request,[
+            'name' => 'required|regex:/^[\pL\s\-]+$/u',
+            'email' => ['required','email',Rule::unique('users')->ignore($user->id)],
+            'birth-date' => 'date|nullable' ,
+            'phone-number' => 'numeric|nullable' ,
+            'city' => 'alpha|nullable' ,
+            'country' => 'alpha|nullable' ,
+            'school'=>'regex:/^[\pL\s\-]+$/u|nullable',
+            'years-of-experience' => 'numeric|nullable',
+            'current-job-title' => 'regex:/^[\pL\s\-]+$/u|nullable',
+            'current-company-name' => 'regex:/^[\pL\s\-]+$/u|nullable',
         ]);
 
         // TODO image process
@@ -217,36 +217,36 @@ class UserController extends Controller
 
         //edit
         $user->name= $request->input('name');
-        $user->current_job_title=$request->input('current_job_title');
+        $user->current_job_title=$request->input('current-job-title');
         //process current company
-        $company=Company :: find(request()->input('current_company_name'));
+        $company=Company :: find(request()->input('current-company-name'));
         if(!is_null($company))
         {
             $user->current_company_id = $company->id;
-
         }
-        $user->current_company_name=request()->input('current_company_name');
-        $user->role= request() -> input('role');
-        $user->current_job_title=request()->input('current_job_title');
+        $user->current_company_name=request()->input('current-company-name');
+        $user->current_job_title=request()->input('current-job-title');
         $user->city = request()->input('city');
         $user->country= request()->input('country');
         $user->looking_for_job=request()->input('looking-for-job');
         $user->about= request()->input('about');
+        $user->birth_date=request()->input('birth_date');
         //search for a school with the same input name
-        $school=School :: where('name' ,request()->input('school'));
+        $school=School :: where('name' ,request()->input('school'))->get();
         //case there is a school of the same name
-        if(!is_null($school))
+        if($school->count()!=0)
         {
             //no school is set before
             if($user->school == null)
-                { $user->current_school_id = $school->id;
+                {
+                    $user->school_id = $school[0]->id;
                 }
             //school is set before
             else
             {    //set school is different from input
-                if($user->school->name != $school->name)
+                if($user->school->name != $school[0]->name)
                 {
-                    $user->current_school_id = $school->id;
+                    $user->school_id = $school[0]->id;
                 }
 
             }
@@ -257,12 +257,17 @@ class UserController extends Controller
             $school->name= request()->input('school');
             $school->save();
             $school = School:: where('name',request()->input('school'));//edit
-            $user->school_id=$school->id;
+            $user->school_id=$school[0]->id;
         }
-        $user->years_of_experience= request()->input('years_of_experience');
-        $user->phone_number= request()->input('phone_number');
-        $user->skills()->saveMany(request()->input('skills'));
-        $user->languages()->saveMany(request()->input('languages'));
+        $user->years_of_experience= request()->input('years-of-experience');
+        $user->email=request()->input('email');
+        $user->phone_number= request()->input('phone-number');
+        $previousSkills=$user->skills;
+        $user->skills()->detach($previousSkills);
+        $user->skills()->attach(request()->input('skills'));
+        $previousLanguages=$user->languages;
+        $user->languages()->detach($previousLanguages);
+        $user->languages()->attach(request()->input('languages'));
         //save
         $user->save();
         return redirect('/profile');

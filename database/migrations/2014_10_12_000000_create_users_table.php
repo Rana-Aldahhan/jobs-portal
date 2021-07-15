@@ -37,6 +37,7 @@ class CreateUsersTable extends Migration
             $table ->string('current_company_name')->nullable();
             $table->boolean('logged_as_company')->default(false);
             $table ->string('profile_thumbnail')->nullable();
+            $table->string('resume')->nullable();
             $table->timestamps();
 
             //foreign keys

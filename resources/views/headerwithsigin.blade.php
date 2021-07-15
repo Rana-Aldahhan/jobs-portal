@@ -54,11 +54,11 @@
     <li>
 
         <i class="fa fa-sign-out fa-2x" aria-hidden="true" style="color:#117272"></i>
-                    
+
           <form  action="{{ route('logout') }}" method="POST"  id="logout-form">
                @csrf
                <a  class="ddrop" onclick="document.getElementById('logout-form').submit(); return false;">Log out </a>
-           </form>
+          </form>
     </li>
 </ul>
   </div>

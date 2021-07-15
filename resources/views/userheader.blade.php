@@ -95,11 +95,10 @@
                 <li>
 
                     <i class="fa fa-sign-out fa-2x" aria-hidden="true" style="color:#117272"></i>
-                    <a href="#" class="ddrop">
-                        <!---- TODO fix ----->             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none dropp">
-                            @csrf
-                        </form>
-                        Log out</a>
+                    <form  action="{{ route('logout') }}" method="POST"  id="logout-form">
+                        @csrf
+                        <a  class="ddrop" onclick="document.getElementById('logout-form').submit(); return false;">Log out </a>
+                    </form>
 
 
 

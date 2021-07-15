@@ -15,7 +15,13 @@
     <link rel="stylesheet" href="{{asset('css/profile.css')}}">
     <link rel="stylesheet" href="{{asset('css/saveuser.css')}}">
 
-   
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
@@ -50,16 +56,16 @@
           <a href="index.html">
               <img src="{{asset('img/img_avatar-1.png')}}" alt="" class="img-fluid rounded-circle">
             </a>
-             
+
             </div>
-         
+
           <!-- .nav-menu -->
            <!-- <button type="button" class="mobile-nav-toggle d-xl-none"><i class="icofont-navigation-menu"></i></button>-->
-        
+
            <div class="container">
            <nav class="nav flex-column ">
-        
-        
+
+
           <a class="nav-link active" href="#" >
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bookmark-star" viewBox="0 0 16 16" style="margin-right:10px;">
           <path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.178.178 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.178.178 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.178.178 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.178.178 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.178.178 0 0 0 .134-.098L7.84 4.1z"/>
@@ -67,56 +73,58 @@
         </svg>
           Saved List
           </a>
-        
-        
+
+
           <a class="nav-link" href="#" >
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-earmark-post-fill" viewBox="0 0 16 16"style="margin-right:10px;">
           <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-5-.5H7a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1 0-1zm0 3h7a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5z"/>
         </svg>
           My Published Jobs
         </a>
-        
-        
+
+
           <a class="nav-link" href="#">
-              
+
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-cart4" viewBox="0 0 16 16"style="margin-right:10px;">
           <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/>
         </svg>
-        
+
         My Jobs Applications
         </a>
           <a class="nav-link " href="#">
-              
+
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16"style="margin-right:10px;">
           <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
         </svg>
           My Notification
-        
+
         </a>
-        
+
         </nav>
-        </div>  
-        
+        </div>
+
         </div>
 
   </div>
 <!--create profile -->
-
+<form class="form" novalidate="" method="POST" action="/profile/edit">
+    @csrf
+    @method('PUT')
 <div class="col-lg-10 sp1 bc1 " style="padding-left: 50px">
 
       <div class="row ">
 
         <div class="col-12 col-sm-auto mb-3">
           <div class="mx-auto" >
-            <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
+            <div class="d-flex justify-content-center align-items-center rounded" style="height: 160px;width:180px; background-color: rgb(233, 236, 239);">
               <span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
 
             </div>
-            <button class="btn btn-light" type="button">
-              <i class="fa fa-fw fa-camera"></i>
-              <span>Change Photo</span>
-   </button>
-         </div>
+
+              <input type="file" id="myFile" name="profile-thumbnail">
+
+          </div>
+
         </div>
 
         <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
@@ -126,7 +134,10 @@
           <label> Name:</label>
           <div class="col">
           <div class="form-group col-md-4 ">
-                      <input class="form-control fc" type="text" name="name1" placeholder="name" value="">
+                      <input class="form-control fc @error('name') is-invalid @enderror" type="text" name="name" placeholder="name" value="{{$user->name}}">
+              @error('name')
+              <p class="help-block is-invalid">{{$errors->first('name')}}</p>
+              @enderror
                     </div>
                     </div>
                     </div>
@@ -135,13 +146,19 @@
                     <label>job title:</label>
                     <div class="col">
                     <div class="form-group">
-                      <input class="form-control fc" type="text" name="job" placeholder="job title" value="">
+                      <input class="form-control fc @error('current-job-title') is-invalid @enderror" type="text" name="current-job-title" placeholder="current job title" value="{{$user->current_job_title}}">
+                        @error('current-job-title')
+                        <p class="help-block is-invalid">{{$errors->first('current-job-title')}}</p>
+                        @enderror
                     </div>
                   </div>
                   <label>at:</label>
                   <div class="col">
                     <div class="form-group">
-                      <input class="form-control fc" type="text" name="at" placeholder="at" value="">
+                      <input class="form-control fc @error('current-company-name') is-invalid @enderror" type="text" name="current-company-name" placeholder="current company name" value="{{$user->current_company_name}}">
+                        @error('current-company-name')
+                        <p class="help-block is-invalid">{{$errors->first('current-company-name')}}</p>
+                        @enderror
                     </div>
                   </div>
                   </div>
@@ -150,14 +167,14 @@
                   <label>country:</label>
                     <div class="col">
                     <div class="form-group">
-                      <input class="form-control fc" type="text" name="country1" placeholder="country" value="">
+                      <input class="form-control fc  @error('country') is-invalid @enderror" type="text" name="country" placeholder="country" value="{{$user->country}}">
                     </div>
                   </div>
                   <label>city:</label>
                   <div class="col">
-                    <div class="form-group">
-                      <input class="form-control fc" type="text" name="city" placeholder="city" value="">
-                    </div>
+                      <div class="form-group">
+                          <input  class="form-control fc  @error('city') is-invalid @enderror" type="text"  name="city" placeholder="city" value="{{$user->city}}">
+                      </div>
                   </div>
                   </div>
 
@@ -165,13 +182,13 @@
               <label>status:</label>
               <div class="col " style="padding-left: 50px">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input fc" type="radio" name="status" id="inlineRadio1" value="option1">
+                    <input class="form-check-input fc" type="radio" name="looking-for-job" id="inlineRadio1" value="1" @if($user->looking_for_job) checked @endif >
                     <label class="form-check-label" for="inlineRadio1">looking for a job</label>
                 </div>
                 </div>
                 <div class="col">
                  <div class="form-check form-check-inline">
-                    <input class="form-check-input fc" type="radio" name="status" id="inlineRadio2" value="option2">
+                    <input class="form-check-input fc" type="radio" name="looking-for-job" id="inlineRadio2" value="0" @if(! $user->looking_for_job) checked @endif >
                     <label class="form-check-label" for="inlineRadio2">no looking for a job</label>
                 </div>
                 </div>
@@ -180,7 +197,7 @@
            <div class="row">
             <label> Birthdate:</label>
             <div class="col">
-            <input type="date" id="myDate" value="">
+            <input type="date" id="myDate" value="{{$user->birth_date}}" name="birth_date"  >
             <p id="demo"></p>
             <script>
             function myFunction() {
@@ -194,64 +211,166 @@
         </div>
       </div>
 
-      <h2>work place <button type="button" class="btn btn-info">add</button></h2>
-<br>
-      <div class="row">
+    <h2>work place</h2>
+    <br>
+    <div class="row">
         <label>previous-company-name:</label>
-          <div class="col">
-          <div class="form-group">
-            <input class="form-control fc" type="text" name="country1" placeholder="country" value="">
-          </div>
+        <div class="col">
+            <div class="form-group">
+                <input class="form-control fc" type="text" name="previous-comany-name1" placeholder="" value="">
+            </div>
         </div>
         <label>previous-job-title:</label>
         <div class="col">
-          <div class="form-group">
-            <input class="form-control fc" type="text" name="city" placeholder="city" value="">
-          </div>
+            <div class="form-group">
+                <input class="form-control fc" type="text" name="previous_job_title1" placeholder="" value="">
+            </div>
         </div>
-      </div>
-        <div class="row">
+
+        <div class="col">
+            <input type="button" id="toggleDiv" value="+">
+
+        </div>
+    </div>
+    <div class="row">
         <label>start date:</label>
-          <div class="col">
-            <input type="date" id="myDate" value="">
+        <div class="col">
+            <input type="date" id="myDate" value=""name="start-date">
             <p id="demo"></p>
             <script>
-            function myFunction() {
-              var x = document.getElementById("myDate").value;
-              document.getElementById("demo").innerHTML = x;
-            }
+                function myFunction() {
+                    var x = document.getElementById("myDate").value;
+                    document.getElementById("demo").innerHTML = x;
+                }
             </script>
         </div>
         <label>end date:</label>
-          <div class="col">
-            <input type="date" id="myDate" value="">
+        <div class="col">
+            <input type="date" id="myDate" value=""name="end-date">
             <p id="demo"></p>
             <script>
-            function myFunction() {
-              var x = document.getElementById("myDate").value;
-              document.getElementById("demo").innerHTML = x;
-            }
+                function myFunction() {
+                    var x = document.getElementById("myDate").value;
+                    document.getElementById("demo").innerHTML = x;
+                }
             </script>
+
         </div>
-        </div>
 
-<br><hr><br>
+    </div>
 
 
-      <div class="row">
-                  <div class="col mb-3">
-                    <div class="form-group">
-                      <label>About</label>
-                      <textarea class="form-control fc" rows="5" placeholder="My Bio"></textarea>
-                    </div>
-                  </div>
+
+    <!--1-->
+    <div  id="MyDiv" style="display: none;">
+        <br><hr><br>
+        <div class="row">
+            <label>previous-company-name:</label>
+            <div class="col">
+                <div class="form-group">
+                    <input class="form-control fc" type="text" name="previous-comany-name2" placeholder="" value="">
                 </div>
+            </div>
+            <label>previous-job-title:</label>
+            <div class="col">
+                <div class="form-group">
+                    <input class="form-control fc" type="text" name="previous_job_title2" placeholder="" value="">
+                </div>
+            </div>
+            <div class="col">
+                <input type="button" id="toggleDiv1" value="+">
 
-     <hr>
+            </div>
+        </div>
+        <div class="row">
+            <label>start date:</label>
+            <div class="col">
+                <input type="date" id="myDate" value=""name="start-date">
+                <p id="demo"></p>
+                <script>
+                    function myFunction() {
+                        var x = document.getElementById("myDate").value;
+                        document.getElementById("demo").innerHTML = x;
+                    }
+                </script>
+            </div>
+            <label>end date:</label>
+            <div class="col">
+                <input type="date" id="myDate" value=""name="end-date">
+                <p id="demo"></p>
+                <script>
+                    function myFunction() {
+                        var x = document.getElementById("myDate").value;
+                        document.getElementById("demo").innerHTML = x;
+                    }
+                </script>
+            </div>
+        </div>
+
+
+
+    </div>
+    <!--end1-->
+
+    <!--2-->
+    <div  id="MyDiv1" style="display: none;">
+        <br><hr><br>
+        <div class="row">
+            <label>previous-company-name:</label>
+            <div class="col">
+                <div class="form-group">
+                    <input class="form-control fc" type="text" name="previous-comany-name3" placeholder="" value="">
+                </div>
+            </div>
+            <label>previous-job-title:</label>
+            <div class="col">
+                <div class="form-group">
+                    <input class="form-control fc" type="text" name="previous_job_title3" placeholder="" value="">
+                </div>
+            </div>
+            <div class="col">
+
+
+            </div>
+        </div>
+        <div class="row">
+            <label>start date:</label>
+            <div class="col">
+                <input type="date" id="myDate" value=""name="start-date">
+                <p id="demo"></p>
+                <script>
+                    function myFunction() {
+                        var x = document.getElementById("myDate").value;
+                        document.getElementById("demo").innerHTML = x;
+                    }
+                </script>
+            </div>
+            <label>end date:</label>
+            <div class="col">
+                <input type="date" id="myDate" value=""name="end-date">
+                <p id="demo"></p>
+                <script>
+                    function myFunction() {
+                        var x = document.getElementById("myDate").value;
+                        document.getElementById("demo").innerHTML = x;
+                    }
+                </script>
+            </div>
+        </div>
+
+    </div>
+
+    <!--end2-->
+
+    <br><br>
+
+
+    <hr>
+
      <h2>Education and experience</h2>
       <div class="tab-content pt-3 ">
         <div class="tab-pane active sp">
-          <form class="form" novalidate="">
+
             <div class="row ">
 
             <div class="col col-md-3">
@@ -259,11 +378,14 @@
                </div>
                  <div class="col-md-4 mb-3">
                    <div class="form-group ">
-                      <input class="form-control fc" type="text" name="school" placeholder="school" value="">
+                      <input class="form-control fc  @error('school') is-invalid @enderror" type="text" name="school" placeholder="school" value="@if (!is_null($school)){{ $school->name}} @endif">
+                       @error('school')
+                       <p class="help-block is-invalid">{{$errors->first('school')}}</p>
+                       @enderror
                    </div>
                  </div>
             </div>
-          </form>
+
 
          <div class="row ">
          <div class="col col-md-3">
@@ -271,10 +393,10 @@
             </div>
                  <div class="col-md-4 mb-3">
                    <div class="form-group ">
-                        <select id="inputState" class="form-control  fc">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
+                       <input class="form-control fc  @error('years-of-experience') is-invalid @enderror" type="text" name="years-of-experience" placeholder="number of your experience years " value="{{$user->years_of_experience}}">
+                       @error('years-of-experience')
+                       <p class="help-block is-invalid">{{$errors->first('years-of-experience')}}</p>
+                       @enderror
                    </div>
                  </div>
          </div>
@@ -285,16 +407,18 @@
              </div>
                   <div class="col-md-4 mb-3">
                     <div class="form-group ">
- 
-                     <select   class="form-control chosen-select  " name="requiredskills" multiple required="">
-                         <option  value=""></option>
-                       <option>American Black Bear</option>
-                       <option>Asiatic Black Bear</option>
-                         <option>Brown Bear</option>
- 
+
+                     <select   class="form-control chosen-select  " name="skills[]" multiple required="">
+                         @foreach($skills as $skill)
+                            @if($user->skills->contains($skill->id))
+                                <option  value="{{$skill->id}}" selected> {{$skill->title}}</option>
+                             @else
+                                 <option  value="{{$skill->id}}" > {{$skill->title}}</option>
+                             @endif
+                         @endforeach
                           </select>
                      <div id="lname_error" class="val_error">
- 
+
                     </div>
                     </div>
                   </div>
@@ -306,17 +430,21 @@
              </div>
                     <div class="col-md-4 mb-3">
                       <div class="form-group  ">
-   
-                       <select   class="chosen-select  form-select mt-3 form-control" name="languages" multiple required="">
-                           <option  value=""></option>
-                         <option>English</option>
-                           <option>french</option>
-                           <option>turki</option>
-   
+
+                       <select   class="chosen-select  form-select mt-3 form-control" name="languages[]" multiple required="">
+
+                           @foreach($languages as $language)
+                               @if($user->languages->contains($language->id))
+                                   <option  value="{{$language->id}}" selected> {{$language->name}}</option>
+                               @else
+                                   <option  value="{{$language->id}}" > {{$language->name}}</option>
+                               @endif
+                           @endforeach
+
                            </select>
-   
+
                       <div id="lname_error" class="val_error">
-   
+
                       </div>
                       </div>
                     </div>
@@ -329,10 +457,12 @@
         <label for="inputState">Resume:</label>
   </div>
       <div class="col-md-4 mb-3">
-         <label class="custom-file">
-             <input type="file" id="file" class="custom-file-input">
-             <span class="custom-file-control"></span>
-           </label>
+          <form action="/action_page.php">
+              <div class="custom-file mb-3">
+                  <input type="file" class="custom-file-input" id="customFile" name="filename">
+                  <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+          </form>
        </div>
 </div>
         </div>
@@ -341,11 +471,13 @@
 <br>
        <h2>Contact info</h2>
 
-         <form class=" sp">
 <div class="form-group row ">
 <label for="inputEmail3" class="col-sm-2 col-form-label">Email:</label>
 <div class="col-sm-6">
-<input type="email" class="form-control fc" id="inputEmail3" placeholder="Email" name="mail1">
+<input type="email" class="form-control fc @error('email') is-invalid @enderror" id="inputEmail3" placeholder="Email" name="email" value="{{$user->email}}">
+    @error('email')
+    <p class="help-block is-invalid">{{$errors->first('email')}}</p>
+    @enderror
 </div>
 </div>
 
@@ -353,30 +485,48 @@
 <div class="form-group row">
 <label for="inputPassword3" class="col-sm-2 col-form-label">Phone :</label>
 <div class="col-sm-6">
-<input type="password" class="form-control fc" id="inputPassword3" placeholder="phone" name="phone">
+<input type="text" class="form-control fc @error('phone-number') is-invalid @enderror" id="inputPassword3" placeholder="phone" name="phone-number" value="{{$user->phone_number}}">
+    @error('phone-number')
+    <p class="help-block is-invalid">{{$errors->first('phone-number')}}</p>
+    @enderror
 </div>
 </div>
+             <hr><br>
 
-</form>
+
+             <div class="row">
+                 <div class="col mb-3">
+                     <div class="form-group">
+                         <label>About</label>
+                         <textarea class="form-control fc" rows="5" placeholder="My Bio" name="about" > {{$user->about}}</textarea>
+                     </div>
+                 </div>
+             </div>
+
+             <hr>
+
+
 
 
             <br>
 <hr>
 <br>
-            
-             
+
+
                 <button class="btn btn-danger" type="submit">Save Changes</button>
-              
-          </form>
+
+
 
 
 
 </div>
 
     </div>
+</form>
 
   </div>
 </div>
+
 <!-- ======= Footer ======= -->
 @extends('footeruser')
 
@@ -410,10 +560,46 @@
   no_results_text: "Oops, nothing found!"
   })
   </script>
+ <script type="text/javascript">
+     $(document).ready(function(){
+
+         $('#toggleDiv').click(function(){
+             $('#MyDiv').toggle();
+         });
+
+     });
+ </script>
+ <script type="text/javascript">
+     $(document).ready(function(){
+
+         $('#toggleDiv1').click(function(){
+             $('#MyDiv1').toggle();
+         });
+
+     });
+ </script>
 
 
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+ <script>
+     $(".chosen-select").chosen({
+         no_results_text: "Oops, nothing found!"
+     })
+ </script>
+
+
+ <script>
+     // Add the following code if you want the name of the file appear on select
+     $(".custom-file-input").on("change", function() {
+         var fileName = $(this).val().split("\\").pop();
+         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+     });
+ </script>
+
+
+
+
+ <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="{{asset('js/bootstrap.min.js')}}"></script>
     <script src="{{asset('js/bootstrap.js')}}"></script>
