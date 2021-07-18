@@ -87,7 +87,7 @@ class JobOpportunity extends Model
     }
     public function userViewers()
     {
-        return $this->belongsToMany(User:: class,'user_job_views','viewing_id','viewer_id')->withTimestamps();
+        return $this->belongsToMany(User:: class,'user_job_views','viewer_id','viewing_id')->withTimestamps();
     }
 
 }

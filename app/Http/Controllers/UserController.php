@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Industry;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Company;
@@ -10,6 +11,7 @@ use App\Models\School;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -23,16 +25,18 @@ class UserController extends Controller
         $industry=$user->industry;
         $languages=$user->languages;
         $workplaces=$user->workPlaces;
-        $colleagues=$user->colleagues;
+        $sentColleagues=$user->sentColleagues()->wherePivot('approved',1)->get();
+        $receivedColleagues=$user->receivedColleagues()->wherePivot('approved',1)->get();
+        $colleagues =$sentColleagues->push($receivedColleagues)->flatten()->shuffle();
         $usersReachCount=0;
         $companiesReachCount=0;
         //count users reaches to this profile of the last month
 
         //delete every reach created before a month
-        //$expired_reaches=$user->userViewers()->wherePivot('created_at','<',now()->subDays(30))->delete();//
+
         //TODO edited warning
         $user->userViewers()->detach($user->userViewers()->wherePivot('created_at','<',now()->subDays(30))->get());
-        //$expired_reaches->delete();
+
 
         //count this month reaches with distinct viewers
         $usersReachCount=DB :: table('user_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();
@@ -42,7 +46,7 @@ class UserController extends Controller
         //delete every reach created before a month
         //$expired_reaches=$user->companyViewers()->where('created_at', '<',now()->subDays(30))->get();
         $user->companyViewers()->detach($user->companyViewers()->wherePivot('created_at','<',now()->subDays(30))->get());
-        //$expired_reaches->delete();
+
 
         //count this month reaches with distinct viewers
         $companyReachCount=DB :: table('user_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();
@@ -50,8 +54,8 @@ class UserController extends Controller
 
 
         return view('user-profile', ['user' => $user,'school'=>$school,'skills'=> $skills,'industry'=>$industry,
-        'languages'=>$languages,'workplaces'=>$workplaces,'colleagues'=>$colleagues,'usersReachCount'=>$usersReachCount,
-        'companiesReachCount'=>$companiesReachCount]);
+        'languages'=>$languages,'workplaces'=>$workplaces,'sentColleagues'=>$sentColleagues,'receivedColleagues'=>$receivedColleagues,'usersReachCount'=>$usersReachCount,
+        'colleagues'=>$colleagues,'companiesReachCount'=>$companiesReachCount]);
     }
 
     /**
@@ -86,31 +90,29 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
 
         $loggedUser=auth()->user();//can be null
-        if($id == $loggedUser->id)
+        if($loggedUser!= null && $id == $loggedUser->id)
             return redirect('/profile');
+
         $user=User::find($id);
         $school=$user->school;
         $skills=$user->skills;
         $workPlaces=$user->workPlaces;
         $languages=$user->languages;
-        $colleagues=$user->sentColleagues()->where('approved',true)->get();
-        $colleagues=$colleagues->push($user->receivedColleagues()->where('approved',true)->get());
-        $colleagues=$colleagues->flatten();
+        $sentColleagues=$user->sentColleagues()->wherePivot('approved',1)->get();
+        $receivedColleagues=$user->receivedColleagues()->wherePivot('approved',1)->get();
+        $colleagues =$sentColleagues->push($receivedColleagues)->flatten()->shuffle();
         $userPublishedJobs=$user->publishedJobs;
 
         $showAddColleagues=true;// cancel colleagues request
         $showCancelRequest=false;
-        $showApproveButton=false;//show remove request
+        $showApproveRequest=false;//show remove request
+        $showIgnoreRequest=false;
+
         $showMessage=false;
 
 
@@ -123,21 +125,46 @@ class UserController extends Controller
                 $received=$loggedUser->receivedColleagues()->find($id);
                 if(!is_null($sender) || !is_null($received))// case a user has sent a colleague request to another
                 {
-                    $showAddColleagues=false;
                     if(!is_null($sender))
                     {
-                        $showCancelRequest=true;
+                        $approved=$loggedUser->sentColleagues()->find($id)->pivot->approved;
+                        $showAddColleagues=false;
+                        if(!$approved)//case 1: logged user has sent a request and it is not accepted yet
+                        {
+
+                            $showCancelRequest=true;
+
+                        }
+                        else//case 2: logged user has sent a request and it is accepted
+                        {
+                            $showCancelRequest=false;
+                        }
+                        $showApproveRequest=false;
+                        $showIgnoreRequest=false;
+
                     }
                     if(!is_null($received))
                     {
-                        $showApproveButton=true;
+                        $approved=$loggedUser->receivedColleagues()->find($id)->pivot->approved;
+                        $showAddColleagues=false;
+                        $showCancelRequest=false;
+                        if(!$approved)//case 1: logged user has received a request and it is not accepted yet
+                        {
+                            $showApproveRequest=true;
+                            $showIgnoreRequest=true;
+
+                        }
+                        else//case 2: logged user has received a request and it is accepted
+                        {
+                            $showApproveRequest=false;
+                            $showIgnoreRequest=false;
+                        }
                     }
                 }
                 //show message in case a user has applied and has been approved to another user job
                 $acceptor=$loggedUser->userAcceptors()->find($id);
                 $acceptant=$loggedUser->userAcceptants()->find($id);
-
-                if(!is_null($acceptor) || !is_null($acceptant))
+                if($acceptor!=null || $acceptant !=null)
                 {
                     $showMessage=true;
                 }
@@ -160,7 +187,7 @@ class UserController extends Controller
         }
         return view('show-user',['loggedUser'=>$loggedUser,'user'=>$user,'school'=>$school,'skills'=>$skills, 'workPlaces'=>$workPlaces,
         'languages'=>$languages, 'colleagues'=>$colleagues,'userPublishedJobs'=> $userPublishedJobs,
-        'showAddColleagues'=>$showAddColleagues,'showCancelRequest'=>$showCancelRequest,'showApprovedButton'=>$showApproveButton,
+        'showAddColleagues'=>$showAddColleagues,'showCancelRequest'=>$showCancelRequest,'showApproveRequest'=>$showApproveRequest,'showIgnoreRequest'=>$showIgnoreRequest,
         'showMessage'=>$showMessage]) ;
     }
 
@@ -175,33 +202,29 @@ class UserController extends Controller
         $user= User :: find( $id);
         $skills = Skill :: all();
         $languages = Language :: all();
+        $industries=Industry::all();
         //fetch user skills and languages
         $user_skills= $user ->skills;
         $user_languages = $user->languages;
         $user_school=$user->school;
         $user_workplaces=$user->workPlaces;
-        return view('profile-edit', ['user' => $user , 'skills' => $skills ,'languages' => $languages,
+        $user_industry=$user->industry;
+        return view('profile-edit', ['user' => $user , 'skills' => $skills ,'languages' => $languages,'industries'=>$industries,
                                      'user_languages' => $user_languages , 'user_skills' =>$user_skills,
                                      'school'=>$user_school,'workplaces'=>$user_workplaces]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request)
     {
-        //dd($request);
+
         $id= auth()->user()->id;
         $user= User :: find( $id);
 
         //validation
         $this->validate($request,[
             'name' => 'required|regex:/^[\pL\s\-]+$/u',
-            'email' => ['required','email',Rule::unique('users')->ignore($user->id)],
+            'email' => ['required','email',Rule::unique('users')->ignore($user->id) ],
             'birth-date' => 'date|nullable' ,
             'phone-number' => 'numeric|nullable' ,
             'city' => 'alpha|nullable' ,
@@ -210,9 +233,30 @@ class UserController extends Controller
             'years-of-experience' => 'numeric|nullable',
             'current-job-title' => 'regex:/^[\pL\s\-]+$/u|nullable',
             'current-company-name' => 'regex:/^[\pL\s\-]+$/u|nullable',
+            'profile' => 'image|nullable|max:1999'
         ]);
 
-        // TODO image process
+
+        if($request->hasFile('profile')){
+            if($user->profile_thumbnail != 'userdefault.png')
+                 unlink(storage_path('app/public/profiles/'.$user->profile_thumbnail));
+            // Get filename with the extension
+            $filenameWithExt = $request->file('profile')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('profile')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            // Upload Image
+            $path = $request->file('profile')->storeAs('public/profiles', $fileNameToStore);
+        } else {
+            if($user->profile_thumbnail == 'userdefault.png')
+                $fileNameToStore = 'userdefault.png';
+            else
+                $fileNameToStore=$user->profile_thumbnail;
+        }
+
         //TODO work places processing
 
         //edit
@@ -232,6 +276,7 @@ class UserController extends Controller
         $user->about= request()->input('about');
         $user->birth_date=request()->input('birth_date');
         //search for a school with the same input name
+        //TODO replace with firstwhere
         $school=School :: where('name' ,request()->input('school'))->get();
         //case there is a school of the same name
         if($school->count()!=0)
@@ -256,7 +301,7 @@ class UserController extends Controller
             $school = new school();
             $school->name= request()->input('school');
             $school->save();
-            $school = School:: where('name',request()->input('school'));//edit
+            $school = School:: where('name',request()->input('school'))->get();//edit
             $user->school_id=$school[0]->id;
         }
         $user->years_of_experience= request()->input('years-of-experience');
@@ -268,6 +313,9 @@ class UserController extends Controller
         $previousLanguages=$user->languages;
         $user->languages()->detach($previousLanguages);
         $user->languages()->attach(request()->input('languages'));
+        $user->industry()->dissociate();
+        $user->industry()->associate(request()->input('industry'));
+        $user->profile_thumbnail=$fileNameToStore;
         //save
         $user->save();
         return redirect('/profile');

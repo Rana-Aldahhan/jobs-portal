@@ -2,7 +2,7 @@
 
 <!--navbar user-->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top scrolling-navbar">
-    <img src="{{asset('img/win win hiring.png')}}" class="logo">
+    <img src="{{asset('img/bluelogo.png')}}" class="logo">
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="icons-mobile"> <i class="fa fa-bars" aria-hidden="true"></i>
@@ -36,7 +36,7 @@
 <div class="pmd-dropdown dropup">
     <button class="btn pmd-btn-fab pmd-ripple-effect  pmd-btn-flat " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"style="outline: none; box-shadow: none;">
         <a>
-        <img src="{{asset('img/img_avatar-1.png')}}" class="imgprofile">
+        <img src="{{asset('storage/profiles/'.auth()->user()->profile_thumbnail)}}" class="imgprofile img-fluid rounded-circle">
         </a>
 
     </button>

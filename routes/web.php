@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route :: get('/', function () {
     return redirect('/home');
 });
-Route::get('/1',function (){return view('managereports');});
+Route::get('/1',function (){return view('');});
 Route :: put('/switch-to-company-account',[UserServices :: class ,'switchToCompanyAccount'])->middleware('auth');
 Route :: put('/switch-to-user-account',[CompanyServices :: class ,'switchToUserAccount'])->middleware('auth');
 Route :: get('/home',function (){if(Auth::check()) return view('withAuthHome'); else return view ('withoutAuthHome');});
@@ -84,6 +84,8 @@ Route :: get('/messeging',[UserServices:: class ,'messeging'])->middleware('auth
 Route :: get('/users/{id}',[UserController :: class ,'show']);
 Route :: post('/user/{id}/add-colleague',[UserServices::class , 'addColleague'])->middleware('auth');
 Route :: delete('/user/{id}/cancel-colleague-request',[UserServices::class , 'cancelRequest'])->middleware('auth');
+Route :: put('/user/{id}/approve-colleague',[UserServices::class , 'approveColleague'])->middleware('auth');
+Route :: delete('/user/{id}/ignore-colleague',[UserServices::class , 'ignoreColleagueRequest'])->middleware('auth');
 Route :: get('/users/{id}/messages',[UserServices::class , 'showMessagesWithUser'])->middleware('auth');
 Route :: post('/users/{id}/messages',[UserServices::class , 'sendMessageToUser'])->middleware('auth');
 Route :: get('/users/{id}/report',[UserServices::class , 'reportUser'])->middleware('auth');

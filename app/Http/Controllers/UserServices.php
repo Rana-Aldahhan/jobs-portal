@@ -13,6 +13,7 @@ use App\Models\JobOpportunity;
 use App\Models\Message;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 //TODO check if logged as company or as user <and redirect back where not allowed>.
 class UserServices extends Controller
@@ -48,8 +49,8 @@ class UserServices extends Controller
             //the industry in the profile is set
             if(!is_null(auth()->user()->industry) )
             {
-               $recomendedCompanies = Company :: where('industry' , auth()->user()->industry)->get();
-               $recomendedPeople = User::where('industry',auth()->user()->industry)->get();
+               $recomendedCompanies = Company :: where('industry_id' , auth()->user()->industry_id)->get();
+               $recomendedPeople = User::where('industry_id',auth()->user()->industry_id )->get();
             }
             if(!is_null(auth()->user()->school_id))
             {
@@ -160,16 +161,21 @@ class UserServices extends Controller
 
     }
     public function postCompany(Request $request){
-        dd($request);
+
         //validation
         $this->validate($request , [
             'name'=>'required',
-            'email'=>'unique|required|email',
-            'website_url'=>'unique',
-            'phone_number'=>'unique|required|numeric',
+            'email' => ['required','email',Rule::unique('companies')],
+            'website_url'=>['URL',Rule::unique('companies')],
+            'phone_number'=>['required','numeric',Rule::unique('companies')],
             'employees_count'=>'numeric|required',
-            'city'=>'alpha|required',
-            'country'=>'alpha|required',
+            'city'=>'regex:/^[\pL\s\-]+$/u|required',
+            'country'=>'regex:/^[\pL\s\-]+$/u|required',
+            'admin1'=>'email|nullable|exists:users,email',
+            'admin2'=>'email|nullable|exists:users,email',
+            'admin3'=>'email|nullable|exists:users,email',
+            'logo' => 'image|nullable|max:1999',
+            'certificate' =>'nullable|max:1999',
         ]);
         //company's attributes
         $company= new Company();
@@ -184,14 +190,53 @@ class UserServices extends Controller
         $company->about=$request->input('about');
 
         //TODO image processing
+        if($request->hasFile('logo')){
+            // Get filename with the extension
+            $filenameWithExt = $request->file('logo')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('logo')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            // Upload Image
+            $path = $request->file('logo')->storeAs('public/profiles', $fileNameToStore);
+        }
+        else {
+                $fileNameToStore = 'companydefault.png';
+        }
+
+        $company->profile_thumbnail=$fileNameToStore;
+
+        //certificate processing
+        $certificateFileNameToStore=null;
+        if($request->hasFile('certificate')){
+            // Get filename with the extension
+            $filenameWithExt = $request->file('certificate')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('certificate')->getClientOriginalExtension();
+            // Filename to store
+            $certificateFileNameToStore= $filename.'_'.time().'.'.$extension;
+            // Upload Image
+            $path = $request->file('certificate')->storeAs('public/certificates', $certificateFileNameToStore);
+        }
+        $company->certificate=$certificateFileNameToStore;
 
         //company's relations
-        $company->industry()->attach($request->input('industry'));
-        $managing_users= User :: whereIn('email',$request->input('managing_users_emails'))->get();
-        $company-> managingUsers()->attach($managing_users);
-        $company->save();
+        $company->industry()->associate($request->input('industry'));
+        $adminEmails=collect([$request->input('admin1'),$request->input('admin2'),$request->input('admin3')]);
 
-        $user=auth()->user()->logged_as_company=true;
+        $managing_users= User :: whereIn('email',$adminEmails)->get();
+        $company->save();
+        $company-> managingUsers()->saveMany($managing_users);
+        $company->managingUsers()->save(auth()->user());
+
+
+
+        $user=auth()->user();
+        $user->logged_as_company=true;
         $user->save();
 
         return redirect('/company-home');
@@ -464,26 +509,41 @@ class UserServices extends Controller
 
     }
     public function addColleague ($id){
-        $loggedUser=auth()->user;
+        $loggedUser=auth()->user();
         $loggedUser->sentColleagues()->attach($id);
-
         //notification
         $notification = new Notification();
         $notification->body="the user ".$loggedUser->name . ' has added you as a colleague';
         $notification->causable_id=$loggedUser->id;
         $notification->causable_type='App\Models\User';
-        $notification->recievable_id=$id;
-        $notification->recievable_type='App\Models\User';
-        $notification->notification_url='/users';
+        //$notification->type='new colleague';
+        $notification->notifiable_id=$id;
+        $notification->notifiable_type='App\Models\User';
+        $notification->notification_url='/users/'.$loggedUser->id;
         $notification->save();
 
-        return redirect('/users/{id}',['id',$id]);
-
+        return redirect('/users/'.$id);
     }
     public function cancelRequest($id){
-        $loggedUser=auth()->user;
+        $loggedUser=auth()->user();
         $loggedUser->sentColleagues()->detach($id);
-        return redirect('/users/{id}',['id',$id]);
+        Notification::where ('causable_id',$loggedUser->id)
+            ->where('causable_type','App\Models\User')
+            ->where('notifiable_id',$id)
+            ->where('notifiable_type','App\Models\User')
+            ->delete();
+        return redirect('/users/'.$id);
+    }
+    public function approveColleague($id){
+        $loggedUser=auth()->user();
+        $loggedUser->receivedColleagues()->updateExistingPivot($id,['approved'=>1]);
+        //TODO maybe make a new notification
+        return redirect('/users/'.$id);
+    }
+    public function ignoreColleagueRequest($id){
+        $loggedUser=auth()->user();
+        $loggedUser->receivedColleagues()->detach($id);
+        return redirect('/users/'.$id);
     }
     public function showMessagesWithUser($id){
         $messages=[];
@@ -492,20 +552,21 @@ class UserServices extends Controller
         {
             $messages=$user->sentMessages()->where('receivable_type','App\Models\User')
                                             ->where('receivable_id',$id)->get();//TODO delete the ()
-            $messages->push($user->recievedMessages()->where('sendable_type','App\Models\User')
-                                                     ->where('sendable_id',$id))->get();//TODO delete the ()
+            $messages->push($user->receivedMessages()->where('sendable_type','App\Models\User')
+                                                     ->where('sendable_id',$id)->get() );//TODO delete the ()
         }
         else //case logged in as company
         {
             $messages=$user->sentMessages()->where('receivable_type','App\Models\Company')
                                             ->where('receivable_id',$id)->get();//TODO delete the ()
             $messages->push($user->recievedMessages()->where('sendable_type','App\Models\Company')
-                                                     ->where('sendable_id',$id))->get();//TODO delete the ()
+                                                     ->where('sendable_id',$id)->get());//TODO delete the ()
         }
         $messages=$messages->flatten();
         $messages=$messages->sortBy('created_at');
-
-        return view('conversation', ['messages'=>$messages,'user'=>$user]);
+        if(auth()->user()->logged_as_company)
+            return view('companyusermessages', ['messages'=>$messages,'user'=>$user]);
+        return view('userusermessages', ['messages'=>$messages,'user'=>$user]);
     }
     public function sendMessageToUser(Request $request,$id){
         $message= new Message();

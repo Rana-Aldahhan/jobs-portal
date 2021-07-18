@@ -79,7 +79,7 @@ class Company extends Model
     }
     public function managingUsers()
     {
-        return $this->hasMany(User  :: class);
+        return $this->hasMany(User  :: class , 'managing_company_id');
     }
     public function notifications()
     {
@@ -111,7 +111,7 @@ class Company extends Model
     }
     public function userAcceptants()
     {
-        return $this->belongsToMany(User :: class ,'company_user_acceptants','acceptant_id','acceptor_id');
+        return $this->belongsToMany(User :: class ,'company_user_acceptants','acceptor_id','acceptant_id');
     }
 
 

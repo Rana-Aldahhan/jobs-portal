@@ -149,7 +149,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Company :: class);
     }
-    public function sentColleagues()
+    public function sentColleagues()//user1 is sender , user2 is receiver
     {
         return $this->belongsToMany(User :: class,'colleagues','user1_id','user2_id')->withPivot('approved');
     }
@@ -220,31 +220,31 @@ class User extends Authenticatable
     }
     public function userViewers()
     {
-        return $this->belongsToMany(User:: class,'user_user_views','viewing_id','viewer_id' )->withTimestamps();
+        return $this->belongsToMany(User:: class,'user_user_views','viewer_id','viewing_id' )->withTimestamps();
     }
     public function companyViewers()
     {
-        return $this->belongsToMany(User:: class,'company_user_views','viewing_id','viewer_id' )->withTimestamps();
+        return $this->belongsToMany(Company:: class,'company_user_views','viewer_id' ,'viewing_id')->withTimestamps();
     }
     public function userViewings()
     {
-        return $this->belongsToMany(User:: class,'user_user_views','viewer_id','viewing_id')->withTimestamps();
+        return $this->belongsToMany(User:: class,'user_user_views','viewing_id','viewer_id')->withTimestamps();
     }
     public function jobViewings()
     {
-        return $this->belongsToMany(User:: class,'user_job_views','viewer_id','viewing_id')->withTimestamps();
+        return $this->belongsToMany(JobOpportunity:: class,'user_job_views','viewing_id','viewer_id')->withTimestamps();
     }
     public function userAcceptants()
     {
-        return $this->belongsToMany(User :: class ,'user_user_acceptants','acceptant_id','acceptor_id')->withTimestamps();
+        return $this->belongsToMany(User :: class ,'user_user_acceptants','acceptor_id','acceptant_id')->withTimestamps();
     }
     public function userAcceptors()
     {
-        return $this->belongsToMany(User :: class ,'user_user_acceptants','acceptor_id','acceptant_id');
+        return $this->belongsToMany(User :: class ,'user_user_acceptants','acceptant_id','acceptor_id');
     }
     public function companyAcceptors()
     {
-        return $this->belongsToMany(User :: class ,'company_user_acceptants','acceptor_id','acceptant_id');
+        return $this->belongsToMany(Company :: class ,'company_user_acceptants','acceptant_id','acceptor_id');
     }
 
 
