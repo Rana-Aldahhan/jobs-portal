@@ -22,7 +22,7 @@ class CreateJobOpportunitiesTable extends Migration
             $table->unsignedBigInteger('positionType_id')->nullable();
             $table->string('title');
             $table->longText('description');
-            $table->boolean('remote')->default(false);//TODO added defaults
+            $table->boolean('remote')->default(false);
             $table->boolean('transportation')->default(false);
             $table->integer('salary');
             $table->string('city')->nullable();

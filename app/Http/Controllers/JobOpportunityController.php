@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Industry;
 use App\Models\JobOpportunity;
 use App\Models\Notification;
+use App\Models\PositionType;
+use App\Models\Skill;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Company;
@@ -30,16 +33,17 @@ class JobOpportunityController extends Controller
             $approvedUser->userAcceptors()->attach($approvingUser);
             //notification
             $notification = new Notification();
-            $notification->body= 'The user ' . $approvingUser->name . ' has approved your job application to the job with the title' . $job->title . 'of the ID '. $job->id;
+            $notification->body= 'The user ' . $approvingUser->name . ' has approved your job application to the job with the title ' . $job->title . ' of the ID '. $job->id;
             $notification->causable_id=$approvingUser->id;
             $notification->causable_type='App\Models\User';
-            $notification->recievable_id=$userID;
-            $notification->recievable_type='App\Models\User';
+            $notification->notifiable_id=$userID;
+            $notification->notifiable_type='App\Models\User';
+            $notification->notification_url='/jobs/'.$jobID;
             $notification->save();
 
             $job->expired=true;
             $job->save();
-            return redirect('/profile/published-jobs');
+            return redirect('/published-jobs');
         }
         else // case logged as company
         {
@@ -67,8 +71,8 @@ class JobOpportunityController extends Controller
         $ignoredUser=User::find($userID);
         $ignoredUser->appliedJobs()->detach($jobID);
         $user=auth()->user();
-        if($user->logged_as_company==true)
-            return redirect('/profile/published-jobs');
+        if(!$user->logged_as_company)
+            return redirect('/published-jobs');
         else
             return redirect('/company/manage-jobs');
 
@@ -209,20 +213,18 @@ class JobOpportunityController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         $job=JobOpportunity :: find($id);
         $requiredSkills=$job->requiredSkills;
         $typeOfPosition=$job->typeOfPosition;
         $industry=$job->industry;
+        $industries=Industry::all();
+        $skills=Skill::all();
+        $typeOfPositions=PositionType::all();
         return view('editJob',['job'=> $job, 'requiredSkills'=> $requiredSkills,
-        'typeOfPosition'=>$typeOfPosition, 'industry'=>$industry]);
+            'typeOfPosition'=>$typeOfPosition, 'industry'=>$industry,'industries'=>$industries,'skills'=>$skills,'typeOfPositions'=>$typeOfPositions]);
     }
 
     /**
@@ -235,37 +237,44 @@ class JobOpportunityController extends Controller
     public function update(Request $request, $id)
     {
         //validation
-        try {
-            $this->validate($request, [
-                'title' => 'required | alpha',
-                'description' => 'required',
-                'remote' => 'boolean | required',
-                'city' => 'alpha ',
-                'country' => 'alpha ',
-                'transportation' => 'boolean',
-                'salary' => 'numeric | required',
-                'required_experience' => 'numeric | required ',
-                'role' => 'alpha | required'
+        $this->validate($request, [
+            'title' =>'required|regex:/^[\pL\s\-]+$/u',
+            'description' => 'required',
+            'city' => 'regex:/^[\pL\s\-]+$/u|nullable ',
+            'country' => 'regex:/^[\pL\s\-]+$/u|nullable ',
+            'salary' => 'numeric|required',
+            'experience' => 'numeric | required ',
+            'role' => 'regex:/^[\pL\s\-]+$/u| required',
+            'skills'=>'required',
+        ]);
 
-            ]);
-        } catch (ValidationException $e) {
-        }
         $job=JobOpportunity :: find($id);
-        $job->title=$request->input('title');
+
+        $job->title=request()->input('title');
         $job->description=$request->input('description');
-        $job->remote=$request->input('remote');
-        $job->transportation=$request->input('transportation');
+        if($request->input('remote')!= null)
+            $job->remote=$request->input('remote');
+        else
+            $job->remote=0;
+        if($request->input('transport')!= null)
+            $job->transportation=$request->input('transport');
+        else
+            $job->transportation=0;
         $job->salary=$request->input('salary');
         $job->city=$request->input('city');
         $job->country=$request->input('country');
         $job->role=$request->input('role');
-        $job->requiredExperience->$request->input('requiredExperience');
-        //TODO  detach old skills,industry,type of position && attach new ones
-        $job->requiredSkills()->saveMany($request->input('requiredSkills'));//
-        $job->typeOfPosition()->save($request->input('typeOfPosition'));
-        $job->industry->save($request->input('industry'));
+        $job->required_experience=$request->input('experience');
+
+        $job->requiredSkills()->detach($job->required_skills);
+        $job->requiredSkills()->attach($request->input('skills'));
+        $job->typeOfPosition()->dissociate();
+        $job->typeOfPosition()->associate($request->input('position'));
+        $job->industry()->dissociate();
+        $job->industry()->associate($request->input('industry'));
+
         $job->save();
-        return redirect('jobs/{id}',['id'=>$id]);
+        return redirect('jobs/'.$id);
     }
 
     /**
