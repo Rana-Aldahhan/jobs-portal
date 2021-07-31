@@ -27,7 +27,7 @@ class UserServices extends Controller
                 $user=auth()->user();
                 $user->logged_as_company=true;
                 $user->save();
-                return redirect('/company_home');
+                return redirect('/company-home');
             }
         else//user have not created a company
         {//TODO process message in view
@@ -146,7 +146,7 @@ class UserServices extends Controller
         $job->typeOfPosition()->associate($request->input('position'));
         $job->requiredSkills()->attach($request->input('skills'));
         $job->save();
-        //TODO added save to the end
+
         return redirect('/published-jobs');
     }
     public function showJobSearch(){
@@ -163,7 +163,7 @@ class UserServices extends Controller
         if(!is_null(auth()->user()->managing_company_id))
         {
             $is_managing_company = true;
-            return view('/home',['is_managing_company'=> $is_managing_company])->with ('warning','you can only create one company');
+            return redirect('/home');//['is_managing_company'=> $is_managing_company])->with ('warning','you can only create one company');
         }
         return view('create-company',['is_managing_company'=> $is_managing_company,'industries'=>$industries]);
 

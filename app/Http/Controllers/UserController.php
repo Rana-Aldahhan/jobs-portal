@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Industry;
+use App\Models\WorkPlace;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Company;
@@ -34,7 +35,6 @@ class UserController extends Controller
 
         //delete every reach created before a month
 
-        //TODO edited warning
         $user->userViewers()->detach($user->userViewers()->wherePivot('created_at','<',now()->subDays(30))->get());
 
 
@@ -50,8 +50,6 @@ class UserController extends Controller
 
         //count this month reaches with distinct viewers
         $companyReachCount=DB :: table('user_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();
-
-
 
         return view('user-profile', ['user' => $user,'school'=>$school,'skills'=> $skills,'industry'=>$industry,
         'languages'=>$languages,'workplaces'=>$workplaces,'sentColleagues'=>$sentColleagues,'receivedColleagues'=>$receivedColleagues,'usersReachCount'=>$usersReachCount,
@@ -217,7 +215,7 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-
+        //dd($request);
         $id= auth()->user()->id;
         $user= User :: find( $id);
 
@@ -257,7 +255,68 @@ class UserController extends Controller
                 $fileNameToStore=$user->profile_thumbnail;
         }
 
-        //TODO work places processing
+        $user->workPlaces()->detach($user->workPlaces);
+        //workplace 1
+        if(request()->input('previous-company-name1') != null)
+        {
+            $workPlace=WorkPlace::whereCompanyName(request()->input('previous-company-name1'))->get()->first();
+            if($workPlace== null)//case the work place doesn't exist
+            {   $workPlace= new WorkPlace();
+                $workPlace->company_name=request()->input('previous-company-name1');
+                $workPlace->save();
+                $workPlace=WorkPlace::whereCompanyName(request()->input('previous-company-name1'))->get()->first();
+            }
+            $user->workPlaces()->attach($workPlace);
+            $user->workPlaces()->updateExistingPivot($workPlace->id,
+                ['started_at'=> request()->input('start-date1') ,'ended_at'=>request()->input('end-date1'),
+                    'user_job_title'=> request()->input('previous_job_title1')]);
+        }
+        // workplace 2
+        if(request()->input('previous-company-name2') != null)
+        {
+            $workPlace=WorkPlace::whereCompanyName(request()->input('previous-company-name2'))->get()->first();
+            if($workPlace== null)//case the work place doesn't exist
+            {   $workPlace= new WorkPlace();
+                $workPlace->company_name=request()->input('previous-company-name2');
+                $workPlace->save();
+                $workPlace=WorkPlace::whereCompanyName(request()->input('previous-company-name2'))->get()->first();
+            }
+            $user->workPlaces()->attach($workPlace);
+            $user->workPlaces()->updateExistingPivot($workPlace->id,
+                ['started_at'=> request()->input('start-date2') ,'ended_at'=>request()->input('end-date2'),
+                    'user_job_title'=> request()->input('previous_job_title2')]);
+        }
+        //workplace 3
+        if(request()->input('previous-company-name3') != null)
+        {
+            $workPlace=WorkPlace::whereCompanyName(request()->input('previous-company-name3'))->get()->first();
+            if($workPlace== null)//case the work place doesn't exist
+            {   $workPlace= new WorkPlace();
+                $workPlace->company_name=request()->input('previous-company-name3');
+                $workPlace->save();
+                $workPlace=WorkPlace::whereCompanyName(request()->input('previous-company-name3'))->get()->first();
+            }
+            $user->workPlaces()->attach($workPlace);
+            $user->workPlaces()->updateExistingPivot($workPlace->id,
+                ['started_at'=> request()->input('start-date3') ,'ended_at'=>request()->input('end-date3'),
+                    'user_job_title'=> request()->input('previous_job_title3')]);
+        }
+
+        //resume processing
+        if($request->hasFile('resume')){
+            $resumeFileNameToStore=null;
+            // Get filename with the extension
+            $filenameWithExt = $request->file('resume')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('resume')->getClientOriginalExtension();
+            // Filename to store
+            $resumeFileNameToStore= $filename.'_'.time().'.'.$extension;
+            // Upload Image
+            $path = $request->file('resume')->storeAs('public/resumes', $resumeFileNameToStore);
+            $user->resume=$resumeFileNameToStore;
+        }
 
         //edit
         $user->name= $request->input('name');
@@ -269,6 +328,11 @@ class UserController extends Controller
             $user->current_company_id = $company->id;
         }
         $user->current_company_name=request()->input('current-company-name');
+        $currentCompany=Company::where('name',request()->input('current-company-name'))->get()->first();
+        if($currentCompany != null)
+        {
+            $user->currentCompany()->associate($currentCompany->id);
+        }
         $user->current_job_title=request()->input('current-job-title');
         $user->city = request()->input('city');
         $user->country= request()->input('country');
@@ -276,7 +340,6 @@ class UserController extends Controller
         $user->about= request()->input('about');
         $user->birth_date=request()->input('birth_date');
         //search for a school with the same input name
-        //TODO replace with firstwhere
         $school=School :: where('name' ,request()->input('school'))->get();
         //case there is a school of the same name
         if($school->count()!=0)

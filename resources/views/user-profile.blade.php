@@ -201,6 +201,18 @@
                     </div>
 
                     <div class="row ">
+                        <div class="col col-md-2">
+                            <p><strong><span class="glyphicon glyphicon-thumbs-up"  for="inputState"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-calendar-check-fill" viewBox="0 0 16 16" >
+<path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-5.146-5.146-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+</svg></span>Field (speciality): </strong>
+
+                        </div>
+                        <div class="col">
+                            {{$user->industry->title}}
+                        </div>
+                    </div>
+
+                    <div class="row ">
                         <div class="col col-md-3">
                             <p><strong><span class="glyphicon glyphicon-thumbs-up"  for="inputState"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-calendar-check-fill" viewBox="0 0 16 16" >
 <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-5.146-5.146-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
@@ -244,10 +256,71 @@
                         </div>
                     </div>
 
+                    <div class="row ">
+                        <div class="col col-md-2">
+                            <p><strong><span class="glyphicon glyphicon-thumbs-up"  for="inputState"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-calendar-check-fill" viewBox="0 0 16 16" >
+<path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1H2zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+</svg></span>Resume: </strong>
+
+                        </div>
+                        <a href="{{asset('storage/resumes/'.$user->resume)}}">
+                        <div class="col">
+                            view resume
+                        </div>
+                        </a>
+                    </div>
+
                     <br>
                     <hr>
                     <br>
-                    <h2>Colleagues :</h2>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <div class="form-group">
+                                <h3><span class="glyphicon glyphicon-thumbs-up"><svg class="octicon octicon-graph UnderlineNav-octicon d-none d-sm-inline" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>
+                                </span>Your previous working places:
+                                </h3>
+                                <br>
+                                @foreach ($user->workPlaces as $workplace)
+                                <div class="col">
+                                    <p>
+                                          Worked at :  {{ $workplace->company_name }} as : {{$workplace->pivot->user_job_title}} , from ( {{$workplace->pivot->started_at}} ) to  ( {{$workplace->pivot->ended_at}} ).
+                                    </p>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h2>Contact info</h2>
+
+                    <div class= "form-group row ">
+                        <p><strong><span class="glyphicon glyphicon-thumbs-up"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
+<path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
+</svg></span>E-mail: </strong>
+                        <div class= "col-sm-10">
+                            {{$user->email}}
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <p><strong><span class="glyphicon glyphicon-thumbs-up"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-telephone-inbound-fill" viewBox="0 0 16 16">
+<path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511zM15.854.146a.5.5 0 0 1 0 .708L11.707 5H14.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 1 0v2.793L15.146.146a.5.5 0 0 1 .708 0z"/>
+</svg></span>phone: </strong>
+                        <div class="col-sm-10">
+                            {{$user->phone_number}}
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <br>
+                <hr>
+                <br>
+
+                <h2>Colleagues :</h2>
                     @if($colleagues->count()>0)
                    @foreach($colleagues as $colleague)
                     <div class="card w-100">
@@ -288,47 +361,8 @@
 
                     <br>
 
+
                     <br>
-                    <div class="row ">
-                        <div class="col col-md-2">
-                            <p><strong><span class="glyphicon glyphicon-thumbs-up"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-tag-fill" viewBox="0 0 16 16">
-<path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1H2zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-</svg></span>Resume: </strong>
-                        </div>
-                        <div class="col">
-
-                        </div>
-                    </div>
-                    <br>
-                    <hr>
-                    <br>
-                    <h2>Contact info</h2>
-
-                    <div class="form-group row ">
-                        <p><strong><span class="glyphicon glyphicon-thumbs-up"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
-<path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
-</svg></span>E-mail: </strong>
-                        <div class="col-sm-10">
-                            {{$user->email}}
-                        </div>
-                    </div>
-
-
-                    <div class="form-group row">
-                        <p><strong><span class="glyphicon glyphicon-thumbs-up"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-telephone-inbound-fill" viewBox="0 0 16 16">
-<path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511zM15.854.146a.5.5 0 0 1 0 .708L11.707 5H14.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 1 0v2.793L15.146.146a.5.5 0 0 1 .708 0z"/>
-</svg></span>phone: </strong>
-                        <div class="col-sm-10">
-                            {{$user->phone_number}}
-                        </div>
-                    </div>
-
-
-
-                </div>
-                <br>
-                <hr>
-                <br>
 
 
 

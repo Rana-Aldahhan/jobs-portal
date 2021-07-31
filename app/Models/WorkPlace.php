@@ -27,6 +27,6 @@ class WorkPlace extends Model
 {
     use HasFactory;
     public function users(){
-        return $this->belongsToMany(User :: class ,'workplace_id','user_workplace');
+        return $this->belongsToMany(User :: class ,'workplace_id','user_workplace')->withPivot(['started_at','ended_at','user_job_title']);
     }
 }

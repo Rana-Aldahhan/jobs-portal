@@ -196,6 +196,24 @@
                     <p>
                         {{$user->years_of_experience}}
                     </p>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <div class="form-group">
+                                <h3><span class="glyphicon glyphicon-thumbs-up"><svg class="octicon octicon-graph UnderlineNav-octicon d-none d-sm-inline" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>
+                                </span>Previous working places:
+                                </h3>
+                                <br>
+                                @foreach ($user->workPlaces as $workplace)
+                                    <div class="col">
+                                        <p>
+                                            Worked at :  {{ $workplace->company_name }} as : {{$workplace->pivot->user_job_title}} , from ( {{$workplace->pivot->started_at}} ) to  ( {{$workplace->pivot->ended_at}} ).
+                                        </p>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
 
 
                     <h6>Languages:</h6>
@@ -205,6 +223,15 @@
                             <br>
                         @endforeach
                     </p>
+
+                    <h6>Resume:</h6>
+
+                    <p>  <a href="{{asset('storage/resumes/'.$user->resume)}}">
+                            view resume
+                        </a>
+                    </p>
+
+                    <hr>
 
 
                     <h5 style=" color:#757575; padding-top:20px; font-weight: 600;">Colleagues:</h5>
@@ -277,12 +304,8 @@
                     </nav>
 
                     <!--end pagination-->
+<hr>
 
-                    <h6>Resume:</h6>
-
-                    <p> </p>
-
-                    <hr>
                     <!-- published jobs start -->
                     <h5 style=" color:#757575; padding-top:20px; font-weight: 600;">{{$user->name}}'s published jobs:</h5>
                     @foreach ($user->publishedJobs as  $job)
@@ -325,6 +348,7 @@
                             </td>
                     @endforeach
                             <!--published jobs end-->
+                            <hr>
 
                     <h6 style="font-weight: 600;">Contact Info:</h6>
 

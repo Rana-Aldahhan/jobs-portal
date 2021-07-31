@@ -180,7 +180,7 @@ class User extends Authenticatable
     }
     public function workPlaces()
     {
-        return $this->belongsToMany( WorkPlace:: class,'user_workplace','user_id','workplace_id');
+        return $this->belongsToMany( WorkPlace:: class,'user_workplace','user_id','workplace_id')->withPivot(['started_at','ended_at','user_job_title']);
     }
     public function languages()
     {

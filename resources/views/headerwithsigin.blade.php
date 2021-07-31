@@ -46,10 +46,18 @@
         <a href="/profile" class=" ddrop">View Profile</a>
     </li>
     <hr>
-    <li>
-        <i class="fa fa-cogs fa-2x" aria-hidden="true" style="color:#117272"></i>
-        <a href="#" class="ddrop">Settings</a>
-    </li>
+        @if(auth()->user()->managing_company_id !=null)
+            <li>
+                <i class="fa fa-cogs fa-2x" aria-hidden="true" style="color:#117272"></i>
+                <form action="/switch-to-company-account" method="post" id="switchtocompany">
+                    @csrf
+                    @method('PUT')
+                    <a  class="ddrop" onclick="document.getElementById('switchtocompany').submit(); return false;">switch to company account</a>
+                </form>
+            </li>
+            <hr>
+            <li>
+                @endif
     <hr>
     <li>
 

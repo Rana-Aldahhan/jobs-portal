@@ -7,7 +7,7 @@
     <title>Document</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-  
+
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
     <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
@@ -17,9 +17,9 @@
 </head>
 <body>
 
-    
+
  <!--navbar comp-->
- @extends('headercomp')
+ @extends('userheader')
 
  @section('include')
 
@@ -34,7 +34,7 @@
 
         <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
 
-        <div class="carousel-inner" role="listbox"> 
+        <div class="carousel-inner" role="listbox">
 
           <!-- Slide 1 -->
         <div class="carousel-item active" style="background: url({{asset('img/ll.jpg')}}); background-repeat: no-repeat">
@@ -44,10 +44,10 @@
                 <p class="animate__animated animate__fadeInUp">this site aims to provide users with the right tools to help them find the most convenient job for them
                     as well as giving the users and companies the chance to post their own jobs opportunities and help them finding the right employee for the.
                 </p>
-                
+
               </div>
             </div>
-          </div>  
+          </div>
  <!-- Slide 2 -->
  <div class="carousel-item" style="background: url({{asset('img/80.jpg')}} ); background-repeat: no-repeat;padding-top:50px ">
     <div class="carousel-container">
@@ -55,7 +55,7 @@
         <h2 class="animate__animated animate__fadeInDown">Welcome to Win-Win hiring communtiy where everybody wins!</h2>
         <p class="animate__animated animate__fadeInUp">this site aims to provide users with the right tools to help them find the most convenient job for them
             as well as giving the users and companies the chance to post their own jobs opportunities and help them finding the right employee for the.</p>
-       
+
       </div>
     </div>
   </div>
@@ -81,17 +81,17 @@
 
 
  <!-- Fact Start -->
- 
+
  <div class="fact">
             <div class="container">
 
     <div class="row align-items-center">
-    
+
         <div class="col-lg-6 mt-6 mt-lg-0">
         <a id="update " class="editlink" href="#">
             <div class="fact-item">
-            
-                
+
+
                 <i class="fa fa-plus-square fa-3x" style="color:#FF8A65"></i>
                 <h2>Create a Job</h2>
             </div>
@@ -99,20 +99,20 @@
         </div>
 
 
-        
+
         <div class="col-lg-6 mt-6 mt-lg-0">
         <a id="update " class="editlink" href="#">
             <div class="fact-item">
-                
-                
+
+
                 <i class="fa fa-cog fa-3x" aria-hidden="true" style="color:#FF8A65"></i>
 
                 <h2>Manage Company's Jobs</h2>
-                
+
             </div>
             </a>
         </div>
-        
+
     </div>
 </div>
 </div>
@@ -188,7 +188,7 @@
         </div>
         <!-- Contact End -->
 
-  
+
 
   <!-- ======= about us ======= -->
   <section id="about" class="about_d baraaa">

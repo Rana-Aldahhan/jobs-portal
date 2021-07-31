@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route :: get('/', function () {
     return redirect('/home');
 });
-Route::get('/1',function (){return view('companysjobs');});
+Route::get('/1',function (){return redirect()->back();});
 Route :: put('/switch-to-company-account',[UserServices :: class ,'switchToCompanyAccount'])->middleware('auth');
 Route :: put('/switch-to-user-account',[CompanyServices :: class ,'switchToUserAccount'])->middleware('auth');
 Route :: get('/home',function (){if(Auth::check()) return view('withAuthHome'); else return view ('withoutAuthHome');});

@@ -217,19 +217,19 @@
                     </div>
                 </div>
 
-                <h2>work place</h2>
+                <h2>Add previous work places :</h2>
                 <br>
                 <div class="row">
-                    <label>previous-company-name:</label>
+                    <label>previous company name:</label>
                     <div class="col">
                         <div class="form-group">
-                            <input class="form-control fc" type="text" name="previous-comany-name1" placeholder="" value="">
+                            <input class="form-control fc" type="text" name="previous-company-name1" placeholder="" value="@if($workplaces->count() >0){{$workplaces[0]->company_name}}@endif"> <!-- $user->workPlaces[0]->company_name -->
                         </div>
                     </div>
                     <label>previous-job-title:</label>
                     <div class="col">
                         <div class="form-group">
-                            <input class="form-control fc" type="text" name="previous_job_title1" placeholder="" value="">
+                            <input class="form-control fc" type="text" name="previous_job_title1" placeholder="" value="@if($workplaces->count() >0){{$user->workPlaces[0]->pivot->user_job_title}}@endif">
                         </div>
                     </div>
 
@@ -241,7 +241,7 @@
                 <div class="row">
                     <label>start date:</label>
                     <div class="col">
-                        <input type="date" id="myDate" value=""name="start-date1">
+                        <input type="date" id="myDate" value="@if($workplaces->count() >0){{ $user->workPlaces[0]->pivot->started_at}}@endif" name="start-date1">
                         <p id="demo"></p>
                         <script>
                             function myFunction() {
@@ -252,7 +252,7 @@
                     </div>
                     <label>end date:</label>
                     <div class="col">
-                        <input type="date" id="myDate" value=""name="end-date1">
+                        <input type="date" id="myDate" value="@if($workplaces->count() >0){{$user->workPlaces[0]->pivot->ended_at}}@endif" name="end-date1">
                         <p id="demo"></p>
                         <script>
                             function myFunction() {
@@ -274,13 +274,13 @@
                         <label>previous-company-name:</label>
                         <div class="col">
                             <div class="form-group">
-                                <input class="form-control fc" type="text" name="previous-comany-name2" placeholder="" value="">
+                                <input class="form-control fc" type="text" name="previous-company-name2" placeholder="" value="@if($workplaces->count() >1){{$workplaces[1]->company_name}}@endif">
                             </div>
                         </div>
                         <label>previous-job-title:</label>
                         <div class="col">
                             <div class="form-group">
-                                <input class="form-control fc" type="text" name="previous_job_title2" placeholder="" value="">
+                                <input class="form-control fc" type="text" name="previous_job_title2" placeholder="" value="@if($workplaces->count() >1){{$user->workPlaces[1]->pivot->user_job_title}}@endif">
                             </div>
                         </div>
                         <div class="col">
@@ -291,7 +291,7 @@
                     <div class="row">
                         <label>start date:</label>
                         <div class="col">
-                            <input type="date" id="myDate" value=""name="start-date2">
+                            <input type="date" id="myDate" value="@if($workplaces->count() >1){{$user->workPlaces[1]->pivot->started_at}}@endif"name="start-date2">
                             <p id="demo"></p>
                             <script>
                                 function myFunction() {
@@ -302,7 +302,7 @@
                         </div>
                         <label>end date:</label>
                         <div class="col">
-                            <input type="date" id="myDate" value=""name="end-date2">
+                            <input type="date" id="myDate" value="@if($workplaces->count() >1){{$user->workPlaces[1]->pivot->ended_at}}@endif"name="end-date2">
                             <p id="demo"></p>
                             <script>
                                 function myFunction() {
@@ -325,13 +325,13 @@
                         <label>previous-company-name:</label>
                         <div class="col">
                             <div class="form-group">
-                                <input class="form-control fc" type="text" name="previous-comany-name3" placeholder="" value="">
+                                <input class="form-control fc" type="text" name="previous-company-name3" placeholder="" value="@if($workplaces->count() >2){{$workplaces[2]->company_name}}@endif">
                             </div>
                         </div>
                         <label>previous-job-title:</label>
                         <div class="col">
                             <div class="form-group">
-                                <input class="form-control fc" type="text" name="previous_job_title3" placeholder="" value="">
+                                <input class="form-control fc" type="text" name="previous_job_title3" placeholder="" value="@if($workplaces->count() >2){{$user->workPlaces[2]->pivot->user_job_title}}@endif">
                             </div>
                         </div>
                         <div class="col">
@@ -342,7 +342,7 @@
                     <div class="row">
                         <label>start date:</label>
                         <div class="col">
-                            <input type="date" id="myDate" value=""name="start-date3">
+                            <input type="date" id="myDate" value="@if($workplaces->count() >2){{$user->workPlaces[2]->pivot->started_at}}@endif"name="start-date3">
                             <p id="demo"></p>
                             <script>
                                 function myFunction() {
@@ -353,7 +353,7 @@
                         </div>
                         <label>end date:</label>
                         <div class="col">
-                            <input type="date" id="myDate" value=""name="end-date3">
+                            <input type="date" id="myDate" value="@if($workplaces->count() >2){{$user->workPlaces[2]->pivot->ended_at}}@endif"name="end-date3">
                             <p id="demo"></p>
                             <script>
                                 function myFunction() {
@@ -488,8 +488,8 @@
                             <div class="col-md-4 mb-3">
                                 <form action="/action_page.php">
                                     <div class="custom-file mb-3">
-                                        <input type="file" class="custom-file-input" id="customFile" name="filename">
-                                        <label class="custom-file-label" for="customFile">Choose file</label>
+                                        <input type="file" class="custom-file-input" id="customFile" name="resume" value="{{$user->resume}}">
+                                        <label class="custom-file-label" for="customFile">{{$user->resume}}</label>
                                     </div>
                                 </form>
                             </div>

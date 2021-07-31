@@ -133,12 +133,12 @@
                 <p class="pabout">
                     {{$company->about}}
                 </p>
-
-
-
+                <h4>Certificate:</h4>
+                <a href="{{asset('storage/certificates/'.$company->certificate)}}"> open certificate</a>
                 <h6 class="styleh">Company's Available Job opportunities:</h6>
 
             </div>
+
             @if($company->publishedJobs->count()!=0)
             @foreach($company->publishedJobs as $job)
             <!--start1-->
@@ -248,25 +248,26 @@
                 <h6 class="styleh">Our Employees:</h6>
 
             </div>
+            @foreach($company->employees as $employee)
             <!--start1employee-->
             <div class="card cardppp" >
-                <a id="update" href="#" class="editlink">
+                <a id="update" href="/users/{{$employee->id}}" class="editlink">
                     <div class="card-body">
                         <div class="container">
                             <div class="media">
                                 <div class="media-left">
-                                    <img src="{{asset('img/img_avatar-1.png')}}" class="media-object imgmed" >
+                                    <img src="{{asset('storage/profiles/'.$employee->profile_thumbnail)}}" class="media-object imgmed" >
                                 </div>
 
 
                                 <div class="media-body">
-                                    <h5 class="media-heading">User's Name</h5>
-                                    <p>JOb Title ,
-                                        city , country</p>
+                                    <h5 class="media-heading">{{$employee->name}}</h5>
+                                    <p>{{$employee->current_job_title}}.
+                                        <br>
+                                        {{$employee->city}} , {{$employee->country}}</p>
 
-                                    <h5 class="media-heading">About this person</h5>
-                                    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus minus, ea,
-                                        placeat .</p>
+                                    <h5 class="media-heading">About :</h5>
+                                    <p> {{$employee->about}}</p>
 
 
                                 </div>
@@ -278,39 +279,7 @@
                 </a>
             </div>
             <!--end1employee-->
-
-            <!--start2employee-->
-            <div class="card cardppp" >
-                <a id="update" href="#" class="editlink">
-                    <div class="card-body">
-                        <div class="container">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="{{asset('img/img_avatar-1.png')}}" class="media-object imgmed" >
-                                </div>
-
-
-                                <div class="media-body">
-                                    <h5 class="media-heading">User's Name</h5>
-                                    <p>JOb Title ,
-                                        city , country</p>
-
-                                    <h5 class="media-heading">About this person</h5>
-                                    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus minus, ea,
-                                        placeat .</p>
-
-
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <!--end2employee-->
-
-
+            @endforeach
 
             <!--start pagination-->
 
