@@ -161,7 +161,7 @@
                     <label for="validationCustom02">other responsible user on this account:</label>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <input type="text" class="form-control @error('admin2') is-invalid @enderror" id="validationCustom02" placeholder=""value="{{old('admin2')}} name="admin2" required>
+                    <input type="text" class="form-control @error('admin2') is-invalid @enderror" id="validationCustom02" placeholder="" value="{{old('admin2')}}" name="admin2" required>
                     @error('admin2')
                     <p class="help-block is-invalid">{{$errors->first('admin2')}}</p>
                     @enderror
@@ -183,7 +183,7 @@
                     <label for="validationCustom02">other responsible user on this account:</label>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <input type="text" class="form-control @error('admin3') is-invalid @enderror" id="validationCustom02" placeholder="" value="{{old('admin3')}} name="admin3" required>
+                    <input type="text" class="form-control @error('admin3') is-invalid @enderror" id="validationCustom02" placeholder="" value="{{old('admin3')}}" name="admin3" required>
                     @error('admin3')
                     <p class="help-block is-invalid">{{$errors->first('admin3')}}</p>
                     @enderror

@@ -67,7 +67,7 @@ class Company extends Model
     use HasFactory;
     public function employees()
     {
-        return $this -> hasMany(User :: class);
+        return $this -> hasMany(User :: class,'current_company_id');
     }
     public function industry()
     {

@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route :: get('/', function () {
     return redirect('/home');
 });
-Route::get('/1',function (){return view('');});
+Route::get('/1',function (){return view('companysjobs');});
 Route :: put('/switch-to-company-account',[UserServices :: class ,'switchToCompanyAccount'])->middleware('auth');
 Route :: put('/switch-to-user-account',[CompanyServices :: class ,'switchToUserAccount'])->middleware('auth');
 Route :: get('/home',function (){if(Auth::check()) return view('withAuthHome'); else return view ('withoutAuthHome');});
@@ -58,7 +58,7 @@ Route :: post('/companies/{id}/messages',[UserServices :: class ,'sendMessageToC
 Route :: get('/jobs/{id}',[JobOpportunityController :: class ,'show']);
 Route :: get ('/jobs/{id}/edit',[JobOpportunityController :: class ,'edit'])->middleware('auth');
 Route :: put ('/jobs/{id}/edit',[JobOpportunityController :: class ,'update'])->middleware('auth');
-Route :: delete('/jobs/{id}/delete',[JobOpportunityController :: class ,'destroy'])->middleware('auth');//TODO stupid move changed from delete to get method
+Route :: delete('/jobs/{id}/delete',[JobOpportunityController :: class ,'destroy'])->middleware('auth');
 
 Route :: post('/jobs/{id}/apply',[UserServices :: class ,'applyJob'])->middleware('auth');//apply to a job
 Route :: delete('/jobs/{id}/withdraw-application',[UserServices :: class ,'withdrawApplication'])->middleware('auth');//apply to a job

@@ -7,7 +7,7 @@
     <title>Document</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-  
+
   <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
   <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
   <link rel="stylesheet" href="{{asset('css/orginal.css')}}">
@@ -18,14 +18,14 @@
 
 </head>
 <body>
-    
+
 
 <!--navbar user-->
-@extends('headerwithsigin')
+@extends('userheader')
 
   @section('cont')
- 
-  @endsection 
+
+  @endsection
    <!--end navbar-->
 
 
@@ -40,27 +40,28 @@
 <!--start search results-->
 
 <!--start company-->
+@if($searchResults->count()!=0)
+    @foreach($searchResults as $company)
 <div class="container">
 <div class="card cardppp"  >
-  <a id="update" href="#" class="editlink">
+  <a id="update" href="/companies/{{$company->id}}" class="editlink">
   <div class="card-body">
 
 
 <div class="container">
 <div class="media">
   <div class="media-left">
-    <img src="{{asset('img/images.png')}}" class="media-object imgmed" >
+    <img src="{{asset('storage/profiles/'.$company->profile_thumbnail)}}" class="media-object imgmed" >
   </div>
 
-  
-  <div class="media-body">
-    <h5 class="media-heading">Company's Name</h5>
-    <p>industry , count of employees 
-        city , country</p>
 
-        <h5 class="media-heading">About the Company</h5>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus minus, ea, 
-        placeat .</p>
+  <div class="media-body">
+    <h5 class="media-heading">{{$company->name}}</h5>
+    <p>{{$company->industry->title}}, {{$company->count_of_employees}}
+        {{$company->city}} , {{$company->country}}</p>
+
+        <h5 class="media-heading">About the Company :</h5>
+    <p>{{$company->about}}.</p>
 
 
   </div>
@@ -72,7 +73,9 @@
   </a>
 </div>
 </div>
+    @endforeach
 <!-- end  company-->
+@else
 
 <!--start company2-->
 
@@ -84,18 +87,13 @@
 <div class="container">
 <div class="media">
   <div class="media-left">
-    <img src="{{asset('img/images.png')}}" class="media-object imgmed" >
   </div>
 
-  
-  <div class="media-body">
-    <h5 class="media-heading">Company's Name</h5>
-    <p>industry , count of employees 
-        city , country</p>
 
-        <h5 class="media-heading">About the Company</h5>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus minus, ea, 
-        placeat .</p>
+  <div class="media-body">
+
+        <h5 class="media-heading"></h5>
+    <p> there is no company found with the name you have entered! </p>
 
 
   </div>
@@ -109,6 +107,7 @@
 </div>
 </div>
 <!-- end  company2-->
+@endif
 </div>
 
 <!--end search results-->

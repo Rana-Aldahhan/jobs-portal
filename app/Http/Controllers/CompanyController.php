@@ -66,7 +66,7 @@ class CompanyController extends Controller
                 }
                 //check if user is approved in any of company's job , so the user can message the company
                 $approvedCompany=$user->companyAcceptors()->find($id);
-                if(!is_null($notifyingCompany))//case the user can message the company
+                if(!is_null($approvedCompany))//case the user can message the company
                 {
                     $showMessageButton=true;
                 }

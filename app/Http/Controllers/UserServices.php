@@ -35,6 +35,7 @@ class UserServices extends Controller
         }
     }
     public function explore(Request $request){
+
         //if logged as company redirect to back
         if(Auth :: check())
         {
@@ -55,31 +56,38 @@ class UserServices extends Controller
             if(!is_null(auth()->user()->school_id))
             {
                 //add people of the same school to recomended people collection
-                $additionalRecomendedPeople= User :: where('school_id' ,auth()->user()->school_id);
+                $additionalRecomendedPeople= User :: where('school_id' ,auth()->user()->school_id)->get();
                 $recomendedPeople->push($additionalRecomendedPeople);
                 $recomendedPeople = $recomendedPeople->flatten();
             }
         }
         else//case not logged in, recommend people and companies of the selected industry ,school
         {
+            //dd($request);
             if(!is_null($request->companyIndustry))
             {
-                $recomendedCompanies = Company :: where('industry' , $request->companyIndustry) ->get();
+                $recomendedCompanies = Company :: where('industry_id' , $request->companyIndustry) ->get();
             }
             if(!is_null($request->peopleIndustry )){
-                $recomendedPeople = User::where('industry',$request->peopleIndustry)->get();
+
+                $recomendedPeople = User::where('industry_id',$request->peopleIndustry)->get();
             }
             if(!is_null($request->peopleEducation)){
-                $school= School :: where('name' ,$request->peopleEducation)->get() ;
+                $school= School :: where('name' ,$request->peopleEducation)->first() ;
                 if($school !=null)
                 {
-                $additionalRecomendedPeople= User :: where('school_id' ,$school->id);
+                $additionalRecomendedPeople= User :: where('school_id' ,$school->id)->get();
                 $recomendedPeople ->push($additionalRecomendedPeople);
                 $recomendedPeople = $recomendedPeople->flatten();
                 }
             }
         }
         $recomendedPeople=$recomendedPeople->shuffle();
+        if(!is_null(auth()->user())) {
+            $recomendedPeople = $recomendedPeople->reject(function ($value, $key) {
+                return $value->id == auth()->user()->id;
+            });
+        }
         $recomendedCompanies=$recomendedCompanies->shuffle();
         $industries= Industry :: all();
 
@@ -291,7 +299,7 @@ class UserServices extends Controller
                 return redirect()->back();
         }
         $searchResults = Company:: where ('name' , $request->input('companySearchName'))->get();
-        return view('company_search_results', ['searchResults',$searchResults]);
+        return view('company_search_results', ['searchResults'=>$searchResults]);
     }
     public function peopleSearchResults(Request $request){
         if(Auth :: check())
@@ -300,7 +308,7 @@ class UserServices extends Controller
                 return redirect()->back();
         }
         $searchResults = User:: where ('name' , $request->input('peopleSearchName'))->get();
-        return view('people_search_results', ['searchResults',$searchResults]);
+        return view('people_search_results', ['searchResults'=> $searchResults]);
     }
     public function filterJobs(Request  $request){
 
@@ -388,13 +396,13 @@ class UserServices extends Controller
         $user= auth()->user();
         //$company= Company :: find($id);
         $user->notifyingCompanies()->attach($id);
-        return redirect('/companies/{id}',['id',$id]);
+        return redirect('/companies/'.$id);
     }
     public function stopNotification($id){
         $user= auth()->user();
        // $company= Company :: find($id);
         $user->notifyingCompanies()->detach($id);
-        return redirect('/companies/{id}',['id',$id]);//TODO other probable syntax is /companies/.$id. ,,, or redirect to action
+        return redirect('/companies/'.$id);
     }
     public function reportCompany($id){
        if(auth()->user()->logged_as_company==true)

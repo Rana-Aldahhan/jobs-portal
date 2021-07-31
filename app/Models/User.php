@@ -147,7 +147,7 @@ class User extends Authenticatable
     ];
     public function currentCompany()
     {
-        return $this->belongsTo(Company :: class);
+        return $this->belongsTo(Company :: class,'current_company_id');
     }
     public function sentColleagues()//user1 is sender , user2 is receiver
     {

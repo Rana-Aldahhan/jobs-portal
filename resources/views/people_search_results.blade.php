@@ -7,7 +7,7 @@
     <title>Document</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-  
+
   <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
   <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
   <link rel="stylesheet" href="{{asset('css/orginal.css')}}">
@@ -18,13 +18,13 @@
 
 </head>
 <body>
-    
+
 
 <!--navbar user-->
-@extends('headerwithsigin')
+@extends('userheader')
 
   @section('cont')
- 
+
   @endsection
    <!--end navbar-->
 
@@ -39,28 +39,30 @@
 
 <!--start search results-->
 
-<!--start company-->
+<!--start people-->
+@if($searchResults->count()!=0)
+    @foreach($searchResults as $user)
+
 <div class="container">
 <div class="card cardppp"  >
-  <a id="update" href="#" class="editlink">
+    <a id="update" href="/users/{{$user->id}}" class="editlink">
   <div class="card-body">
 
 
 <div class="container">
 <div class="media">
   <div class="media-left">
-    <img src="{{asset('img/img_avatar-1.png')}}" class="media-object imgmed" >
+    <img src="{{asset('storage/profiles/'.$user->profile_thumbnail)}}" class="media-object imgmed" >
   </div>
 
-  
-  <div class="media-body">
-    <h5 class="media-heading">User's Name</h5>
-    <p>JOb Title , 
-        city , country</p>
 
-        <h5 class="media-heading">About this person</h5>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus minus, ea, 
-        placeat .</p>
+  <div class="media-body">
+    <h5 class="media-heading">{{$user->name}}</h5>
+    <p>{{$user->current_job_title}} ,
+        {{$user->city }}, {{$user->country}}</p>
+
+        <h5 class="media-heading">About this user:</h5>
+    <p> {{$user->about}}</p>
 
 
   </div>
@@ -72,8 +74,9 @@
   </a>
 </div>
 </div>
-<!-- end  company-->
-
+<!-- end  people-->
+    @endforeach
+ @else
 <!--start company2-->
 
 <div class="container">
@@ -84,18 +87,15 @@
 <div class="container">
 <div class="media">
   <div class="media-left">
-    <img src="{{asset('img/img_avatar-1.png')}}" class="media-object imgmed" >
+
   </div>
 
-  
-  <div class="media-body">
-    <h5 class="media-heading">User's Name</h5>
-    <p>JOb Title , 
-        city , country</p>
 
-        <h5 class="media-heading">About this person</h5>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus minus, ea, 
-        placeat .</p>
+  <div class="media-body">
+    <h5 class="media-heading"></h5>
+
+        <h5 class="media-heading"></h5>
+    <p> there is no user found with the name you have entered! </p>
 
 
   </div>
@@ -111,6 +111,7 @@
 </div>
 <!-- end  company2-->
 </div>
+@endif
 
 <!--end search results-->
 
