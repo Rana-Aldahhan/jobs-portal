@@ -2,6 +2,7 @@
 @yield('cont')
 
 @if(!(Auth :: check()))
+<link rel="stylesheet" href="{{asset('css/orginal.css')}}">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top ">
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +43,7 @@
 <!--end navbar-->
 @elseif(auth()->user()->logged_as_company==0)
     <!--navbar user-->
+    <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top scrolling-navbar">
         <img src="{{asset('img/bluelogo.png')}}" class="logo">
 
@@ -116,6 +118,7 @@
 
     </nav>
 @else
+    <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top ">
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

@@ -22,6 +22,7 @@ class CreateNotificationsTable extends Migration
             $table->unsignedBigInteger('causable_id')->nullable();
             $table->string('causable_type')->nullable();
             $table->string('notification_url');
+            $table->boolean('seen')->default(false);
             $table->timestamps();
         });
     }

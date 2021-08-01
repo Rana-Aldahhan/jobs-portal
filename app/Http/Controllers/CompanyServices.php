@@ -95,10 +95,12 @@ class CompanyServices extends Controller
         {
             $notification=new Notification();
             $notification->body='A company you are intrested in : '.$company->name.' has posted a new job opportunity,check it out!';
-            $notification->notifable_id=$user->id;
-            $notification->notifable_type='App\Models\User';
+            $notification->type='new job';
+            $notification->notifiable_id=$user->id;
+            $notification->notifiable_type='App\Models\User';
             $notification->causable_id=$company->id;
             $notification->causable_type='App\Models\Company';
+            $notification->notification_url='/jobs/'.$job->id;
             $notification->save();
         }
 

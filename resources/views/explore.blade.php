@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
     <link rel="stylesheet" href="{{asset('css/orginal.css')}}">
     <link rel="stylesheet" href="{{asset('css/explore.css')}}">
-    <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+
 
 </head>
 <body>

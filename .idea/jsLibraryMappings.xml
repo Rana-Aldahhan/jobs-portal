@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="PROJECT" libraries="{bootstrap, chosen, chosen.jquery, jquery, jquery-3.2.1.slim, popper.js}" />
+    <file url="PROJECT" libraries="{all, bootstrap, chosen, chosen.jquery, jquery, jquery-3.2.1.slim, malihu-custom-scrollbar-plugin, popper.js}" />
   </component>
 </project>

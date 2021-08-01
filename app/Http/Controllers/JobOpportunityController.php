@@ -34,6 +34,7 @@ class JobOpportunityController extends Controller
             //notification
             $notification = new Notification();
             $notification->body= 'The user ' . $approvingUser->name . ' has approved your job application to the job with the title ' . $job->title . ' of the ID '. $job->id;
+            $notification->type='approved';
             $notification->causable_id=$approvingUser->id;
             $notification->causable_type='App\Models\User';
             $notification->notifiable_id=$userID;
@@ -53,6 +54,7 @@ class JobOpportunityController extends Controller
             $approvedUser->companyAcceptors()->attach($approvingCompany->id);
              //notification
              $notification = new Notification();
+            $notification->type='approved';
              $notification->body= 'The company ' .$approvingCompany->name . ' has approved your job application to the job with the title' . $job->title . 'of the ID '. $job->id;
              $notification->causable_id=$approvingCompany->id;
              $notification->causable_type='App\Models\Company';

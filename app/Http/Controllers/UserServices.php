@@ -278,6 +278,12 @@ class UserServices extends Controller
             return redirect()->back();
         $user = auth()->user();
         $notifications=$user->notifications;
+        $notifications=$notifications->sortByDesc('created_at');
+        /*$user->notifications->map(function ($notification) {
+            $notification->seen=true;
+            return $notification->save();
+        });
+        */
         return view('user-notifications',['user' => $user , 'notifications' => $notifications]);
     }
     public function messeging(){
@@ -285,11 +291,13 @@ class UserServices extends Controller
         if($user->logged_as_company==true)
             return redirect()->back();
         $messegingCompanies=$user->companyAcceptors;
-        $messegingUsers=$user->userAcceptors;
-        $messegingUsers->push($user->acceptants);
+        $messegingUsers=null;
+        if($user->userAcceptors != null)
+            $messegingUsers=$user->userAcceptors;
+        if($user->userAcceptants != null)
+            $messegingUsers=$messegingUsers->union($user->userAcceptants);
         $messegingUsers = $messegingUsers->flatten();
-
-        return view('userMesseging',['user'=>$user, 'messegingCompanies'=>$messegingCompanies,
+        return view('userMessaging',['user'=>$user, 'messegingCompanies'=>$messegingCompanies,
         'messegingUsers'=>$messegingUsers]);
     }
     public function companySearchResults(Request $request){
@@ -444,18 +452,19 @@ class UserServices extends Controller
         $message= new Message();
         $message->body=$request->input('messageBody');
         $message->sendable_id=auth()->user()->id;
-        $message->recievable_id=$id;
+        $message->receivable_id=$id;
         $message->sendable_type='App\Models\User';
-        $message->recivable_type='App\Models\Company';
+        $message->receivable_type='App\Models\Company';
         $message->save();
         //send a notification of a new message to a company
         $notification = new Notification();
         $notification->body='You received a new message of this user: '.auth()->user()->name;
-        $notification->recievable_id=$id;
-        $notification->recievable_type='App\Models\Company';
+        $notification->type='message';
+        $notification->notifiable_id=$id;
+        $notification->notifiable_type='App\Models\Company';
         $notification->causable_id=auth()->user()->id;
         $notification->causable_type='App\Models\User';
-        $notification->notification_url='/users';
+        $notification->notification_url='/users/'.auth()->user()->id.'/messages';
         $notification->save();
 
         return redirect('/companies/{id}/messages',['id'=>$id]);
@@ -469,6 +478,7 @@ class UserServices extends Controller
         //send a notification to the job publisher
         $notification = new Notification();
         $notification->body= 'The user ' . $user->name .' has applied to a job you published ,with the title'  .$job->title . 'of the ID '.$job->id;
+        $notification->type='applicant';
         $notification->causable_id=$user->id;
         $notification->causable_type='App\Models\User';
         $notification->notifiable_id=$job->publishable_id;
@@ -522,6 +532,7 @@ class UserServices extends Controller
         //notification
         $notification = new Notification();
         $notification->body="the user ".$loggedUser->name . ' has added you as a colleague';
+        $notification->type='colleague';
         $notification->causable_id=$loggedUser->id;
         $notification->causable_type='App\Models\User';
         //$notification->type='new colleague';
@@ -554,6 +565,7 @@ class UserServices extends Controller
         return redirect('/users/'.$id);
     }
     public function showMessagesWithUser($id){
+        $messagedUser=User::find($id);
         $messages=[];
         $user=auth()->user();
         if(auth()->user()->logged_as_company==false)//case logged in as user
@@ -562,19 +574,35 @@ class UserServices extends Controller
                                             ->where('receivable_id',$id)->get();//TODO delete the ()
             $messages->push($user->receivedMessages()->where('sendable_type','App\Models\User')
                                                      ->where('sendable_id',$id)->get() );//TODO delete the ()
+
+            $user->receivedMessages()->where('sendable_type','App\Models\User')
+                ->where('sendable_id',$id)->get()->map(function ($message) {
+                    $message->seen=true;
+                    return $message->save();
+                });
         }
         else //case logged in as company
         {
-            $messages=$user->sentMessages()->where('receivable_type','App\Models\Company')
+            $company=Company::find($user->managing_company_id);
+            $messages=$company>sentMessages()->where('receivable_type','App\Models\User')
                                             ->where('receivable_id',$id)->get();//TODO delete the ()
-            $messages->push($user->recievedMessages()->where('sendable_type','App\Models\Company')
+            $messages->push($company->recievedMessages()->where('sendable_type','App\Models\User')
                                                      ->where('sendable_id',$id)->get());//TODO delete the ()
+
+            $company->receivedMessages()->where('sendable_type','App\Models\User')
+                ->where('sendable_id',$id)->get()->map(function ($message) {
+                    $message->seen=true;
+                    return $message->save();
+                });
         }
         $messages=$messages->flatten();
         $messages=$messages->sortBy('created_at');
+
+        //dd($messages);
+
         if(auth()->user()->logged_as_company)
-            return view('companyusermessages', ['messages'=>$messages,'user'=>$user]);
-        return view('userusermessages', ['messages'=>$messages,'user'=>$user]);
+            return view('companyusermessages', ['messages'=>$messages,'user'=>$user,'messagedUser'=>$messagedUser]);
+        return view('userusermessages', ['messages'=>$messages,'user'=>$user,'messagedUser'=>$messagedUser]);
     }
     public function sendMessageToUser(Request $request,$id){
         $message= new Message();
@@ -586,11 +614,12 @@ class UserServices extends Controller
             //send a notification of a new message to the receiving user
             $notification = new Notification();
             $notification->body='You received a new message of this user: '.auth()->user()->name;
-            $notification->recievable_id=$id;
-            $notification->recievable_type='App\Models\User';
+            $notification->type='message';
+            $notification->notifiable_id=$id;
+            $notification->notifiable_type='App\Models\User';
             $notification->causable_id=auth()->user()->id;
             $notification->causable_type='App\Models\User';
-            $notification->notification_url='/users';
+            $notification->notification_url='/users/'.auth()->user()->id.'/messages';
             $notification->save();
 
         }
@@ -602,17 +631,18 @@ class UserServices extends Controller
             //send a notification of a new message to the receiving user
             $notification = new Notification();
             $notification->body='You received a new message of this company: '.$company->name;
-            $notification->recievable_id=$id;
-            $notification->recievable_type='App\Models\User';
+            $notification->type='message';
+            $notification->notifiable_id=$id;
+            $notification->notifiable_type='App\Models\User';
             $notification->causable_id=$company->id;
             $notification->causable_type='App\Models\Company';
-            $notification->notification_url='/companies';
+            $notification->notification_url='/companies/'.$company->id.'/messages';
             $notification->save();
         }
-        $message->recievable_id=$id;
-        $message->recivable_type='App\Models\User';
+        $message->receivable_id=$id;
+        $message->receivable_type='App\Models\User';
         $message->save();
-        return redirect('/users/{id}/messages',['id'=>$id]);
+        return redirect('/users/'.$id.'/messages');
 
     }
     public function reportUser($id){

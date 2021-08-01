@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
@@ -15,162 +15,162 @@
     <link rel="stylesheet" href="{{asset('css/formcustomisedjob.css')}}">
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
-    <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+    <script src="{{asset('js/jquery-3.6.0.min.js')}}"></script>
+    <script src="{{asset('js/chosen.jquery.min.js')}}"></script>
+    <link rel="stylesheet" href="{{asset('css/chosen.min.css')}}">
+
 
 </head>
 <body>
 
+<!--navbar user-->
+@extends('headerwithsigin')
 
+@section('cont')
 
- <!--navbar user-->
+@endsection
 
- @extends('userheader')
-
-
- @section('cont')
-
- @endsection
-
-
-   <!--end navbar-->
-
-
-
-<!--start form-->
-
-<div class="form-body">
-        <div class="row">
-            <div class="form-holder">
- <div class="form-content">
-                    <div class="form-items">
-                        <h3>Find Jobs</h3>
-      <p>Fill in the data below.</p>
+<!--end navbar-->
+<div class="styleform">
+    <div class="container">
         <form class="requires-validation" novalidate method="get" action="/job-search-results">
+            @csrf
 
-            <div class="form-check space">
-                <input class="form-check-input" type="checkbox" value="1" id="checkbox1" name="remote" required>
-                <label class="form-check-label">Remote?</label>&nbsp;&nbsp;
-
-            </div>
-
-            <div class="col-md-12 space"id="box1">
-
-                <input class="form-control" type="text" name="city" placeholder="City" required>
-                <input class="form-control" type="text" name="country" placeholder="Country" required>
-
-            </div>
-
-
-            <div class="col-md-12 space">
-                <div class="sss">
-                    <select data-placeholder="Job industry" class="chosen-select form-select mt-3"name="industries"  >
-                        <option hidden disabled selected value> -- select an option -- </option>
-                        @foreach($industries as $industry)
-                            <option value="{{$industry->id}}">{{$industry->title}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-
-            <div class="col-md-12 space">
-              <div class="sss">
-                <select multiple data-placeholder="Your Skills" class="chosen-select form-select mt-3" name="skills[]"  >
-
-                    @foreach($skills as $skill)
-                      <option value="{{$skill->id}}">{{$skill->title}}</option>
-                    @endforeach
-
-                </select>
-              </div>
-            </div>
-
-
-            <div class="col-md-12 space">
-              <div class="sss">
-            <select data-placeholder="Type of job position" class="chosen-select form-select mt-3"name="typeOfPosition"  >
-                <option hidden disabled selected value> -- select an option -- </option>
-                @foreach($typeOfPosition as $position)
-                    <option value="{{$position->id}}">{{$position->name}}</option>
-                @endforeach
-        </select>
-              </div>
-            </div>
-
-
-            <div class="col-md-12 space">
-                <input class="form-control" type="string" name="required_experience" placeholder="Your Experience years in that industry " required>
-
-            </div>
-
-            <div class="col-md-12 space">
-                <input class="form-control" type="string" name="salary" placeholder="Salary" required>
-
-            </div>
-
-
-
-        <div class="form-check space"id="box1">
-          <input class="form-check-input" type="checkbox" value="1" id="invalidCheck" name="transport" required>
-          <label class="form-check-label">With transpotation?</label>
-
-        </div>
+            <div class=" card d-flex justify-content-center mx-auto my-3 p-5" style="width: 40rem;">
+                <div class="card-body">
+                    <h2 class="card-title">Find Jobs</h2>
+                    <h5 class="text-muted "> <i class="fa fa-hand-o-down" aria-hidden="true"></i>Fill in the data below.</h5>
 
 
 
 
-            <div class="form-button mt-3">
-                                <button id="submit" type="submit" class="btn btn-primary btnform">Search</button>
-                            </div>
-                        </form>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="checkbox1" value="1" name="remote">
+
+                        <label class="form-check-label" for="inlineCheckbox1">&nbsp;&nbsp;Remote?
+                        </label>
+
                     </div>
+
+                    <div class="form-row" id="box1">
+                        <div class="form-group col-md-6 ">
+                            <label for="inputEmail">City <span>*</span></label>
+                            <input class="form-control" type="text" name="city" required>
+
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="inputPhone">Country <span>*</span></label>
+                            <input class="form-control" type="text" name="country"  required>
+
+
+                        </div>
+
+                        <div class="form-check space"id="box1">
+                            <input class="form-check-input" type="checkbox" value="1" id="invalidCheck" name="transport" required>
+                            <label class="form-check-label">With transpotation?</label>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-group col-md-6 ">
+                        <label for="validationTooltip01"> Industry Field <span>*</span> </label>
+                        <select class="custom-select" required>
+                            <option hidden disabled selected value> -- select an option -- </option>
+                            @foreach($industries as $industry)
+                                <option value="{{$industry->id}}">{{$industry->title}}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+
+                    <div class="form-group col-md-6 ">
+                        <label for="inputState">Your Skills <span>*</span></label>
+
+                        <select   class="form-control chosen-select  " name="skills[]" multiple required="">
+                            @foreach($skills as $skill)
+                                <option value="{{$skill->id}}">{{$skill->title}}</option>
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group col-md-6 ">
+                        <label for="validationTooltip01"> Type of Job Position <span>*</span> </label>
+                        <select class="custom-select" required>
+                            <option hidden disabled selected value> -- select an option -- </option>
+                            @foreach($typeOfPosition as $position)
+                                <option value="{{$position->id}}">{{$position->name}}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group col-md-6 ">
+
+                        <label for="inputLastName ">Your Experience Years In That Industry <span>*</span>
+                        </label>
+                        <input type="string" class="form-control "  name="required_experience" required>
+
+
+                    </div>
+
+                    <div class="form-group col-md-6 ">
+                        <label for="inputLastName">Salary<span>*</span>
+                        </label>
+                        <input class="form-control" type="string" name="salary" placeholder="Salary" required>
+
+                    </div>
+
+
+
+                    <div class="form-button pt-4">
+                        <button id="submit" type="submit" class="btn btn-primary btn-block btn-lg" value="Register" name="publish">
+                            <span>Search</span></button> </div>
+
+
+
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-
-
-<!--end form-->
+</div>
 
 
 <script>
-  function toggleFields(boxId, checkboxId) {
-  var checkbox = document.getElementById(checkboxId);
-  var box = document.getElementById(boxId);
-  checkbox.onclick = function() {
-    console.log(this);
-    if (this.checked) {
-      box.style['display'] = 'none';
-    } else {
-      box.style['display'] = 'block';
+    function toggleFields(boxId, checkboxId) {
+        var checkbox = document.getElementById(checkboxId);
+        var box = document.getElementById(boxId);
+        checkbox.onclick = function() {
+            console.log(this);
+            if (this.checked) {
+                box.style['display'] = 'none';
+            } else {
+                box.style['display'] = 'block';
+            }
+        };
     }
-  };
-}
-toggleFields('box1', 'checkbox1');
+    toggleFields('box1', 'checkbox1');
 
 </script>
 
 
 <script>
-  $(".chosen-select").chosen({
-no_results_text: "Oops, nothing found!"
-
-})
-
+    $(".chosen-select").chosen({
+        no_results_text: "Oops, nothing found!"
+    })
 </script>
 
-
-   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-    <script src="{{asset('js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('js/bootstrap.js')}}"></script>
-
-
-
-
-
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="{{asset('js/bootstrap.min.js')}}"></script>
+<script src="{{asset('js/bootstrap.js')}}"></script>
 
 </body>
 </html>

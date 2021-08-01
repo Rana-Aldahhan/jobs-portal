@@ -20,6 +20,7 @@ class CreateMessagesTable extends Migration
             $table->unsignedBigInteger('receivable_id')->nullable();
             $table->string('receivable_type')->nullable();
             $table->string('body');
+            $table->boolean('seen')->default(false);
             $table->timestamps();
         });
     }
