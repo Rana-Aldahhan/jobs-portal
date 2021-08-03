@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PositionType;
+use App\Models\Skill;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Company;
@@ -19,7 +20,6 @@ use Illuminate\Validation\Rule;
 class UserServices extends Controller
 {
     public function switchToCompanyAccount(){
-        //TODO check in view if managing company is null then show this button or not
         if(auth()->user()->logged_as_company==true)
         return redirect()->back();
         if(!is_null(auth()->user()->managing_company_id))//user has created a company
@@ -31,7 +31,7 @@ class UserServices extends Controller
             }
         else//user have not created a company
         {//TODO process message in view
-            redirect()->back()->with('warning','you don\'t have a company account yet!');
+            return redirect()->back()->with('warning','you don\'t have a company account yet!');
         }
     }
     public function explore(Request $request){
@@ -57,7 +57,7 @@ class UserServices extends Controller
             {
                 //add people of the same school to recomended people collection
                 $additionalRecomendedPeople= User :: where('school_id' ,auth()->user()->school_id)->get();
-                $recomendedPeople->push($additionalRecomendedPeople);
+                $recomendedPeople->union($additionalRecomendedPeople);
                 $recomendedPeople = $recomendedPeople->flatten();
             }
         }
@@ -77,7 +77,7 @@ class UserServices extends Controller
                 if($school !=null)
                 {
                 $additionalRecomendedPeople= User :: where('school_id' ,$school->id)->get();
-                $recomendedPeople ->push($additionalRecomendedPeople);
+                $recomendedPeople ->union($additionalRecomendedPeople);
                 $recomendedPeople = $recomendedPeople->flatten();
                 }
             }
@@ -128,8 +128,14 @@ class UserServices extends Controller
         //job attributes
         $job = new JobOpportunity();
         $job->title=$request->input('title');
-        $job->remote=$request->input('remote');
-        $job->transportation=$request->input('transport');
+        if($request->input('remote')!= null)
+            $job->remote=$request->input('remote');
+        else
+            $job->remote=0;
+        if($request->input('transport')!= null)
+            $job->transportation=$request->input('transport');
+        else
+            $job->transportation=0;
         $job->city=$request->input('city');
         $job->country=$request->input('country');
         $job->role=$request->input('role');
@@ -142,7 +148,7 @@ class UserServices extends Controller
         $job->save();
 
         //job relations
-        $job->industry()->associate($request->input('industries'));
+        $job->industry()->associate($request->input('industry'));
         $job->typeOfPosition()->associate($request->input('position'));
         $job->requiredSkills()->attach($request->input('skills'));
         $job->save();
@@ -150,7 +156,7 @@ class UserServices extends Controller
         return redirect('/published-jobs');
     }
     public function showJobSearch(){
-        $skills=\App\Models\Skill::all();
+        $skills=Skill::all();
         $industries =Industry::all();
         $typeOfPosition=PositionType::all();
         return view ('job-search',['skills'=>$skills , 'industries'=>$industries,'typeOfPosition'=>$typeOfPosition]);
@@ -197,7 +203,7 @@ class UserServices extends Controller
         $company->slogan=$request->input('slogan');
         $company->about=$request->input('about');
 
-        //TODO image processing
+
         if($request->hasFile('logo')){
             // Get filename with the extension
             $filenameWithExt = $request->file('logo')->getClientOriginalName();
@@ -262,9 +268,8 @@ class UserServices extends Controller
         $user = auth()->user()->load(['publishedJobs.requiredSkills','publishedJobs.industry']);
        //$publishedJobs=$user->publishedJobs;
       // $publishedJobs->load(['requiredSkills','industry']);
-        //TODO see why not sorting wel
-        $user->publishedJobs->sortByDesc('updated_at');
-        return view('user_published_jobs',['user' => $user]);//,'publishedJobs' => $publishedJobs]);
+        $publishedJobs=$user->publishedJobs->sortByDesc('created_at');
+        return view('user_published_jobs',['user' => $user,'publishedJobs' => $publishedJobs]);
     }
     public function appliedJobs(){
         if (auth()->user()->logged_as_company==true)
@@ -381,9 +386,9 @@ class UserServices extends Controller
                 return $job->transportation == request('transport');
             });
         }
+        //TODO make jobs two kind : matched jobs (count in both sort condition below must be 0) , and similler jobs
 
         if(!is_null($request->input('skills') )) {//TODO sort by request's specification
-            //TODO explain the changes
             $jobSearchResults = $jobSearchResults->sortBy([
                 function ($job){
                     return count( collect( request('skills') )->diff( $job->requiredSkills ->modelKeys() )  );
@@ -427,13 +432,11 @@ class UserServices extends Controller
         // $company=Company :: find($id);
         //$company->incomingReports()->save($report);
         $report->sendable_id=auth()->user()->id;
-        $report->sendable_type='App\Models\User';//TODO attaching or saving
-        $report->recievable_id=$id;
-        $report->recievable_type='App\Models\Company';//TODO attaching or saving
+        $report->sendable_type='App\Models\User';
+        $report->receivable_id=$id;
+        $report->receivable_type='App\Models\Company';
         $report->save();
-
-        return redirect('/companies/{id}' ,['id'=>$id]);
-
+        return redirect('/companies/'.$id);
     }
     public function showMessagesWithCompany($id){
         if(auth()->user()->logged_as_company==true)
@@ -443,7 +446,7 @@ class UserServices extends Controller
         $messages=collect();
         $user=auth()->user();
         $messages=$user->sentMessages()->find($id);//TODO check receivable and sendable type
-        $messages->push($user->recievedMessages()->find($id));
+        $messages->push($user->receivedMessages()->find($id));
         $messages=$messages->flatten();
         $messages=$messages->sortBy('created_at');
         return view('conversation', ['messages'=>$messages,'user'=>$user]);
@@ -584,9 +587,9 @@ class UserServices extends Controller
         else //case logged in as company
         {
             $company=Company::find($user->managing_company_id);
-            $messages=$company>sentMessages()->where('receivable_type','App\Models\User')
+            $messages=$company->sentMessages()->where('receivable_type','App\Models\User')
                                             ->where('receivable_id',$id)->get();//TODO delete the ()
-            $messages->push($company->recievedMessages()->where('sendable_type','App\Models\User')
+            $messages->push($company->receivedMessages()->where('sendable_type','App\Models\User')
                                                      ->where('sendable_id',$id)->get());//TODO delete the ()
 
             $company->receivedMessages()->where('sendable_type','App\Models\User')
@@ -620,7 +623,6 @@ class UserServices extends Controller
             $notification->causable_id=auth()->user()->id;
             $notification->causable_type='App\Models\User';
             $notification->notification_url='/users/'.auth()->user()->id.'/messages';
-            $notification->save();
 
         }
         else//logged as company
@@ -637,8 +639,8 @@ class UserServices extends Controller
             $notification->causable_id=$company->id;
             $notification->causable_type='App\Models\Company';
             $notification->notification_url='/companies/'.$company->id.'/messages';
-            $notification->save();
-        }
+         }
+        $notification->save();
         $message->receivable_id=$id;
         $message->receivable_type='App\Models\User';
         $message->save();
@@ -649,6 +651,7 @@ class UserServices extends Controller
          return view('report',['id'=>$id]);
     }
     public function sendUserReport(Request $request,$id){
+       // dd($request);
         $report = new Report();
         $report->reason=$request->input('reportReason');
         $report->information=$request->input('reportInformation');
@@ -661,11 +664,11 @@ class UserServices extends Controller
             $report->sendable_id=auth()->user()->managing_company_id;
             $report->sendable_type='App\Models\Company';
         }
-        $report->recievable_id=$id;
-        $report->recievable_type='App\Models\Company';//TODO attaching or saving
+        $report->receivable_id=$id;
+        $report->receivable_type='App\Models\User';
         $report->save();
 
-        return redirect('/users/{id}',['id'=>$id]);
+        return redirect('/users/'.$id);
 
     }
     //website admin functionalities
@@ -679,7 +682,7 @@ class UserServices extends Controller
         {
             return redirect()->back();
         }
-        $companiesReports=Report :: where('receivable_type','App\Models\Company')->get();
+       /* $companiesReports=Report :: where('receivable_type','App\Models\Company')->get();
         $usersReports=Report ::where('receivable_type','App\Models\User')->get();
         $companiesReports=$companiesReports->groupBy('receivable_id');
         $usersReports=$usersReports->groupBy('receivable_id');
@@ -693,10 +696,28 @@ class UserServices extends Controller
         $usersIDs=$usersReports->keys();
         $reportedCompanies=Company::find($companiesIDs);
         $reportedUsers=User::find($usersIDs);
+       */
 
-        return view ('manageReports',['user'=>$user,'companiesReports'=>$companiesReports,'companiesIds'=>$companiesIDs,
-            'usersReports'=>$usersReports,'usersIds'=>$usersIDs,
-            'reportedCompanies'=>$reportedCompanies,'reportedUsers'=>$reportedUsers]);
+        //new code
+        $reportedUsers=User::all()->load('incomingReports');
+        $reportedUsers=$reportedUsers->reject(function ($user){
+            return $user->incomingReports->count()==0;
+        });
+        $reportedUsers=$reportedUsers->sortByDesc(function ($user){
+            return count($user->incomingReports);
+        });
+
+        $reportedCompanies=Company::all()->load('incomingReports');
+        $reportedCompanies=$reportedCompanies->reject(function ($company){
+            return $company->incomingReports->count()==0;
+        });
+        $reportedCompanies=$reportedCompanies->sortByDesc(function ($company){
+            return count($company->incomingReports);
+        });
+
+
+        return view ('managerReports',['user'=>$user,
+            'reportedCompanies'=>$reportedCompanies,'reportedUsers'=>$reportedUsers ]);
     }
     public function showCompanyReports($id){
         $user=auth()->user();
@@ -709,9 +730,10 @@ class UserServices extends Controller
             return redirect()->back();
         }
         $reportedCompany=Company :: find($id);
-        $reports=$reportedCompany->incomingReports;
+        $reports=$reportedCompany->incomingReports->load('sendable');
+        $reports=$reports->sortByDesc('created_at');
 
-        return view('show_company_reports',['user'=>$user,'reportedCompany'=>$reportedCompany,'reports'=>$reports]);
+        return view('company-reports',['user'=>$user,'reportedCompany'=>$reportedCompany,'reports'=>$reports]);
     }
     public function showUserReports($id){
         $user=auth()->user();
@@ -724,9 +746,9 @@ class UserServices extends Controller
             return redirect()->back();
         }
         $reportedUser=User :: find($id);
-        $reports=$reportedUser->incomingReports;
-
-        return view('show_company_reports',['user'=>$user,'reportedUser'=>$reportedUser,'reports'=>$reports]);
+        $reports=$reportedUser->incomingReports->load('sendable');
+        $reports=$reports->sortByDesc('created_at');
+        return view('user-reports',['user'=>$user,'reportedUser'=>$reportedUser,'reports'=>$reports]);
     }
 
 

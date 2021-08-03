@@ -50,85 +50,59 @@
 
                 <div class="card-body contacts_body">
                     <ul class="contacts">
-                        <li class=""><!--active-->
+                        <li class="">
                             <div class="d-flex bd-highlight">
                                 <div class="img_cont">
-                                    <img src="https://static.turbosquid.com/Preview/001214/650/2V/boy-cartoon-3D-model_D.jpg" class="rounded-circle user_img">
-
+                                    <a href="/users/{{$reportedUser->id}}">
+                                    <img src="{{asset('storage/profiles/'.$reportedUser->profile_thumbnail)}}" class="rounded-circle user_img">
+                                    </a>
                                 </div>
                                 <div class="user_info">
-                                    <span>Khalid</span>
+                                    <span><a href="/users/{{$reportedUser->id}}">
+                                            {{$reportedUser->name }}
+                                        </a> <br> {{$reportedUser->incomingReports->count()}} report on this user.</span>
 
                                 </div>
-                                <button type="button" class="btn btn-info" style="margin-left: 200px">block user</button>
+                                <form action="/manage-reports/users/{{$reportedUser->id}}/delete" method="post" id="blockuser">
+                                    @csrf
+                                    @method('DELETE')
+                                <button type="button" class="btn btn-info" style="margin-left: 200px"
+                                        onclick="document.getElementById('blockuser').submit(); return false;">
+                                    block user</button>
+                                </form>
                             </div>
 
                         </li>
 
-
+                       @foreach($reports as $report)
                         <li>
-
                             <div class="card w-75 " style="height: 150px">
                                 <div class="card-body">
                                     <div class="row">
 
                                         <div class="col-lg-4 col-sm-auto mb-3">
                                             <div class="img_cont">
-                                                <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">
-                                                <p>user</p>
+                                                <a href="/users/{{$report->sendable->id}}">
+                                                <img src="{{asset('storage/profiles/'.$report->sendable->profile_thumbnail)}}" class="rounded-circle user_img">
+                                                </a>
+                                                    <p> </p>
                                             </div>
 
                                         </div>
                                         <div class="col-lg-4 col-sm-auto mb-3">
-                                            <p>report name <br>report reason <br>report info</p>
+                                            <p>reporter name :{{$report->sendable->name}}
+                                                <br>report reason : {{$report->reason}}
+                                                <br>report infomation: {{$report->information}}
+                                                <br> report sent {{$report->created_at->diffForHumans()}}
+                                            </p>
 
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </li>
-                        <li>
+                        @endforeach
 
-                            <div class="card w-75 " style="height: 150px">
-                                <div class="card-body">
-                                    <div class="row">
-
-                                        <div class="col-lg-4 col-sm-auto mb-3">
-                                            <div class="img_cont">
-                                                <img src="{{asset('img/win win hiring.png')}}" class="rounded-circle user_img">
-                                                <p>company</p>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-lg-4 col-sm-auto mb-3">
-                                            <p>report name <br>report reason <br>report info</p>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-
-                            <div class="card w-75 " style="height: 150px " >
-                                <div class="card-body">
-                                    <div class="row">
-
-                                        <div class="col-lg-4 col-sm-auto mb-3">
-                                            <div class="img_cont">
-                                                <img src="https://i.pinimg.com/originals/ac/b9/90/acb990190ca1ddbb9b20db303375bb58.jpg" class="rounded-circle user_img">
-                                                <p>user</p>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-lg-4 col-sm-auto mb-3">
-                                            <p>report name <br>report reason <br>report info</p>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
                     </ul>
                 </div>
 

@@ -102,7 +102,7 @@
 
                     <div class="form-group col-md-6 ">
                         <label for="validationTooltip01"> Industry field <span>*</span> </label>
-                        <select class="custom-select" required>
+                        <select class="custom-select" required name="industry">
                             @foreach($industries as $industry)
                                 <option value="{{$industry->id}}"> {{$industry->title}} </option>
                             @endforeach

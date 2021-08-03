@@ -135,7 +135,8 @@
                                 <hr>
                             @endif
 
-                            @if(!$showIgnoreRequest && !$showApproveRequest && !$showCancelRequest && !$showAddColleagues)
+                            @if(!$showIgnoreRequest && !$showApproveRequest && !$showCancelRequest && !$showAddColleagues
+                                && !$loggedUser->logged_as_company)
                                 <div class="stylego">
 
                                         <a id="update "  class="editlink" >

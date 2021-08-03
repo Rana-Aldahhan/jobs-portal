@@ -49,7 +49,7 @@ class UserController extends Controller
 
 
         //count this month reaches with distinct viewers
-        $companyReachCount=DB :: table('user_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();
+        $companiesReachCount=DB :: table('company_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();
 
         return view('user-profile', ['user' => $user,'school'=>$school,'skills'=> $skills,'industry'=>$industry,
         'languages'=>$languages,'workplaces'=>$workplaces,'sentColleagues'=>$sentColleagues,'receivedColleagues'=>$receivedColleagues,'usersReachCount'=>$usersReachCount,
@@ -91,12 +91,11 @@ class UserController extends Controller
 
     public function show($id)
     {
-
         $loggedUser=auth()->user();//can be null
         if($loggedUser!= null && $id == $loggedUser->id)
             return redirect('/profile');
 
-        $user=User::find($id);
+        $user=User::findOrFail($id);
         $school=$user->school;
         $skills=$user->skills;
         $workPlaces=$user->workPlaces;
@@ -105,18 +104,15 @@ class UserController extends Controller
         $receivedColleagues=$user->receivedColleagues()->wherePivot('approved',1)->get();
         $colleagues =$sentColleagues->push($receivedColleagues)->flatten()->shuffle();
         $userPublishedJobs=$user->publishedJobs;
-
         $showAddColleagues=true;// cancel colleagues request
         $showCancelRequest=false;
         $showApproveRequest=false;//show remove request
         $showIgnoreRequest=false;
-
         $showMessage=false;
-
 
         if(Auth :: check())//case logged in
         {
-            if($user->logged_as_company==false)//logged as user
+            if($loggedUser->logged_as_company==false)//logged as user
             {
                 //show colleagues states
                 $sender=$loggedUser->sentColleagues()->find($id);
@@ -175,6 +171,7 @@ class UserController extends Controller
                 //show message in case a user has applied and has been approved to a company's job
                 $company = Company::find($loggedUser->managing_company_id);
                 $companyAcceptor=$user->companyAcceptors()->find($company->id);
+                $showAddColleagues=false;
                 if(!is_null($companyAcceptor))
                 {
                     $showMessage=true;
@@ -183,6 +180,7 @@ class UserController extends Controller
                 $user->companyViewers()->attach($company);
             }
         }
+
         return view('show-user',['loggedUser'=>$loggedUser,'user'=>$user,'school'=>$school,'skills'=>$skills, 'workPlaces'=>$workPlaces,
         'languages'=>$languages, 'colleagues'=>$colleagues,'userPublishedJobs'=> $userPublishedJobs,
         'showAddColleagues'=>$showAddColleagues,'showCancelRequest'=>$showCancelRequest,'showApproveRequest'=>$showApproveRequest,'showIgnoreRequest'=>$showIgnoreRequest,
@@ -392,8 +390,36 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        //TODO detach every thing and delete every thing belongs to it
         //case of website's admin deleting a user
         $user=User::find($id);
+        DB::table('application')->where('user_id',$id)->delete();
+        DB::table('colleagues')->where('user1_id',$id)->orWhere('user2_id',$id)->delete();
+        DB::table('company_user_acceptants')->where('acceptant_id',$id)->delete();
+        DB::table('company_user_views')->where('viewer_id',$id)->delete();
+        //TODO delete related job things
+        foreach ($user->publishedJobs as $job)
+        {
+            DB::table('application')->where('job_id',$job->id)->delete();
+            DB::table('job_skill')->where('job_id',$job->id)->delete();
+            DB::table('saved_jobs')->where('job_id',$job->id)->delete();
+            DB::table('user_job_views')->where('viewer_id',$job->id)->delete();
+        }
+        $user->publishedJobs()->delete();
+        DB::table('languages_user')->where('user_id',$id)->delete();
+        DB::table('messages')->where(['sendable_id','sendable_type'],[$id,'App\Models\User'])
+                    ->orWhere(['receivable_id','receivable_type'],[$id,'App\Model\User'])->delete();
+        DB::table('notifications')->where(['causable_id','causable_type'],[$id,'App\Models\User'])
+            ->orWhere(['notifiable_id','notifiable_type'],[$id,'App\Model\User'])->delete();
+        DB::table('reports')->where(['sendable_id','sendable_type'],[$id,'App\Models\User'])
+            ->orWhere(['receivable_id','receivable_type'],[$id,'App\Model\User'])->delete();
+        DB::table('saved_jobs')->where('user_id',$id)->delete();
+        DB::table('skill_user')->where('user_id',$id)->delete();
+        DB::table('user_job_views')->where('viewing_id',$id)->delete();
+        DB::table('user_notifying_company')->where('user_id',$id)->delete();
+        DB::table('user_user_acceptants')->where('acceptor_id',$id)->orWhere('acceptant_id',$id)->delete();
+        DB::table('user_user_views')->where('viewer_id',$id)->orWhere('viewing_id',$id)->delete();
+        DB::table('user_workplace')->where('user_id',$id)->delete();
         $user->delete();
         return redirect('manage-reports');
     }

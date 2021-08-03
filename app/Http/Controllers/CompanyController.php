@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CompanyController extends Controller
 {
@@ -100,9 +101,31 @@ class CompanyController extends Controller
 
     public function destroy($id)
     {
+        //TODO detache every thing and delete every thing blongs to it
         //case of website's admin deleting a company
-     $company=Company::find($id);
-     $company->delete();
-     return redirect('manage-reports');
+         $company=Company::find($id);
+         DB::table('company_user_acceptants')->where('acceptor_id',$id)->delete();
+         DB::table('company_user_views')->where('viewing_id',$id)->delete();
+            foreach ($company->publishedJobs as $job)
+            {
+                DB::table('application')->where('job_id',$job->id)->delete();
+                DB::table('job_skill')->where('job_id',$job->id)->delete();
+                DB::table('saved_jobs')->where('job_id',$job->id)->delete();
+                DB::table('user_job_views')->where('viewer_id',$job->id)->delete();
+            }
+         $company->publishedJobs()->delete();
+        DB::table('messages')->where(['sendable_id','sendable_type'],[$id,'App\Models\Company'])
+            ->orWhere(['receivable_id','receivable_type'],[$id,'App\Model\Company'])->delete();
+        DB::table('notifications')->where(['causable_id','causable_type'],[$id,'App\Models\Company'])
+            ->orWhere(['notifiable_id','notifiable_type'],[$id,'App\Model\Company'])->delete();
+        DB::table('reports')->where(['sendable_id','sendable_type'],[$id,'App\Models\Company'])
+            ->orWhere(['receivable_id','receivable_type'],[$id,'App\Model\Company'])->delete();
+        foreach ($company->employees as $user)
+            $user->currentCompany()->disassociate();
+        foreach ($company->managingUsers as $user)
+            $user->managingCompany()->disassociate();
+        DB::table('user_notifying_company')->where('company_id',$id)->delete();
+         $company->delete();
+         return redirect('manage-reports');
     }
 }

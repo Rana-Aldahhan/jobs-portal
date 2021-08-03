@@ -116,7 +116,7 @@
 
                   <hr>
 
-              @else
+              @elseif(!$user->logged_as_company)
                   <div class="stylego">
                       <form method="post" action="/jobs/{{$job->id}}/withdraw-application" id="unapply">
                           @csrf
@@ -150,7 +150,7 @@
                       </div>
                       <hr>
 
-              @else
+                  @elseif(!$user->logged_as_company)
 
                       <div class="stylego">
                           <form method="post" action="/jobs/{{$job->id}}/unsave" id="unsave">
@@ -196,6 +196,25 @@
 
 
 </h2>
+      @if($job->publishable_id==auth()->user()->id && $job->publishable_type='App\Models\User' && !auth()->user()->logged_as_company
+           || $job->publishable_id==auth()->user()->managing_company_id && $job->publishable_type='App\Models\Company' && auth()->user()->logged_as_company)
+      <div class="row">
+          <div class="col mb-3">
+              <div class="form-group">
+                  <h3><span class="glyphicon glyphicon-thumbs-up"><svg class="octicon octicon-graph UnderlineNav-octicon d-none d-sm-inline" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>
+                                </span>Your monthly Users reaches :
+                  </h3>
+                  <br>
+                  <div > <strong> number of other unique users reaches : {{$reachCount}}</strong></div><br>
+
+
+
+
+              </div>
+          </div>
+      </div>
+      @endif
+
       <h6>
           @if(!$job->remote)
               {{ucwords($job->city)}} ,{{ucwords($job->country)}}.

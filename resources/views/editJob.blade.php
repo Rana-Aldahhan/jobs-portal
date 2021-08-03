@@ -41,8 +41,8 @@
 
             <div class=" card d-flex justify-content-center mx-auto my-3 p-5" style="width: 40rem;">
                 <div class="card-body">
-                    <h2 class="card-title">Create New Job</h2>
-                    <h6 class="text-muted">Fill The Information Below To Publish Your Job Opportunity</h6>
+                    <h2 class="card-title">Edit your published Job</h2>
+                    <h6 class="text-muted">Fill The Information Below To Edit Your Published Job Opportunity</h6>
 
 
                     <div class="form-group col-md-6 first  @error('title') is-invalid @enderror"> <label for="inputFirstName">Title job" <span>*</span></label>
@@ -101,7 +101,7 @@
 
                     <div class="form-group col-md-6 ">
                         <label for="validationTooltip01"> Industry field <span>*</span> </label>
-                        <select class="custom-select" required>
+                        <select class="custom-select" required name="industry">
                             @foreach($industries as $industry)
                                 @if($job->industry_id == $industry->id)
                                     <option  value="{{$industry->id}}" selected> {{$industry->title}}</option>
@@ -195,7 +195,7 @@
                         <label class="form-check-label" for="inlineCheckbox1">&nbsp;&nbsp;I Agree To The Terms & Conditions</label> </div>
                     <div class="form-button pt-4">
                         <button type="submit" class="btn btn-primary btn-block btn-lg" >
-                            <span>Publish The Job</span></button> </div>
+                            <span>Save edits</span></button> </div>
 
 
                 </div>

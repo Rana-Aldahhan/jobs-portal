@@ -40,8 +40,8 @@
 
             <div id="div">
                 <div class="profile">
-                    <a href="index.html">
-                        <img src="{{asset('img/img_avatar-1.png')}}" alt="" class="img-fluid rounded-circle">
+                    <a href="/profile">
+                        <img src="{{asset('storage/profiles/'.auth()->user()->profile_thumbnail)}}" alt="" class="img-fluid rounded-circle">
                     </a>
 
                 </div>

@@ -155,7 +155,8 @@ class JobOpportunityController extends Controller
                 else//the logged user is not the publisher of the job
                 {
                     // increment the job's reaches
-                    $job->userViewers()->attach($user);
+                    $user->jobViewings()->attach($job);
+                    //$job->userViewers()->save($user);
                 }
                 if (!is_null($user->savedJobs()->find($id)))//the user already saved the job
                 {
