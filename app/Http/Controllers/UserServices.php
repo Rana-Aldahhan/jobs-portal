@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PositionType;
 use App\Models\Skill;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Company;
@@ -324,7 +325,6 @@ class UserServices extends Controller
         return view('people_search_results', ['searchResults'=> $searchResults]);
     }
     public function filterJobs(Request  $request){
-
         $user=auth()->user();
         $jobSearchResults=JobOpportunity:: where('expired',false)->get();
 
@@ -388,7 +388,7 @@ class UserServices extends Controller
         }
         //TODO make jobs two kind : matched jobs (count in both sort condition below must be 0) , and similler jobs
 
-        if(!is_null($request->input('skills') )) {//TODO sort by request's specification
+       /* if(!is_null($request->input('skills') )) {
             $jobSearchResults = $jobSearchResults->sortBy([
                 function ($job){
                     return count( collect( request('skills') )->diff( $job->requiredSkills ->modelKeys() )  );
@@ -398,10 +398,83 @@ class UserServices extends Controller
             }
                 ]);
         }
+       */
+        // new skill code
+        if(!is_null($request->input('skills') ))
+        {
+            $jobSearchResults=$jobSearchResults->reject(function ($job){
+               return  collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count() ==0;
+            });
+            $jobSearchResults = $jobSearchResults->sortByDesc(
+                [function ($job){
+                return collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count();
+            },
+                    function($job){
+                        return $job->requiredSkills->count()== request('skills')->count();
+                    }
+            ]);
+        }
+        if(!is_null(request('sortBy')))
+        {
+            if(request('sortBy') == 'date')
+                $jobSearchResults=$jobSearchResults->sortByDesc('created_at');
+            if(request('sortBy') == 'salary')
+                $jobSearchResults=$jobSearchResults->sortByDesc('salary');
+            if(request('sortBy') == 'convenient')
+            {
+                if(!is_null($request->input('skills') ))
+                {
+                    $jobSearchResults=$jobSearchResults->reject(function ($job){
+                        return  collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count() ==0;
+                    });
+                    $jobSearchResults = $jobSearchResults->sortByDesc(
+                        [function ($job){
+                            return collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count();
+                        },
+                            function($job){
+                                return $job->requiredSkills->count()== request('skills')->count();
+                            }
+                        ]);
+                }
+            }
+        }
         $jobSearchResults->load(['industry','typeOfPosition','requiredSkills','publishable']);
-        //dd($jobSearchResults);
-        //TODO reject all jobs published by user
 
+       // reject all jobs published by the logged user
+        if(Auth::check()) {
+            $jobSearchResults = $jobSearchResults->reject(function ($job) {
+                return $job->publishable_id == auth()->user()->id && $job->publishable_type=='App\Models\User';
+            });
+        }
+
+        return view('job_search_results',['user'=>$user,'jobSearchResults'=>$jobSearchResults]);
+    }
+    public function sortJobs($results)
+    {
+        dd('smth');
+        $jobSearchResults=$results;
+        $user=auth()->user();
+        if(request('date'))
+            $jobSearchResults=$jobSearchResults->sortBy('created_at');
+        if(request('salary'))
+            $jobSearchResults=$jobSearchResults->sortByDesc('salary');
+        if(request('convenient'))
+        {
+            if(!is_null(request()->old('skills') ))
+            {
+                $jobSearchResults=$jobSearchResults->reject(function ($job){
+                    return  collect($job->requiredSkills ->modelKeys())->intersect( request()->old('skills') )->count()==0;
+                });
+                $jobSearchResults = $jobSearchResults->sortByDesc(
+                    [function ($job){
+                        return collect($job->requiredSkills ->modelKeys())->intersect(request()->old('skills') )->count();
+                    },
+                        function($job){
+                            return $job->requiredSkills->count()== request()->old('skills')->count();
+                        }
+                    ]);
+            }
+        }
         return view('job_search_results',['user'=>$user,'jobSearchResults'=>$jobSearchResults]);
     }
     //user-company functionalities
@@ -436,7 +509,7 @@ class UserServices extends Controller
         $report->receivable_id=$id;
         $report->receivable_type='App\Models\Company';
         $report->save();
-        return redirect('/companies/'.$id);
+        return redirect('/companies/'.$id)->with('status', 'Report Sent');
     }
     public function showMessagesWithCompany($id){
         if(auth()->user()->logged_as_company==true)
@@ -668,7 +741,7 @@ class UserServices extends Controller
         $report->receivable_type='App\Models\User';
         $report->save();
 
-        return redirect('/users/'.$id);
+        return redirect('/users/'.$id)->with('status', 'Report Sent');
 
     }
     //website admin functionalities

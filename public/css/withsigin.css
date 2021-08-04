@@ -1,6 +1,6 @@
 div ul {
     padding-right: 70px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .ddrop {
@@ -15,10 +15,12 @@ div ul {
 }
 button {
     background-color: #343a40;
-    margin-right: 70px;
+    /*  margin-right: 5px;*/
+    margin-left: 50px;
 }
 .imgprofile {
     max-width: 200px;
     max-height: 50px;
     margin-top: 10px;
+    margin-left: 40px;
 }

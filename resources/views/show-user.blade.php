@@ -166,6 +166,11 @@
         <div class="col-lg-8 " style="margin-top:150px;">
             <div class="container">
                 <div class="styleabout">
+                    @if (session('status'))
+                        <div class="alert alert-danger">
+                            {{ session('status') }}
+                        </div>
+                    @endif
                     <h4>About:</h4>
 
                     <p class="pabout">

@@ -127,6 +127,19 @@
                         <input class="form-control" type="string" name="salary" placeholder="Salary" required>
 
                     </div>
+                    <div class="form-group col-md-6 ">
+                        <label> sort results by: </label>
+                        <select name="sortBy" class="custom-select" >
+                            <option hidden disabled selected value> -- select a way to sort -- </option>
+                            <option value="convenient" @if(request()->old('sortBy') == 'convenient') selected @endif>
+                                the most convenient </option>
+                            <option value="date" @if(request()->old('sortBy') == 'date') selected @endif >
+                                the latest</option>
+                            <option value="salary" @if(request()->old('sortBy') == 'salary') selected @endif>
+                                the highest salary</option>
+                        </select>
+                    </div>
+
 
 
 

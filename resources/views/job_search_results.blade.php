@@ -40,7 +40,24 @@
                    @if($jobSearchResults->count()==0)
                        <th style="font-size: 20px;text-align:center;">no results found according to your specifications</th>
                    @else
-                 <th style="font-size: 20px;text-align:center;">YOUR JOB SEARCH RESULTS:</th>
+                 <th style="font-size: 20px;text-align:center;">YOUR JOB SEARCH RESULTS:
+                    <!-- <br>
+                     <form id="sort" action="/job-search-results" method="get">
+                         @csrf
+                     <label> sort by: </label>
+                 <select name="sortBy" onchange="if (this.selectedIndex){document.getElementById('sort').submit(); return false;};">
+                     <option hidden disabled selected value> -- select a way to sort -- </option>
+                     <option value="convenient" @if(request()->old('sortBy') == 'convenient') selected @endif>
+                         by the most convenient </option>
+                     <option value="date" @if(request()->old('sortBy') == 'date') selected @endif >
+                         by the latest</option>
+                     <option value="salary" @if(request()->old('sortBy') == 'salary') selected @endif>
+                         by the highest salary</option>
+
+                 </select>
+                     </form>
+                     -->
+                 </th>
                    @endif
                </tr>
     </thead>

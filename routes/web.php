@@ -30,6 +30,8 @@ Route :: get ('/explore/company-search-results',[UserServices:: class ,'companyS
 Route :: get ('/explore/people-search-results',[UserServices:: class ,'peopleSearchResults']);
 Route :: get('/job-search',  [UserServices:: class ,'showJobSearch']);
 Route :: get ('/job-search-results', [UserServices::class ,'filterJobs' ]);
+//Route :: get ('/job-search-results/{results}', [UserServices::class ,'sortJobs' ]);
+
 Route :: get ('/create-job', [UserServices:: class ,'showCreateJob'])->middleware('auth');
 Route :: post('/create-job',[UserServices :: class , 'postJob']);
 Route :: get ('/create-company',[UserServices :: class , 'showCreateCompany'])->middleware('auth');

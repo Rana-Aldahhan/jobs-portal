@@ -54,6 +54,10 @@
                                 </div>
                                 <div class="user_info">
                                     <span>{{$company->name}}</span>
+                                    <p>{{$user->receivedMessages()
+                                        ->where(['sendable_id','sendable_type','seen'],[$company->id,'App\Models\Company',0])
+                                        ->count()}}
+                                        new messages</p>
                                 </div>
                             </div>
                             </a>
@@ -77,22 +81,36 @@
                     <h4 class="styleh">Users you can message</h4>
 
                     <ul class="contacts">
-                        @foreach($messegingUsers as $user)
+                        @foreach($messegingUsers as $messagedUser)
                         <li class="active" >
-                            <a href="/users/{{$user->id}}/messages">
+                            <a href="/users/{{$messagedUser->id}}/messages">
                             <div class="d-flex bd-highlight" >
                                 <div class="img_cont" >
-                                    <img src="{{asset('storage/profiles/'.$user->profile_thumbnail)}}"  class="rounded-circle user_img">
+                                    <img src="{{asset('storage/profiles/'.$messagedUser->profile_thumbnail)}}"  class="rounded-circle user_img">
 
                                 </div>
                                 <div class="user_info">
 
-                                    <span href="/users/{{$user->id}}/messages">{{$user->name}}</span>
+                                    <span href="/users/{{$messagedUser->id}}/messages">{{$messagedUser->name}}</span>
+                                    <p>{{$user->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')
+                                    ->where('seen',0)->count()}}
+                                        new messages</p>
                                 </div>
                             </div>
                             </a>
                         </li>
                         @endforeach
+                            @if($messegingUsers->count()==0)
+                                <br> <br>
+                                <li class="active">
+                                    <div class="d-flex bd-highlight">
+                                        <div class="user_info">
+                                            <span>There is no users you can message yet!</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <br> <br><br>
+                            @endif
 
                     </ul>
                 </div>
