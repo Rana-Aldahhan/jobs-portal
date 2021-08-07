@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route :: get('/', function () {
     return redirect('/home');
 });
-Route::get('/1',function (){return view('managerReports');});
+Route::get('/1',function (){return view('company-applicants');});
 Route :: put('/switch-to-company-account',[UserServices :: class ,'switchToCompanyAccount'])->middleware('auth');
 Route :: put('/switch-to-user-account',[CompanyServices :: class ,'switchToUserAccount'])->middleware('auth');
 Route :: get('/home',function (){if(Auth::check()) return view('withAuthHome'); else return view ('withoutAuthHome');});
@@ -41,9 +41,11 @@ Route :: post('/create-company',[UserServices :: class , 'postCompany'])->middle
 
 //company and its related functionalities
 Route :: get('/company-home',function(){if(auth()->user()->logged_as_company==false) return redirect()->back(); else return view('companyHome');})->middleware('auth');
-Route :: get ('company-profile',[CompanyController :: class ,'showProfile'])->middleware('auth');
-//edit get form
-//edit put
+Route :: get ('/company-profile',[CompanyController :: class ,'showProfile'])->middleware('auth');
+//new new
+Route :: get ('/company-profile/edit',[CompanyController :: class ,'edit'])->middleware('auth');
+Route :: put('/company-profile/edit',[CompanyController :: class ,'update'])->middleware('auth');
+
 Route :: get ('/manage-company-jobs',[CompanyServices:: class ,'manageJobs'])->middleware('auth');
 Route :: get ('/company-notifications',[CompanyServices:: class ,'notifications'])->middleware('auth');
 Route :: get('/company-messeging',[CompanyServices:: class ,'messeging'])->middleware('auth');

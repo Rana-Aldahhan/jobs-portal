@@ -104,7 +104,8 @@
                 <label for="validationCustom02">slogan:</label>
             </div>
             <div class="col-md-4 mb-3">
-                <input type="text" class="form-control" id="validationCustom02" placeholder="slogan" value="{{old('slogan')}}" name="slogan" required>
+                <input type="text" class="form-control" id="validationCustom02" placeholder="slogan"
+                       value="{{old('slogan')}}" name="slogan" required>
             </div>
         </div>
 

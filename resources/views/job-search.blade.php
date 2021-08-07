@@ -24,7 +24,7 @@
 <body>
 
 <!--navbar user-->
-@extends('headerwithsigin')
+@extends('userheader')
 
 @section('cont')
 
@@ -38,8 +38,10 @@
 
             <div class=" card d-flex justify-content-center mx-auto my-3 p-5" style="width: 40rem;">
                 <div class="card-body">
-                    <h2 class="card-title">Find Jobs</h2>
-                    <h5 class="text-muted "> <i class="fa fa-hand-o-down" aria-hidden="true"></i>Fill in the data below.</h5>
+                    <h2 class="card-title"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>      Find Jobs</h2>
+                    <h5 class="text-muted ">  Fill the specifications of the job you are searching :</h5>
 
 
 
@@ -55,14 +57,14 @@
 
                     <div class="form-row" id="box1">
                         <div class="form-group col-md-6 ">
-                            <label for="inputEmail">City <span>*</span></label>
-                            <input class="form-control" type="text" name="city" required>
+                            <label for="inputEmail">City </label>
+                            <input class="form-control" type="text" name="city" required placeholder="city">
 
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="inputPhone">Country <span>*</span></label>
-                            <input class="form-control" type="text" name="country"  required>
+                            <label for="inputPhone">Country</label>
+                            <input class="form-control" type="text" name="country" placeholder="country"  required>
 
 
                         </div>
@@ -78,7 +80,7 @@
 
 
                     <div class="form-group col-md-6 ">
-                        <label for="validationTooltip01"> Industry Field <span>*</span> </label>
+                        <label for="validationTooltip01"> Industry Field </label>
                         <select class="custom-select" required>
                             <option hidden disabled selected value> -- select an option -- </option>
                             @foreach($industries as $industry)
@@ -89,7 +91,7 @@
                     </div>
 
                     <div class="form-group col-md-6 ">
-                        <label for="inputState">Your Skills <span>*</span></label>
+                        <label for="inputState">Your Skills </label>
 
                         <select   class="form-control chosen-select  " name="skills[]" multiple required="">
                             @foreach($skills as $skill)
@@ -101,9 +103,9 @@
                     </div>
 
                     <div class="form-group col-md-6 ">
-                        <label for="validationTooltip01"> Type of Job Position <span>*</span> </label>
+                        <label for="validationTooltip01"> Type of Job Position  </label>
                         <select class="custom-select" required>
-                            <option hidden disabled selected value> -- select an option -- </option>
+                            <option hidden disabled selected value> select job position type </option>
                             @foreach($typeOfPosition as $position)
                                 <option value="{{$position->id}}">{{$position->name}}</option>
                             @endforeach
@@ -114,15 +116,15 @@
 
                     <div class="form-group col-md-6 ">
 
-                        <label for="inputLastName ">Your Experience Years In That Industry <span>*</span>
+                        <label for="inputLastName ">Your Experience Years In That Industry
                         </label>
-                        <input type="string" class="form-control "  name="required_experience" required>
+                        <input type="string" class="form-control "  name="required_experience"  placeholder="years of your experience" required>
 
 
                     </div>
 
                     <div class="form-group col-md-6 ">
-                        <label for="inputLastName">Salary<span>*</span>
+                        <label for="inputLastName">Salary <span  style="color:#cb1a1a; font-size:smaller;">(in K$)</span>
                         </label>
                         <input class="form-control" type="string" name="salary" placeholder="Salary" required>
 
@@ -130,7 +132,7 @@
                     <div class="form-group col-md-6 ">
                         <label> sort results by: </label>
                         <select name="sortBy" class="custom-select" >
-                            <option hidden disabled selected value> -- select a way to sort -- </option>
+                            <!--<option hidden disabled selected value> -- select a way to sort -- </option>-->
                             <option value="convenient" @if(request()->old('sortBy') == 'convenient') selected @endif>
                                 the most convenient </option>
                             <option value="date" @if(request()->old('sortBy') == 'date') selected @endif >
@@ -144,8 +146,9 @@
 
 
                     <div class="form-button pt-4">
-                        <button id="submit" type="submit" class="btn btn-primary btn-block btn-lg" value="Register" name="publish">
-                            <span>Search</span></button> </div>
+                        <button id="submit" type="submit" class="btn btn-primary btn-block btn-lg" value="Register" name="publish" >
+                             <span>Search</span></button>
+                    </div>
 
 
 

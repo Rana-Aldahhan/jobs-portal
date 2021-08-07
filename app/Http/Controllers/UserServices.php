@@ -28,6 +28,7 @@ class UserServices extends Controller
                 $user=auth()->user();
                 $user->logged_as_company=true;
                 $user->save();
+               // dd($user->logged_as_company);
                 return redirect('/company-home');
             }
         else//user have not created a company
@@ -114,7 +115,7 @@ class UserServices extends Controller
         //validation
 
        $this->validate($request, [
-            'title' => 'required|string',
+            'title' => 'required|regex:/^[\pL\s\-]+$/u',
             'remote'=>'nullable',
             'transport'=>'boolean',
             'city'=>'alpha|nullable',
@@ -130,7 +131,11 @@ class UserServices extends Controller
         $job = new JobOpportunity();
         $job->title=$request->input('title');
         if($request->input('remote')!= null)
+        {
             $job->remote=$request->input('remote');
+            $job->city=null;
+            $job->country=null;
+        }
         else
             $job->remote=0;
         if($request->input('transport')!= null)
@@ -296,13 +301,13 @@ class UserServices extends Controller
         $user=auth()->user();
         if($user->logged_as_company==true)
             return redirect()->back();
-        $messegingCompanies=$user->companyAcceptors;
+        $messegingCompanies=$user->companyAcceptors->unique();
         $messegingUsers=null;
         if($user->userAcceptors != null)
             $messegingUsers=$user->userAcceptors;
         if($user->userAcceptants != null)
             $messegingUsers=$messegingUsers->union($user->userAcceptants);
-        $messegingUsers = $messegingUsers->flatten();
+        $messegingUsers = $messegingUsers->flatten()->unique();
         return view('userMessaging',['user'=>$user, 'messegingCompanies'=>$messegingCompanies,
         'messegingUsers'=>$messegingUsers]);
     }
@@ -516,13 +521,21 @@ class UserServices extends Controller
         {
             return redirect()->back();
         }
-        $messages=collect();
         $user=auth()->user();
-        $messages=$user->sentMessages()->find($id);//TODO check receivable and sendable type
-        $messages->push($user->receivedMessages()->find($id));
+        $company=Company::find($id);
+        $messages=$user->sentMessages()->where('receivable_type','App\Models\Company')
+            ->where('receivable_id',$id)->get();
+        $messages->push($user->receivedMessages()->where('sendable_type','App\Models\Company')
+            ->where('sendable_id',$id)->get() );
+
+        $user->receivedMessages()->where('sendable_type','App\Models\Company')
+            ->where('sendable_id',$id)->get()->map(function ($message) {
+                $message->seen=true;
+                return $message->save();
+            });
         $messages=$messages->flatten();
         $messages=$messages->sortBy('created_at');
-        return view('conversation', ['messages'=>$messages,'user'=>$user]);
+        return view('usercompanymessages', ['messages'=>$messages,'user'=>$user ,'company'=>$company]);
     }
     public function sendMessageToCompany(Request $request,$id){
         $message= new Message();
@@ -543,7 +556,7 @@ class UserServices extends Controller
         $notification->notification_url='/users/'.auth()->user()->id.'/messages';
         $notification->save();
 
-        return redirect('/companies/{id}/messages',['id'=>$id]);
+        return redirect('/companies/'.$id.'/messages');
     }
     //user-job functionalities
     public function applyJob($id){
@@ -677,7 +690,7 @@ class UserServices extends Controller
         //dd($messages);
 
         if(auth()->user()->logged_as_company)
-            return view('companyusermessages', ['messages'=>$messages,'user'=>$user,'messagedUser'=>$messagedUser]);
+            return view('companyusermessages', ['messages'=>$messages,'user'=>$user,'company'=>$company,'messagedUser'=>$messagedUser]);
         return view('userusermessages', ['messages'=>$messages,'user'=>$user,'messagedUser'=>$messagedUser]);
     }
     public function sendMessageToUser(Request $request,$id){

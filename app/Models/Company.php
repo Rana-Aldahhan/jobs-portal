@@ -97,13 +97,13 @@ class Company extends Model
     {
         return $this->morphMany(Report :: class,'sendable');
     }
-    public function outcomingMessages()
+    public function sentMessages()
     {
         return $this->morphMany(Message :: class,'sendable');
     }
-    public function incomingMessages()
+    public function receivedMessages()
     {
-        return $this->morphMany(Message :: class,' receivable');
+        return $this->morphMany(Message :: class,'receivable');
     }
     public function userViewings()
     {

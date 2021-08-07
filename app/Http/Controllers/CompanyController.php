@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Industry;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
 {
@@ -87,15 +90,100 @@ class CompanyController extends Controller
     }
 
 
-    public function edit($id)
+    public function edit()
     {
-        //
+        $company=Company::find(auth()->user()->managing_company_id);
+        $company->load('industry','managingUsers');
+        $industries=Industry::all();
+        return view('company-profile-edit' , ['company'=>$company,'industries'=>$industries]);
+
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        //fetch company record
+        $company=Company::find(auth()->user()->managing_company_id);
+
+        //validation
+        $this->validate($request , [
+            'name'=>'required',
+            'email' => ['required','email',Rule::unique('companies','email')->ignore($company->id)],
+            'website_url'=>['URL',Rule::unique('companies','website_url')->ignore($company->id)],
+            'phone_number'=>['required','numeric',Rule::unique('companies','phone_number')->ignore($company->id)],
+            'employees_count'=>'numeric|required',
+            'city'=>'regex:/^[\pL\s\-]+$/u|required',
+            'country'=>'regex:/^[\pL\s\-]+$/u|required',
+            'admin1'=>'email|nullable|exists:users,email',
+            'admin2'=>'email|nullable|exists:users,email',
+            'admin3'=>'email|nullable|exists:users,email',
+            'logo' => 'image|nullable|max:1999',
+            'certificate' =>'nullable|max:1999',
+        ]);
+        //company's attributes
+        $company->name=$request->input('name');
+        $company->email=$request->input('email');
+        $company->website_url=$request->input('website_url');
+        $company->phone_number=$request->input('phone_number');
+        $company->employees_count=$request->input('employees_count');
+        $company->city=$request->input('city');
+        $company->country=$request->input('country');
+        $company->slogan=$request->input('slogan');
+        $company->about=$request->input('about');
+
+        if($request->hasFile('logo')){
+            if($company->profile_thumbnail != 'companydefault.png')
+                unlink(storage_path('app/public/profiles/'.$company->profile_thumbnail));
+            // Get filename with the extension
+            $filenameWithExt = $request->file('logo')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('logo')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            // Upload Image
+            $path = $request->file('logo')->storeAs('public/profiles', $fileNameToStore);
+        }
+        else {
+            if($company->profile_thumbnail == 'companydefault.png')
+                $fileNameToStore = 'companydefault.png';
+            else
+                $fileNameToStore=$company->profile_thumbnail;
+        }
+
+        $company->profile_thumbnail=$fileNameToStore;
+
+        //certificate processing
+        if($request->hasFile('certificate')){
+            unlink(storage_path('app/public/profiles/'.$company->certificate));
+            // Get filename with the extension
+            $filenameWithExt = $request->file('certificate')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('certificate')->getClientOriginalExtension();
+            // Filename to store
+            $certificateFileNameToStore= $filename.'_'.time().'.'.$extension;
+            // Upload Image
+            $path = $request->file('certificate')->storeAs('public/certificates', $certificateFileNameToStore);
+            $company->certificate=$certificateFileNameToStore;
+        }
+
+        //company's relations
+        $company->industry()->disassociate();
+        $company->industry()->associate($request->input('industry'));
+        //TODO add new column to user
+        /*
+        $adminEmails=collect([$request->input('admin1'),$request->input('admin2'),$request->input('admin3')]);
+        $managing_users= User :: whereIn('email',$adminEmails)->get();
+        $company->save();
+        $company-> managingUsers()->saveMany($managing_users);
+        $company->managingUsers()->save(auth()->user());
+        */
+        $company->save();
+
+        return redirect('/company-profile');
     }
 
 

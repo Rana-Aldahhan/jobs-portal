@@ -196,8 +196,8 @@
 
 
 </h2>
-      @if($job->publishable_id==auth()->user()->id && $job->publishable_type='App\Models\User' && !auth()->user()->logged_as_company
-           || $job->publishable_id==auth()->user()->managing_company_id && $job->publishable_type='App\Models\Company' && auth()->user()->logged_as_company)
+      @if( ($job->publishable_id==auth()->user()->id && $job->publishable_type='App\Models\User' && !auth()->user()->logged_as_company)
+           || ($job->publishable_id==auth()->user()->managing_company_id && $job->publishable_type='App\Models\Company' && auth()->user()->logged_as_company))
       <div class="row">
           <div class="col mb-3">
               <div class="form-group">

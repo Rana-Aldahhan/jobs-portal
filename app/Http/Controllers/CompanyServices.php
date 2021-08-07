@@ -31,6 +31,7 @@ class CompanyServices extends Controller
             return redirect()->back();
         $company = auth()->user()->managingCompany;
         $publishedJobs=$company->publishedJobs;
+        $publishedJobs=$publishedJobs->sortByDesc('created_at');
         return view('company_published_jobs',['company' => $company , 'publishedJobs' => $publishedJobs]);
     }
     public function notifications(){
@@ -38,6 +39,7 @@ class CompanyServices extends Controller
             return redirect()->back();
         $company = auth()->user()->managingCompany;
         $notifications=$company->notifications;
+        $notifications=$notifications->sortByDesc('created_at');
         return view('company-notifications',['company' => $company , 'notifications' => $notifications]);
     }
     public function messeging(){
@@ -45,11 +47,12 @@ class CompanyServices extends Controller
         $company=$user->managingCompany;
         if($user->logged_as_company==false)
             return redirect()->back();
-        $messegingUsers=$company->acceptants;
+        $messegingUsers=$company->userAcceptants->unique();
 
         return view('companyMesseging',['company'=>$company, 'messegingUsers'=>$messegingUsers]);
     }
     public function postJob(Request $request){
+        //dd($request);
         $user=auth()->user();
         //if logged as a company redirect back
         if($user->logged_as_company==false)
@@ -59,42 +62,55 @@ class CompanyServices extends Controller
         $company=$user->managingCompany;
         //validation
         $this->validate($request, [
-            'title' => 'required|alpha',
-            'remote'=>'boolean|required',
+            'title' => 'required|regex:/^[\pL\s\-]+$/u',
+            'remote'=>'nullable',
             'transport'=>'boolean',
-            'city'=>'alpha',
-            'country'=>'alpha',
-            'role'=> 'required|alpha',
+            'city'=>'regex:/^[\pL\s\-]+$/u|nullable',
+            'country'=>'regex:/^[\pL\s\-]+$/u|nullable',
+            'role'=> 'required|string',
             'experience'=>'required|numeric',
             'salary'=>'required|numeric',
-            'description'=>'required'
+            'description'=>'required',
         ]);
+
         //make an new instance
         //job attributes
         $job = new JobOpportunity();
         $job->title=$request->input('title');
-        $job->remote=$request->input('remote');
-        $job->transportation=$request->input('transport');
+        if($request->input('remote')!= null)
+        {
+            $job->remote=$request->input('remote');
+            $job->city=null;
+            $job->country=null;
+        }
+        else
+            $job->remote=0;
+        if($request->input('transport')!= null)
+            $job->transportation=$request->input('transport');
+        else
+            $job->transportation=0;
         $job->city=$request->input('city');
         $job->country=$request->input('country');
         $job->role=$request->input('role');
-        $job->required_experience=$request->inut('experience');
+        $job->required_experience=$request->input('experience');
         $job->salary=$request->input('salary');
         $job->description=$request->input('description');
-        //job relations
-        $job->industry()->attach($request->input('industry'));
-        $job->typeOfPosition()->attach($request->input('position'));
-        $job->requiredSkills()->attach($request->input('skills'));
         $job->publishable_id=$company->id;
         $job->publishable_type='App\Models\Company';
 
+        $job->save();
+
+        //job relations
+        $job->industry()->associate($request->input('industry'));
+        $job->typeOfPosition()->associate($request->input('position'));
+        $job->requiredSkills()->attach($request->input('skills'));
         $job->save();
         //TOD8O make a new notification to users that are interested in this company
         $notifiedUsers=$company->notifiedUsers;
         foreach ($notifiedUsers as $user)
         {
             $notification=new Notification();
-            $notification->body='A company you are intrested in : '.$company->name.' has posted a new job opportunity,check it out!';
+            $notification->body='A company you are interested in : '.$company->name.' has posted a new job opportunity,check it out!';
             $notification->type='new job';
             $notification->notifiable_id=$user->id;
             $notification->notifiable_type='App\Models\User';

@@ -165,22 +165,21 @@
                                         {{$job->city}} , {{$job->country}}
                                         @endif
                                     </p>
-                                    <h5 class="media-heading">required skills :</h5>
+                                    <h5 class="media-heading">required skills :
                                     @foreach($job->requiredSkills as $skill)
-                                        {{$skill->title}} ,
+                                        {{$skill->title}}
                                     @endforeach
-                                    <h5 class="media-heading">required experience :</h5>
-                                    <p>
+                                    </h5>
+                                    <h5 class="media-heading">required experience :
                                         {{$job->required_experience}}
-                                    </p>
-                                    <h5 class="media-heading">salary :</h5>
-                                    <p>
-                                        {{$job->salary}}
-                                    </p>
-                                    <h5 class="media-heading">published at:</h5>
-                                    <p>
+                                    </h5>
+                                    <h5 class="media-heading">salary :
+
+                                        {{$job->salary}}  K$
+                                    </h5>
+                                    <h5 class="media-heading">published at:
                                         {{$job->created_at->diffForHumans()}}
-                                    </p>
+                                    </h5>
 
 
                                 </div>

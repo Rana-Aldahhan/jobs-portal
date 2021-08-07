@@ -33,7 +33,8 @@
 <!--end navbar-->
 <div class="styleform">
     <div class="container">
-        <form class="requires-validation" novalidate method="post" action="/create-job">
+        <form class="requires-validation" novalidate method="post" action="@if(!auth()->user()->logged_as_company)/create-job
+                                                                            @else/company-create-job @endif">
             @csrf
 
             <div class=" card d-flex justify-content-center mx-auto my-3 p-5" style="width: 40rem;">

@@ -27,7 +27,7 @@
 <body>
 
 <!--navbar user-->
-@extends('headerwithsigin')
+@extends('userheader')
 
 @section('cont')
 
@@ -54,9 +54,8 @@
                                 </div>
                                 <div class="user_info">
                                     <span>{{$company->name}}</span>
-                                    <p>{{$user->receivedMessages()
-                                        ->where(['sendable_id','sendable_type','seen'],[$company->id,'App\Models\Company',0])
-                                        ->count()}}
+                                    <p>{{$user->receivedMessages()->where('sendable_id',$company->id)->where('sendable_type','App\Models\Company')
+                                    ->where('seen',0)->count()}}
                                         new messages</p>
                                 </div>
                             </div>

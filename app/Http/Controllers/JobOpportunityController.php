@@ -20,7 +20,20 @@ class JobOpportunityController extends Controller
         $user=auth()->user();
         $job=JobOpportunity :: find($id);
         $applicants=$job->applicants;
-        return view('applicants', ['user'=> $user , 'job'=>$job, 'applicants'=>$applicants]);
+        $applicants=$applicants->sortByDesc('created_at');
+        if(!auth()->user()->logged_as_company) {
+            if($job->publishable_id == $user->id && $job->publishable_type=='App\Models\User')
+            return view('applicants', ['user' => $user, 'job' => $job, 'applicants' => $applicants]);
+            else
+                abort(403,'unauthorized access');
+        }
+        else{
+            $company=$user->managingCompany;
+            if($job->publishable_id == $company->id && $job->publishable_type=='App\Models\Company')
+            return view('company-applicants', ['company'=> $company , 'job'=>$job, 'applicants'=>$applicants]);
+            else
+                abort(403,'unauthorized access');
+        }
     }
     public function approveApplicant($jobID, $userID){
         $approvingUser=auth()->user();
@@ -28,23 +41,27 @@ class JobOpportunityController extends Controller
         $job=JobOpportunity :: find($jobID);
         if($approvingUser->logged_as_company==false)//case a user is accepting another user
         {
-            $approvedUser->appliedJobs()->updateExistingPivot($jobID,['approved'=>true]);
+            $approvedUser->appliedJobs()->updateExistingPivot($jobID, ['approved' => true]);
             //add a new acceptant-acceptor relation
             $approvedUser->userAcceptors()->attach($approvingUser);
             //notification
             $notification = new Notification();
-            $notification->body= 'The user ' . $approvingUser->name . ' has approved your job application to the job with the title ' . $job->title . ' of the ID '. $job->id;
-            $notification->type='approved';
-            $notification->causable_id=$approvingUser->id;
-            $notification->causable_type='App\Models\User';
-            $notification->notifiable_id=$userID;
-            $notification->notifiable_type='App\Models\User';
-            $notification->notification_url='/jobs/'.$jobID;
+            $notification->body = 'The user ' . $approvingUser->name . ' has approved your job application to the job with the title ' . $job->title . ' of the ID ' . $job->id;
+            $notification->type = 'approved';
+            $notification->causable_id = $approvingUser->id;
+            $notification->causable_type = 'App\Models\User';
+            $notification->notifiable_id = $userID;
+            $notification->notifiable_type = 'App\Models\User';
+            $notification->notification_url = '/jobs/' . $jobID;
             $notification->save();
 
-            $job->expired=true;
+            $job->expired = true;
             $job->save();
-            return redirect('/published-jobs');
+
+            if ($job->publishable_id == auth()->user()->id && $job->publishable_type == 'App\Models\User')
+                return redirect('/published-jobs');
+            else
+                abort(403, 'unauthorized access');
         }
         else // case logged as company
         {
@@ -58,14 +75,19 @@ class JobOpportunityController extends Controller
              $notification->body= 'The company ' .$approvingCompany->name . ' has approved your job application to the job with the title' . $job->title . 'of the ID '. $job->id;
              $notification->causable_id=$approvingCompany->id;
              $notification->causable_type='App\Models\Company';
-             $notification->recievable_id=$userID;
-             $notification->recievable_type='App\Models\User';
+             $notification->notifiable_id=$userID;
+             $notification->notifiable_type='App\Models\User';
+            $notification->type = 'approved';
+            $notification->notification_url = '/jobs/' . $jobID;
              $notification->save();
 
             $job->expired=true;
             $job->save();
 
-             return redirect('/company/manage-jobs');
+            if($job->publishable_id == $approvingCompany->id && $job->publishable_type=='App\Models\Company')
+                return redirect('/manage-company-jobs');
+            else
+                abort(403,'unauthorized access');
         }
 
     }
@@ -194,8 +216,10 @@ class JobOpportunityController extends Controller
                     $show_edit_delete_applicants_buttons = true;
                     //count the last month's reaches
                     //delete every reach created before a month
-                    $expired_reaches=$job->userViewers()->where('created_at', '>',now()->subDays(30))->get();
+                   /* $expired_reaches=$job->userViewers()->where('created_at', '>',now()->subDays(30))->get();
                     $expired_reaches->delete();
+                   */
+                    $job->userViewers()->detach($job->userViewers()->wherePivot('created_at','<',now()->subDays(30))->get());
                     //count this month reaches with distinct viewers
                     $reachCount=DB :: table('user_job_views')->select('viewing_id')->where('viewer_id',$job->id)->distinct()->get()->count();
 

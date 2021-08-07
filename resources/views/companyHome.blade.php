@@ -88,7 +88,7 @@
     <div class="row align-items-center">
 
         <div class="col-lg-6 mt-6 mt-lg-0">
-        <a id="update " class="editlink" href="#">
+        <a id="update " class="editlink" href="/create-job">
             <div class="fact-item">
 
 
@@ -101,7 +101,7 @@
 
 
         <div class="col-lg-6 mt-6 mt-lg-0">
-        <a id="update " class="editlink" href="#">
+        <a id="update " class="editlink" href="/manage-company-jobs">
             <div class="fact-item">
 
 
