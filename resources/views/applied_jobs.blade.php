@@ -168,10 +168,11 @@
 
 
          <td class="candidate-list-favourite-time text-center">
-             <form method="post" action="/jobs/{{$job->id}}/withdraw-application" id="unapply">
+             @if(!auth()->user()->appliedJobs->find($job->id)->pivot->approved)
+             <form method="post" action="/jobs/{{$job->id}}/withdraw-application" id="unapply{{$loop->index}}">
                  @csrf
                  @method('DELETE')
-              <a class="candidate-list-favourite order-2 text-danger" href="" onclick="document.getElementById('unapply').submit(); return false;">
+              <a class="candidate-list-favourite order-2 text-danger" href="" onclick="document.getElementById('unapply{{$loop->index}}').submit(); return false;">
 
                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-arrow-90deg-down" viewBox="0 0 16 16"style="margin-top:10px">
                   <path fill-rule="evenodd" d="M4.854 14.854a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V3.5A2.5 2.5 0 0 1 6.5 1h8a.5.5 0 0 1 0 1h-8A1.5 1.5 0 0 0 5 3.5v9.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4z"/>
@@ -179,6 +180,16 @@
                 <span class="candidate-list-time order-1">withdraw applications</span>
               </a>
              </form>
+                 @else
+                 <a class="candidate-list-favourite order-2 text-dark" >
+
+                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="green" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16" style="margin-right:10px;">
+                     <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
+                     <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+                 </svg>
+                 <span class="candidate-list-time order-1" style="color: green">  Application Approved</span>
+                 </a>
+             @endif
 
             </td>
 

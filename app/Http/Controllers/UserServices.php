@@ -17,12 +17,11 @@ use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-//TODO check if logged as company or as user <and redirect back where not allowed>.
 class UserServices extends Controller
 {
     public function switchToCompanyAccount(){
         if(auth()->user()->logged_as_company==true)
-        return redirect()->back();
+            abort(403);
         if(!is_null(auth()->user()->managing_company_id))//user has created a company
             {
                 $user=auth()->user();
@@ -32,8 +31,8 @@ class UserServices extends Controller
                 return redirect('/company-home');
             }
         else//user have not created a company
-        {//TODO process message in view
-            return redirect()->back()->with('warning','you don\'t have a company account yet!');
+        {
+            abort(403);
         }
     }
     public function explore(Request $request){
@@ -42,7 +41,7 @@ class UserServices extends Controller
         if(Auth :: check())
         {
             if (auth()->user()->logged_as_company==true)
-            return redirect()->back();
+                abort(403);
         }
         $recomendedCompanies = Company :: simplePaginate(5);
         $recomendedPeople = User :: simplePaginate(5);
@@ -110,7 +109,7 @@ class UserServices extends Controller
         //if logged as a company redirect back
         if($user->logged_as_company==true)
         {
-            return redirect()->back();
+            abort(403);
         }
         //validation
 
@@ -170,12 +169,12 @@ class UserServices extends Controller
     public function showCreateCompany() {
         $industries=Industry::all();
         if (auth()->user()->logged_as_company==true)
-            return redirect()->back();
+            abort(403);
         $is_managing_company =false;
         if(!is_null(auth()->user()->managing_company_id))
         {
             $is_managing_company = true;
-            return redirect('/home');//['is_managing_company'=> $is_managing_company])->with ('warning','you can only create one company');
+            return redirect('/home')->with ('status','You can only make one company account !');
         }
         return view('create-company',['is_managing_company'=> $is_managing_company,'industries'=>$industries]);
 
@@ -263,14 +262,16 @@ class UserServices extends Controller
     }
     public function savedJobs(){
         if (auth()->user()->logged_as_company==true)
-         return redirect()->back();
+            abort(403);
         $user = auth()->user();
-        $savedJobs=$user->savedJobs;
+        $savedJobs=$user->savedJobs->sortByDesc(function($job){
+            return $job->pivot->created_at;
+        });
         return view('saved_jobs',['user' => $user , 'savedJobs' => $savedJobs]);
     }
     public function publishedJobs(){
         if (auth()->user()->logged_as_company==true)
-            return redirect()->back();
+            abort(403);;
         $user = auth()->user()->load(['publishedJobs.requiredSkills','publishedJobs.industry']);
        //$publishedJobs=$user->publishedJobs;
       // $publishedJobs->load(['requiredSkills','industry']);
@@ -279,14 +280,16 @@ class UserServices extends Controller
     }
     public function appliedJobs(){
         if (auth()->user()->logged_as_company==true)
-            return redirect()->back();
+            abort(403);
         $user = auth()->user();
-        $appliedJobs=$user->appliedJobs;
+        $appliedJobs=$user->appliedJobs->sortByDesc(function($job){
+            return $job->pivot->created_at;
+        });
         return view('applied_jobs',['user' => $user , 'appliedJobs' => $appliedJobs]);
     }
     public function notifications(){
         if (auth()->user()->logged_as_company==true)
-            return redirect()->back();
+            abort(403);
         $user = auth()->user();
         $notifications=$user->notifications;
         $notifications=$notifications->sortByDesc('created_at');
@@ -300,7 +303,7 @@ class UserServices extends Controller
     public function messeging(){
         $user=auth()->user();
         if($user->logged_as_company==true)
-            return redirect()->back();
+            abort(403);
         $messegingCompanies=$user->companyAcceptors->unique();
         $messegingUsers=null;
         if($user->userAcceptors != null)
@@ -315,7 +318,7 @@ class UserServices extends Controller
         if(Auth :: check())
         {
             if (auth()->user()->logged_as_company==true)
-                return redirect()->back();
+                abort(403);
         }
         $searchResults = Company:: where ('name' , $request->input('companySearchName'))->get();
         return view('company_search_results', ['searchResults'=>$searchResults]);
@@ -324,7 +327,7 @@ class UserServices extends Controller
         if(Auth :: check())
         {
             if (auth()->user()->logged_as_company==true)
-                return redirect()->back();
+                abort(403);
         }
         $searchResults = User:: where ('name' , $request->input('peopleSearchName'))->get();
         return view('people_search_results', ['searchResults'=> $searchResults]);
@@ -498,7 +501,7 @@ class UserServices extends Controller
     public function reportCompany($id){
        if(auth()->user()->logged_as_company==true)
        {
-           return redirect()->back();
+           abort(403);
        }
         return view('report',['id'=>$id]);
     }
@@ -519,7 +522,7 @@ class UserServices extends Controller
     public function showMessagesWithCompany($id){
         if(auth()->user()->logged_as_company==true)
         {
-            return redirect()->back();
+            abort(403);
         }
         $user=auth()->user();
         $company=Company::find($id);
@@ -566,7 +569,7 @@ class UserServices extends Controller
         $user->appliedJobs()->attach($id);
         //send a notification to the job publisher
         $notification = new Notification();
-        $notification->body= 'The user ' . $user->name .' has applied to a job you published ,with the title'  .$job->title . 'of the ID '.$job->id;
+        $notification->body= 'The user ' . $user->name .' has applied to a job you published ,with the title'  .$job->title . '/n published : ' . $job->created_at->diffForHumans();
         $notification->type='applicant';
         $notification->causable_id=$user->id;
         $notification->causable_type='App\Models\User';
@@ -578,7 +581,7 @@ class UserServices extends Controller
         else {
             $notification->notifiable_type='App\Models\Company';
         }
-        $notification->notification_url='/users/'.$user->id;
+        $notification->notification_url='/jobs/'.$job->id.'/applicants';
         $notification->save();
         return redirect ('/jobs/'.$id);
     }
@@ -586,22 +589,22 @@ class UserServices extends Controller
         $user=auth()->user();
         $user->appliedJobs()->detach($id);
         $job=JobOpportunity :: find($id);
-        //TODO delete related  notification
         $notification=Notification::where ('causable_id',$user->id)
                                     ->where('causable_type','App\Models\User')
                                     ->where('notifiable_id',$job->publishable_id)
                                     ->where('notifiable_type',$job->publishable_type)
                                     ->delete();
         $previousPath =str_replace(url('/'), '', url()->previous());
-        if ( $previousPath == '/jobs/'.$id)//TODO mention changes
+        if ( $previousPath == '/jobs/'.$id)
             return redirect('/jobs/'.$id);
         else
             return redirect('/applied-jobs');
 
     }
     public function saveJob($id){
-        //TODO check if logged as company
         $user=auth()->user();
+        if($user->logged_as_company)
+            abort(403);
         $user->savedJobs()->attach($id);
         return redirect('/jobs/'.$id);//,['id',$id]);
     }
@@ -660,9 +663,9 @@ class UserServices extends Controller
         if(auth()->user()->logged_as_company==false)//case logged in as user
         {
             $messages=$user->sentMessages()->where('receivable_type','App\Models\User')
-                                            ->where('receivable_id',$id)->get();//TODO delete the ()
+                                            ->where('receivable_id',$id)->get();
             $messages->push($user->receivedMessages()->where('sendable_type','App\Models\User')
-                                                     ->where('sendable_id',$id)->get() );//TODO delete the ()
+                                                     ->where('sendable_id',$id)->get() );
 
             $user->receivedMessages()->where('sendable_type','App\Models\User')
                 ->where('sendable_id',$id)->get()->map(function ($message) {
@@ -674,9 +677,9 @@ class UserServices extends Controller
         {
             $company=Company::find($user->managing_company_id);
             $messages=$company->sentMessages()->where('receivable_type','App\Models\User')
-                                            ->where('receivable_id',$id)->get();//TODO delete the ()
+                                            ->where('receivable_id',$id)->get();
             $messages->push($company->receivedMessages()->where('sendable_type','App\Models\User')
-                                                     ->where('sendable_id',$id)->get());//TODO delete the ()
+                                                     ->where('sendable_id',$id)->get());
 
             $company->receivedMessages()->where('sendable_type','App\Models\User')
                 ->where('sendable_id',$id)->get()->map(function ($message) {
@@ -762,11 +765,11 @@ class UserServices extends Controller
         $user=auth()->user();
         if($user->logged_as_company==true)
         {
-            return redirect()->back();
+            abort(403);
         }
         if($user->admin==false)
         {
-            return redirect()->back();
+            abort(403,'unauthorized access');
         }
        /* $companiesReports=Report :: where('receivable_type','App\Models\Company')->get();
         $usersReports=Report ::where('receivable_type','App\Models\User')->get();
@@ -809,11 +812,11 @@ class UserServices extends Controller
         $user=auth()->user();
         if($user->logged_as_company==true)
         {
-            return redirect()->back();
+            abort(403);
         }
         if($user->admin==false)
         {
-            return redirect()->back();
+            abort(403,'unauthorized access');
         }
         $reportedCompany=Company :: find($id);
         $reports=$reportedCompany->incomingReports->load('sendable');
@@ -825,11 +828,11 @@ class UserServices extends Controller
         $user=auth()->user();
         if($user->logged_as_company==true)
         {
-            return redirect()->back();
+            abort(403);
         }
         if($user->admin==false)
         {
-            return redirect()->back();
+            abort(403,'unauthorized access');
         }
         $reportedUser=User :: find($id);
         $reports=$reportedUser->incomingReports->load('sendable');

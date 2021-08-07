@@ -27,14 +27,21 @@
 
    <!--start slids-->
 
+
    <section id="hero">
+
     <div class="hero-container">
       <div id="heroCarousel" class="carousel slide carousel-fade" data-ride="carousel">
 
         <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
 
         <div class="carousel-inner" role="listbox">
-
+            @if (session('status'))
+                <div class="alert alert-warning">
+                    <br>
+                    {{ session('status') }}
+                </div>
+        @endif
           <!-- Slide 1 -->
         <div class="carousel-item active" style="background: url({{asset('img/bg-masthead.jpg')}});">
             <div class="carousel-container">
@@ -48,9 +55,11 @@
             </div>
           </div>
  <!-- Slide 2 -->
+
  <div class="carousel-item" style="background: url({{asset('img/slid4.jpg')}} );">
     <div class="carousel-container">
       <div class="carousel-content">
+
         <h2 class="animate__animated animate__fadeInDown">Welcome to Win-Win hiring communtiy where everybody wins!</h2>
         <p class="animate__animated animate__fadeInUp">this site aims to provide users with the right tools to help them find the most convenient job for them
             as well as giving the users and companies the chance to post their own jobs opportunities and help them finding the right employee for the.</p>

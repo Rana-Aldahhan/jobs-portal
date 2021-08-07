@@ -56,9 +56,15 @@
                                     <div class="user_info">
 
                                         <span href="/users/{{$messagedUser->id}}/messages">{{$messagedUser->name}}</span>
-                                        <p>{{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')
-                                    ->where('seen',0)->count()}}
-                                            new messages</p>
+                                        <p>@if($company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')
+                                        ->where('seen',0)->count() >0)
+                                                {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')
+                                        ->where('seen',0)->count()}} new messages <br>
+                                                {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->body}}
+                                            @else {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->body}} ,
+                                                {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->created_at->diffForHumans()}}
+                                            @endif
+                                        </p>
                                     </div>
                                 </div>
                             </a>

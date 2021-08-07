@@ -42,7 +42,6 @@ Route :: post('/create-company',[UserServices :: class , 'postCompany'])->middle
 //company and its related functionalities
 Route :: get('/company-home',function(){if(auth()->user()->logged_as_company==false) return redirect()->back(); else return view('companyHome');})->middleware('auth');
 Route :: get ('/company-profile',[CompanyController :: class ,'showProfile'])->middleware('auth');
-//new new
 Route :: get ('/company-profile/edit',[CompanyController :: class ,'edit'])->middleware('auth');
 Route :: put('/company-profile/edit',[CompanyController :: class ,'update'])->middleware('auth');
 

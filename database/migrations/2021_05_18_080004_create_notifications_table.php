@@ -15,7 +15,7 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->string('type');//TODO new new ,add types to wherever a notification is made
+            $table->string('type');
             $table->string('body');
             $table->unsignedBigInteger('notifiable_id')->nullable();
             $table->string('notifiable_type')->nullable();

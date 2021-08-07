@@ -19,7 +19,7 @@ class UserController extends Controller
 {
     public function showProfile(){
         if (auth()->user()->logged_as_company==true)
-            return redirect()->back();
+            abort(403,'unauthorized access');
         $user= auth()->user();
         $school=$user->school;
         $skills=$user->skills;
@@ -390,14 +390,12 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //TODO detach every thing and delete every thing belongs to it
         //case of website's admin deleting a user
         $user=User::find($id);
         DB::table('application')->where('user_id',$id)->delete();
         DB::table('colleagues')->where('user1_id',$id)->orWhere('user2_id',$id)->delete();
         DB::table('company_user_acceptants')->where('acceptant_id',$id)->delete();
         DB::table('company_user_views')->where('viewer_id',$id)->delete();
-        //TODO delete related job things
         foreach ($user->publishedJobs as $job)
         {
             DB::table('application')->where('job_id',$job->id)->delete();

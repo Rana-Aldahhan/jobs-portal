@@ -192,7 +192,7 @@ class User extends Authenticatable
     }
     public function savedJobs()
     {
-        return $this->belongsToMany(JobOpportunity :: class,'saved_jobs','user_id','job_id');
+        return $this->belongsToMany(JobOpportunity :: class,'saved_jobs','user_id','job_id')->withTimestamps();
     }
     public function notifyingCompanies()
     {
@@ -204,7 +204,7 @@ class User extends Authenticatable
     }
     public function appliedJobs()
     {
-        return $this->belongsToMany(JobOpportunity  :: class,'applications','user_id','job_id')->withPivot('approved');
+        return $this->belongsToMany(JobOpportunity  :: class,'applications','user_id','job_id')->withPivot('approved')->withTimestamps();
     }
     public function incomingReports()
     {

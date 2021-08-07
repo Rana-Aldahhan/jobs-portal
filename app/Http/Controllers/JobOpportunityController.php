@@ -20,7 +20,9 @@ class JobOpportunityController extends Controller
         $user=auth()->user();
         $job=JobOpportunity :: find($id);
         $applicants=$job->applicants;
-        $applicants=$applicants->sortByDesc('created_at');
+        $applicants=$applicants->sortByDesc(function ($user){
+            return $user->pivot->created_at;
+        });
         if(!auth()->user()->logged_as_company) {
             if($job->publishable_id == $user->id && $job->publishable_type=='App\Models\User')
             return view('applicants', ['user' => $user, 'job' => $job, 'applicants' => $applicants]);
@@ -46,7 +48,7 @@ class JobOpportunityController extends Controller
             $approvedUser->userAcceptors()->attach($approvingUser);
             //notification
             $notification = new Notification();
-            $notification->body = 'The user ' . $approvingUser->name . ' has approved your job application to the job with the title ' . $job->title . ' of the ID ' . $job->id;
+            $notification->body = 'The user ' . $approvingUser->name . ' has approved your job application to the job with the title ' . $job->title . '/n published : ' . $job->created_at->diffForHumans();
             $notification->type = 'approved';
             $notification->causable_id = $approvingUser->id;
             $notification->causable_type = 'App\Models\User';
@@ -72,7 +74,7 @@ class JobOpportunityController extends Controller
              //notification
              $notification = new Notification();
             $notification->type='approved';
-             $notification->body= 'The company ' .$approvingCompany->name . ' has approved your job application to the job with the title' . $job->title . 'of the ID '. $job->id;
+             $notification->body= 'The company ' .$approvingCompany->name . ' has approved your job application to the job with the title' . $job->title .  '/n published : ' . $job->created_at->diffForHumans();
              $notification->causable_id=$approvingCompany->id;
              $notification->causable_type='App\Models\Company';
              $notification->notifiable_id=$userID;
@@ -166,7 +168,6 @@ class JobOpportunityController extends Controller
                     $show_edit_delete_applicants_buttons = true;
                     //count the last month's reaches
                     //delete every reach created before a month
-                    //TODO edits
                     $job->userViewers()->detach($job->userViewers()->wherePivot('created_at','<',now()->subDays(30))->get());
                     //$expired_reaches=$job->userViewers()->where('created_at', '>',now()->subDays(30))->get();
                     //$expired_reaches->delete();

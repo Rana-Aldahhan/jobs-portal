@@ -12,7 +12,7 @@ class CompanyServices extends Controller
 {
     public function switchToUserAccount(){
         if(auth()->user()->logged_as_company== false)
-            return redirect()->back();
+            abort(403,'unauthorized access');
         if(!is_null(auth()->user()->managing_company_id))//user has a company account
             {
                 $user=auth()->user();
@@ -22,13 +22,13 @@ class CompanyServices extends Controller
 
             }
         else//user doesn't have a company account
-        {//TODO process message in view
-            redirect()->back()->with('warning','you already are in user account!');
+        {
+            abort(403,'unauthorized access');
         }
     }
     public function manageJobs(){
         if (auth()->user()->logged_as_company==false)
-            return redirect()->back();
+            abort(403,'unauthorized access');
         $company = auth()->user()->managingCompany;
         $publishedJobs=$company->publishedJobs;
         $publishedJobs=$publishedJobs->sortByDesc('created_at');
@@ -36,7 +36,7 @@ class CompanyServices extends Controller
     }
     public function notifications(){
         if (auth()->user()->logged_as_company==false)
-            return redirect()->back();
+            abort(403,'unauthorized access');
         $company = auth()->user()->managingCompany;
         $notifications=$company->notifications;
         $notifications=$notifications->sortByDesc('created_at');
@@ -46,7 +46,7 @@ class CompanyServices extends Controller
         $user=auth()->user();
         $company=$user->managingCompany;
         if($user->logged_as_company==false)
-            return redirect()->back();
+            abort(403,'unauthorized access');
         $messegingUsers=$company->userAcceptants->unique();
 
         return view('companyMesseging',['company'=>$company, 'messegingUsers'=>$messegingUsers]);
@@ -54,10 +54,10 @@ class CompanyServices extends Controller
     public function postJob(Request $request){
         //dd($request);
         $user=auth()->user();
-        //if logged as a company redirect back
+        //if logged as a company abort 403
         if($user->logged_as_company==false)
         {
-            return redirect()->back();
+            abort(403,'unauthorized access');
         }
         $company=$user->managingCompany;
         //validation

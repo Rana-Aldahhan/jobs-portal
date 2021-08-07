@@ -88,6 +88,9 @@ body,html{
 .active{
     background-color: rgba(0,0,0,0.3);
 }
+.new{
+    background-color:  rgba(250,0,0,0.09);
+}
 .user_img{
     height: 70px;
     width: 70px;

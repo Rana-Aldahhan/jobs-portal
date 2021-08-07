@@ -157,10 +157,10 @@
                                             </td>
                                             @if(!$job->expired)
                                             <td class="candidate-list-favourite-time text-center">
-                                                <form  method="post" action="/jobs/{{$job->id}}/applicants/{{$applicant->id}}" id="approve">
+                                                <form  method="post" action="/jobs/{{$job->id}}/applicants/{{$applicant->id}}" id="approve{{$loop->index}}">
                                                     @csrf
                                                     @method('PUT')
-                                                <a class="candidate-list-favourite order-2 text-dark" href=""  onclick="document.getElementById('approve').submit(); return false;">
+                                                <a class="candidate-list-favourite order-2 text-dark" href=""  onclick="document.getElementById('approve{{$loop->index}}').submit(); return false;">
 
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check2-square" viewBox="0 0 16 16">
                                                         <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
@@ -173,10 +173,10 @@
                                             </td>
 
                                             <td class="candidate-list-favourite-time text-center">
-                                                <form  method="post" action="/jobs/{{$job->id}}/applicants/{{$applicant->id}}" id="ignore">
+                                                <form  method="post" action="/jobs/{{$job->id}}/applicants/{{$applicant->id}}" id="ignore{{$loop->index}}">
                                                     @csrf
                                                     @method("DELETE")
-                                                <a class="candidate-list-favourite order-2 text-dark" href="" onclick="document.getElementById('ignore').submit(); return false;">
+                                                <a class="candidate-list-favourite order-2 text-dark" href="" onclick="document.getElementById('ignore{{$loop->index}}').submit(); return false;">
 
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check2-square" viewBox="0 0 16 16">
                                                         <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
@@ -191,13 +191,13 @@
                                         @if($applicant->appliedJobs()->find($job->id)->pivot->approved)
                                                 <td class="candidate-list-favourite-time text-center">
 
-                                                        <a class="candidate-list-favourite order-2 text-dark" href="" onclick="document.getElementById('ignore').submit(); return false;">
+                                                        <a class="candidate-list-favourite order-2 text-dark"  >
 
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check2-square" viewBox="0 0 16 16">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-check2-square" viewBox="0 0 16 16">
                                                                 <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
                                                                 <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
                                                             </svg>
-                                                            <span class="candidate-list-time order-1">Approved</span>
+                                                            <span class="candidate-list-time order-1" style="color: green">Approved</span>
                                                         </a>
 
                                                 </td>

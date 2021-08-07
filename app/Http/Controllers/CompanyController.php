@@ -15,7 +15,7 @@ class CompanyController extends Controller
     public function showProfile()
     {
         if (auth()->user()->logged_as_company==false)
-            return redirect()->back();
+            abort(403);
         $company=auth()->user()->managingCompany;
         $industry=$company->industry;
         $employees=$company->employees;
@@ -189,7 +189,6 @@ class CompanyController extends Controller
 
     public function destroy($id)
     {
-        //TODO detache every thing and delete every thing blongs to it
         //case of website's admin deleting a company
          $company=Company::find($id);
          DB::table('company_user_acceptants')->where('acceptor_id',$id)->delete();

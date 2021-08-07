@@ -45,7 +45,8 @@
                 <div class="card-body contacts_body">
                     <ul class="contacts">
                         @foreach($messegingCompanies as $company)
-                        <li class="active">
+                        <li class="@if($user->receivedMessages()->where('sendable_id',$company->id)->where('sendable_type','App\Models\Company')
+                                    ->where('seen',0)->count() >0)new @else active @endif">
                             <a href="/companies/{{$company->id}}/messages">
                             <div class="d-flex bd-highlight">
                                 <div class="img_cont">
@@ -54,9 +55,15 @@
                                 </div>
                                 <div class="user_info">
                                     <span>{{$company->name}}</span>
-                                    <p>{{$user->receivedMessages()->where('sendable_id',$company->id)->where('sendable_type','App\Models\Company')
-                                    ->where('seen',0)->count()}}
-                                        new messages</p>
+                                    <p>@if($user->receivedMessages()->where('sendable_id',$company->id)->where('sendable_type','App\Models\Company')
+                                    ->where('seen',0)->count() >0)
+                                            {{$user->receivedMessages()->where('sendable_id',$company->id)->where('sendable_type','App\Models\Company')
+                                    ->where('seen',0)->count()}} new messages <br>
+                                            {{$user->receivedMessages()->where('sendable_id',$company->id)->where('sendable_type','App\Models\Company')->get()->last()->body}}
+                                         @else {{$user->receivedMessages()->where('sendable_id',$company->id)->where('sendable_type','App\Models\Company')->get()->last()->body}} ,
+                                            {{$user->receivedMessages()->where('sendable_id',$company->id)->where('sendable_type','App\Models\Company')->get()->last()->created_at->diffForHumans()}}
+                                        @endif
+                                    </p>
                                 </div>
                             </div>
                             </a>
@@ -91,9 +98,15 @@
                                 <div class="user_info">
 
                                     <span href="/users/{{$messagedUser->id}}/messages">{{$messagedUser->name}}</span>
-                                    <p>{{$user->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')
-                                    ->where('seen',0)->count()}}
-                                        new messages</p>
+                                    <p>@if($user->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')
+                                    ->where('seen',0)->count() >0)
+                                            {{$user->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')
+                                    ->where('seen',0)->count()}} new messages <br>
+                                            {{$user->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->body}}
+                                        @else {{$user->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->body}} ,
+                                    {{$user->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->created_at->diffForHumans()}}
+                                    @endif
+                                    </p>
                                 </div>
                             </div>
                             </a>
