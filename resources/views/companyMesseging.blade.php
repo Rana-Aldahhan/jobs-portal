@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
+    <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
     <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
 
 

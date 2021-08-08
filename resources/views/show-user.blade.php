@@ -37,8 +37,8 @@
 
 
         <div class="col-lg-4  "style="margin-top:90px;">
-            <div id="div">
-                <div class="d-flex flex-column">
+            <div id="div" >
+                <div class="d-flex flex-column" >
 
                     <div class="profile">
                         <a href="{{asset('storage/profiles/'.$user->profile_thumbnail)}}">
@@ -52,7 +52,7 @@
                         <ul>
                             <div>
 
-                                <p>Job Title :{{$user->current_job_title}} at  {{$user->current_company_name}} <br>
+                                <p>{{$user->current_job_title}} at  {{$user->current_company_name}} <br>
                                     {{$user->country}}, {{$user->city}}
                                 </p>
 
@@ -89,7 +89,7 @@
                                     @csrf
                                     @method("DELETE")
                                 <a id="update " href="" class="editlink" onclick="document.getElementById('cancelrequest').submit(); return false;" >
-                                    <i class="fa fa-user-plus fa-2x"></i>
+                                    <i class="fa fa-user-times fa-2x" aria-hidden="true"></i>
                                     <h6> cancel colleague request </h6>
                                 </a>
                                 </form>
@@ -117,7 +117,7 @@
                                     @csrf
                                     @method("DELETE")
                                 <a id="update " href="" class="editlink" onclick="document.getElementById('ignorerequest').submit(); return false;">
-                                    <i class="fa fa-user-plus fa-2x"></i>
+                                    <i class="fa fa-user-times fa-2x" aria-hidden="true"></i>
                                     <h6> ignore colleague request </h6>
                                 </a>
                                 </form>
@@ -128,7 +128,10 @@
                             @if($showMessage)
                                 <div class="stylego">
                                         <a id="update " href="/users/{{$user->id}}/messages" class="editlink" >
-                                            <i class="fa fa-user-plus fa-2x"></i>
+
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16" style="margin-right:10px;">
+                                                <path d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zM5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                            </svg>
                                             <h6> Message</h6>
                                         </a>
                                 </div>
@@ -173,19 +176,23 @@
                     @endif
                     <h4>About:</h4>
 
-                    <p class="pabout">
+                    <p class="">
                         {{$user->about}}
                     </p>
+                        <hr>
 
-
+                        <h4>Education and experience:</h4>
                     <h6> @if($user->school != null)Studied at :{{$user->school->name}} @endif</h6>
 
                     <h6>Skills:</h6>
 
                     <p>
                         @foreach($user->skills as $skill)
-                            {{$skill->title}}
-                            <br>
+                            @if(!$loop->last)
+                                {{ $skill->title   }}  ,
+                            @else
+                                {{ $skill->title   }} .
+                            @endif
                         @endforeach
                     </p>
 
@@ -197,17 +204,37 @@
                         @endif
                     </p>
 
-                    <h6>Experience:</h6>
+                    <h6>Work Experience:</h6>
 
                     <p>
-                        {{$user->years_of_experience}}
+                        {{$user->years_of_experience}} years.
                     </p>
+                        <h6>Languages:</h6>
+                        <p>
+                            @foreach($user->languages as $language)
+
+                                @if(!$loop->last)
+                                    {{ $language->name   }},
+                                @else
+                                    {{ $language->name   }} .
+                                @endif
+                            @endforeach
+                        </p>
+
+                        <h6>Resume:</h6>
+
+                        <p>  <a href="{{asset('storage/resumes/'.$user->resume)}}">
+                                view resume
+                            </a>
+                        </p>
+
+                        <hr>
                     <div class="row">
                         <div class="col mb-3">
                             <div class="form-group">
-                                <h3><span class="glyphicon glyphicon-thumbs-up"><svg class="octicon octicon-graph UnderlineNav-octicon d-none d-sm-inline" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>
+                                <h4><span class="glyphicon glyphicon-thumbs-up"><svg class="octicon octicon-graph UnderlineNav-octicon d-none d-sm-inline" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>
                                 </span>Previous working places:
-                                </h3>
+                                </h4>
                                 <br>
                                 @foreach ($user->workPlaces as $workplace)
                                     <div class="col">
@@ -222,25 +249,10 @@
                     <hr>
 
 
-                    <h6>Languages:</h6>
-                    <p>
-                        @foreach($user->languages as $language)
-                            {{$language->name}}
-                            <br>
-                        @endforeach
-                    </p>
-
-                    <h6>Resume:</h6>
-
-                    <p>  <a href="{{asset('storage/resumes/'.$user->resume)}}">
-                            view resume
-                        </a>
-                    </p>
-
-                    <hr>
 
 
-                    <h5 style=" color:#757575; padding-top:20px; font-weight: 600;">Colleagues:</h5>
+
+                    <h4 style=" padding-top:20px; font-weight: 600;">Colleagues:</h4>
 
 
                     @if($colleagues->count()>0)
@@ -277,6 +289,12 @@
                             </a>
                         </div>
                         @endforeach
+
+                            <div class="d-flex justify-content-center">
+                                {!! $colleagues->links()!!}
+                            </div>
+
+
                     @else
                         <p> this user has no colleagues yet!</p>
                     @endif
@@ -287,34 +305,12 @@
 
 
 
-                    <!--start pagination-->
-
-                    <nav aria-label="Page navigation example" class="page" style="margin-left:5px;">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-
-                    <!--end pagination-->
 <hr>
 
                     <!-- published jobs start -->
-                    <h5 style=" color:#757575; padding-top:20px; font-weight: 600;">{{$user->name}}'s published jobs:</h5>
-                    @foreach ($user->publishedJobs as  $job)
+                    <h4 style=" ; padding-top:20px; font-weight: 600;">{{$user->name}}'s published jobs:</h4>
+                        <br>
+                    @foreach ($userPublishedJobs as  $job)
 
                         <tr class="candidates-list">
                             <td class="title">
@@ -336,7 +332,11 @@
                                                         <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
                                                     </svg>required skills:
                                                     @foreach($job->requiredSkills as $skill)
-                                                        {{ $skill->title }} ,
+                                                        @if(!$loop->last)
+                                                            {{ $skill->title   }}  ,
+                                                        @else
+                                                            {{ $skill->title   }} .
+                                                        @endif
                                                     @endforeach
                                                 </li>
                                                 <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stack pr-1" viewBox="0 0 16 16">
@@ -347,16 +347,23 @@
                                                 <li>
                                                     Published {{$job->created_at->diffForHumans()}}
                                                 </li>
+                                                @if($job->expired)
+                                                    <li style="color: red">EXPIRED</li>
+                                                @endif
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                             </td>
-                    @endforeach
-                            <!--published jobs end-->
                             <hr>
+                    @endforeach
+                            <div class="d-flex justify-content-center">
+                                {!! $userPublishedJobs->links()!!}
+                            </div>
+                            <!--published jobs end-->
 
-                    <h6 style="font-weight: 600;">Contact Info:</h6>
+
+                    <h4 style="font-weight: 600;">Contact Info:</h4>
 
 
                 </div>

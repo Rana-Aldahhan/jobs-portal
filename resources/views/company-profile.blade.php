@@ -93,7 +93,7 @@
                         </div>
                         <div class="row">
                             <label>{{$company->industry->title}}
-                             <br> {{$company->employees_count}} employees in this company</label>
+                             <br> {{number_format($company->employees_count,0)}} employees in this company</label>
 
                         </div>
                         <div class="row">
@@ -203,7 +203,9 @@
 
 
 
-            <button type="button" class="btn btn-secondary btn-lg btn-block">more</button>
+            <div class="d-flex justify-content-center">
+                {!! $employees->links()!!}
+            </div>
 
 
 

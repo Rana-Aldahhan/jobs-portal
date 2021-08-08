@@ -199,18 +199,10 @@
 
          </tbody>
      </table>
-     <div class="text-center mt-3 mt-sm-3">
-         <ul class="pagination justify-content-center mb-0">
-         <li class="page-item disabled"> <span class="page-link">Prev</span> </li>
-         <li class="page-item active" aria-current="page"><span class="page-link">1 </span> <span class="sr-only">(current)</span></li>
-         <li class="page-item"><a class="page-link" href="#">2</a></li>
-         <li class="page-item"><a class="page-link" href="#">3</a></li>
-         <li class="page-item"><a class="page-link" href="#">...</a></li>
-         <li class="page-item"><a class="page-link" href="#">25</a></li>
-         <li class="page-item"> <a class="page-link" href="#">Next</a> </li>
-         </ul>
-     </div>
-                  <br> <br><br><br><br> <br><br><br><br> <br><br><br>
+                  <div class="d-flex justify-content-center">
+                      {!! $appliedJobs->links()!!}
+                  </div>
+                  <br> <br><br><br><br>
      </div>
      </div>
      </div>

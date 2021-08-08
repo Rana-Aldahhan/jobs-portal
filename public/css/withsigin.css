@@ -8,7 +8,7 @@ div ul {
     font-size: 18px;
 }
 .ddrop:hover {
-    background-color: #70b9b0;
+   /* background-color: #70b9b0;*/
     color: black;
     border-radius: 30px;
     text-decoration: none;

@@ -31,7 +31,7 @@ class CompanyServices extends Controller
             abort(403,'unauthorized access');
         $company = auth()->user()->managingCompany;
         $publishedJobs=$company->publishedJobs;
-        $publishedJobs=$publishedJobs->sortByDesc('created_at');
+        $publishedJobs=$publishedJobs->sortByDesc('created_at')->paginate(2);
         return view('company_published_jobs',['company' => $company , 'publishedJobs' => $publishedJobs]);
     }
     public function notifications(){
@@ -39,7 +39,7 @@ class CompanyServices extends Controller
             abort(403,'unauthorized access');
         $company = auth()->user()->managingCompany;
         $notifications=$company->notifications;
-        $notifications=$notifications->sortByDesc('created_at');
+        $notifications=$notifications->sortByDesc('created_at')->paginate(6);
         return view('company-notifications',['company' => $company , 'notifications' => $notifications]);
     }
     public function messeging(){

@@ -162,15 +162,11 @@
         <br>
     @endforeach
 
-
-
-
-
         <!--- Rana's end of changes--->
-
-
       <br>
-      <button type="button" class="btn btn-secondary btn-lg btn-block">more</button>
+      <div class="d-flex justify-content-center">
+            {!! $publishedJobs->links()!!}
+        </div>
         <br> <br><br><br><br> <br><br><br><br> <br><br><br>
   </div>
   </div>

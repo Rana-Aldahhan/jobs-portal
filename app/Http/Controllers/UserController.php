@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Collection;
 
 class UserController extends Controller
 {
@@ -28,7 +29,7 @@ class UserController extends Controller
         $workplaces=$user->workPlaces;
         $sentColleagues=$user->sentColleagues()->wherePivot('approved',1)->get();
         $receivedColleagues=$user->receivedColleagues()->wherePivot('approved',1)->get();
-        $colleagues =$sentColleagues->push($receivedColleagues)->flatten()->shuffle();
+        $colleagues =$sentColleagues->push($receivedColleagues)->flatten();
         $usersReachCount=0;
         $companiesReachCount=0;
         //count users reaches to this profile of the last month
@@ -50,7 +51,7 @@ class UserController extends Controller
 
         //count this month reaches with distinct viewers
         $companiesReachCount=DB :: table('company_user_views')->select('viewing_id')->where('viewer_id',$user->id)->distinct()->get()->count();
-
+        $colleagues=$colleagues->paginate(3);
         return view('user-profile', ['user' => $user,'school'=>$school,'skills'=> $skills,'industry'=>$industry,
         'languages'=>$languages,'workplaces'=>$workplaces,'sentColleagues'=>$sentColleagues,'receivedColleagues'=>$receivedColleagues,'usersReachCount'=>$usersReachCount,
         'colleagues'=>$colleagues,'companiesReachCount'=>$companiesReachCount]);
@@ -102,8 +103,8 @@ class UserController extends Controller
         $languages=$user->languages;
         $sentColleagues=$user->sentColleagues()->wherePivot('approved',1)->get();
         $receivedColleagues=$user->receivedColleagues()->wherePivot('approved',1)->get();
-        $colleagues =$sentColleagues->push($receivedColleagues)->flatten()->shuffle();
-        $userPublishedJobs=$user->publishedJobs;
+        $colleagues =$sentColleagues->push($receivedColleagues)->flatten()->paginate(3);
+        $userPublishedJobs=$user->publishedJobs->paginate(3);
         $showAddColleagues=true;// cancel colleagues request
         $showCancelRequest=false;
         $showApproveRequest=false;//show remove request
@@ -229,7 +230,8 @@ class UserController extends Controller
             'years-of-experience' => 'numeric|nullable',
             'current-job-title' => 'regex:/^[\pL\s\-]+$/u|nullable',
             'current-company-name' => 'regex:/^[\pL\s\-]+$/u|nullable',
-            'profile' => 'image|nullable|max:1999'
+            'profile' => 'image|nullable|max:1999',
+            'resume'=>'nullable|max:1999'
         ]);
 
 
@@ -302,6 +304,8 @@ class UserController extends Controller
 
         //resume processing
         if($request->hasFile('resume')){
+            if($user->resume !=null)
+                unlink(storage_path('app/public/resumes/'.$user->resume));
             $resumeFileNameToStore=null;
             // Get filename with the extension
             $filenameWithExt = $request->file('resume')->getClientOriginalName();

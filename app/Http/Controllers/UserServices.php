@@ -43,8 +43,8 @@ class UserServices extends Controller
             if (auth()->user()->logged_as_company==true)
                 abort(403);
         }
-        $recomendedCompanies = Company :: simplePaginate(5);
-        $recomendedPeople = User :: simplePaginate(5);
+        $recomendedCompanies = Company::all();
+        $recomendedPeople = User::all();
 
         if(Auth :: check())//case logged in: recommend companies and people of the same field
         {
@@ -83,13 +83,13 @@ class UserServices extends Controller
                 }
             }
         }
-        $recomendedPeople=$recomendedPeople->shuffle();
+        $recomendedPeople=$recomendedPeople->paginate(3);
         if(!is_null(auth()->user())) {
             $recomendedPeople = $recomendedPeople->reject(function ($value, $key) {
                 return $value->id == auth()->user()->id;
-            });
+            })->paginate(3);
         }
-        $recomendedCompanies=$recomendedCompanies->shuffle();
+        $recomendedCompanies=$recomendedCompanies->paginate(3);
         $industries= Industry :: all();
 
         return view('explore',['recomendedCompanies'=> $recomendedCompanies ,
@@ -266,7 +266,7 @@ class UserServices extends Controller
         $user = auth()->user();
         $savedJobs=$user->savedJobs->sortByDesc(function($job){
             return $job->pivot->created_at;
-        });
+        })->paginate(2);
         return view('saved_jobs',['user' => $user , 'savedJobs' => $savedJobs]);
     }
     public function publishedJobs(){
@@ -275,7 +275,7 @@ class UserServices extends Controller
         $user = auth()->user()->load(['publishedJobs.requiredSkills','publishedJobs.industry']);
        //$publishedJobs=$user->publishedJobs;
       // $publishedJobs->load(['requiredSkills','industry']);
-        $publishedJobs=$user->publishedJobs->sortByDesc('created_at');
+        $publishedJobs=$user->publishedJobs->sortByDesc('created_at')->paginate(2);
         return view('user_published_jobs',['user' => $user,'publishedJobs' => $publishedJobs]);
     }
     public function appliedJobs(){
@@ -284,7 +284,7 @@ class UserServices extends Controller
         $user = auth()->user();
         $appliedJobs=$user->appliedJobs->sortByDesc(function($job){
             return $job->pivot->created_at;
-        });
+        })->paginate(2);
         return view('applied_jobs',['user' => $user , 'appliedJobs' => $appliedJobs]);
     }
     public function notifications(){
@@ -292,7 +292,7 @@ class UserServices extends Controller
             abort(403);
         $user = auth()->user();
         $notifications=$user->notifications;
-        $notifications=$notifications->sortByDesc('created_at');
+        $notifications=$notifications->sortByDesc('created_at')->paginate(7);
         /*$user->notifications->map(function ($notification) {
             $notification->seen=true;
             return $notification->save();
@@ -307,9 +307,9 @@ class UserServices extends Controller
         $messegingCompanies=$user->companyAcceptors->unique();
         $messegingUsers=null;
         if($user->userAcceptors != null)
-            $messegingUsers=$user->userAcceptors;
+            $messegingUsers=$user->userAcceptors->unique();
         if($user->userAcceptants != null)
-            $messegingUsers=$messegingUsers->union($user->userAcceptants);
+            $messegingUsers=$messegingUsers->union($user->userAcceptants)->unique();
         $messegingUsers = $messegingUsers->flatten()->unique();
         return view('userMessaging',['user'=>$user, 'messegingCompanies'=>$messegingCompanies,
         'messegingUsers'=>$messegingUsers]);
@@ -320,7 +320,7 @@ class UserServices extends Controller
             if (auth()->user()->logged_as_company==true)
                 abort(403);
         }
-        $searchResults = Company:: where ('name' , $request->input('companySearchName'))->get();
+        $searchResults = Company:: where ('name' ,'like','%'. $request->input('companySearchName'.'%'))->get()->paginate(2);
         return view('company_search_results', ['searchResults'=>$searchResults]);
     }
     public function peopleSearchResults(Request $request){
@@ -329,10 +329,16 @@ class UserServices extends Controller
             if (auth()->user()->logged_as_company==true)
                 abort(403);
         }
-        $searchResults = User:: where ('name' , $request->input('peopleSearchName'))->get();
+        $searchResults = User:: where ('name' ,'like','%'. $request->input('peopleSearchName').'%')->get()->paginate(2);
         return view('people_search_results', ['searchResults'=> $searchResults]);
     }
     public function filterJobs(Request  $request){
+
+        //validation
+        $this->validate($request ,[
+            'required_experience'=>'numeric|nullable',
+            'salary'=>'numeric|nullable'
+        ]);
         $user=auth()->user();
         $jobSearchResults=JobOpportunity:: where('expired',false)->get();
 
@@ -349,6 +355,7 @@ class UserServices extends Controller
             $jobSearchResults=$jobSearchResults->filter(function ($job ){
                 return $job->remote == request('remote');
             });
+           // $jobSearchResults=$jobSearchResults->where('remote',1)->paginate(1);
         }
         if(!$request->isNotFilled('city'))
         {
@@ -362,11 +369,11 @@ class UserServices extends Controller
                 return $job->country == request('country');
             });
         }
-        if(!$request->isNotFilled('industries'))
+        if(!$request->isNotFilled('industry'))
         {
             $jobSearchResults=$jobSearchResults->filter(function ($job ){
                 //dd($job->industry);
-                return $job->industry->id == request('industries');
+                return $job->industry->id == request('industry');
             });
         }
         if(!$request->isNotFilled('typeOfPosition'))
@@ -454,7 +461,8 @@ class UserServices extends Controller
                 return $job->publishable_id == auth()->user()->id && $job->publishable_type=='App\Models\User';
             });
         }
-
+        //dd($jobSearchResults);
+        $jobSearchResults = $jobSearchResults->paginate(5);
         return view('job_search_results',['user'=>$user,'jobSearchResults'=>$jobSearchResults]);
     }
     public function sortJobs($results)

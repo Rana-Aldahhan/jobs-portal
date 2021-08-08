@@ -241,9 +241,14 @@
                         </div>
                         <div class="col">
                             <p>
-                            @foreach ($user->skills as $skill)
-                                 {{ $skill->title   }}
-                            @endforeach
+                                @foreach ($user->skills as $skill)
+                                    @if(!$loop->last)
+                                        {{ $skill->title   }}  ,
+                                    @else
+                                        {{ $skill->title   }} .
+                                    @endif
+
+                                @endforeach
                             </p>
                         </div>
                     </div>
@@ -257,7 +262,12 @@
                         <div class="col">
                             <p>
                             @foreach ($user->languages as $language)
-                            {{ $language->name   }}
+
+                                    @if(!$loop->last)
+                                        {{ $language->name   }},
+                                    @else
+                                        {{ $language->name   }} .
+                                    @endif
                             @endforeach
 
                             </p>
@@ -353,11 +363,14 @@
                             </div>
                         </div>
                     </div>
+                        <div class="d-flex justify-content-center">
+                            {!! $colleagues->links()!!}
+                        </div>
                     <br>
                     @endforeach
-                        <button type="button" class="btn btn-secondary btn-lg btn-block">more</button>
-                        <hr>
-                    @else
+
+
+                @else
                         <br>
                         <p> you don't have any colleague yet!</p>
                         <hr>

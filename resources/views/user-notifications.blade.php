@@ -142,6 +142,8 @@
              <p>You received no notification !</p>
           </li>
       @endif
+
+
 @php
 
       auth()->user()->notifications->map(function ($notification) {
@@ -155,12 +157,16 @@
 
 <hr>
   </ul>
+
 </div>
 
-
+      <div class="d-flex justify-content-center">
+          {!! $notifications->links()!!}
+      </div>
 
   <!---end noti-->
       <br> <br><br><br><br> <br><br><br><br> <br><br><br>
+
 </div>
 </div>
 

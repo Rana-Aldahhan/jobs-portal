@@ -81,7 +81,7 @@
 
                     <div class="form-group col-md-6 ">
                         <label for="validationTooltip01"> Industry Field </label>
-                        <select class="custom-select" required>
+                        <select class="custom-select"  name="industry" required>
                             <option hidden disabled selected value> -- select an option -- </option>
                             @foreach($industries as $industry)
                                 <option value="{{$industry->id}}">{{$industry->title}}</option>
@@ -118,15 +118,20 @@
 
                         <label for="inputLastName ">Your Experience Years In That Industry
                         </label>
-                        <input type="string" class="form-control "  name="required_experience"  placeholder="years of your experience" required>
-
+                        <input type="string" class="form-control @error('required_experience') is-invalid @enderror "  name="required_experience"  placeholder="years of your experience" required>
+                        @error('required_experience')
+                        <p class="help-block is-invalid">{{$errors->first('required_experience')}}</p>
+                        @enderror
 
                     </div>
 
                     <div class="form-group col-md-6 ">
                         <label for="inputLastName">Salary <span  style="color:#cb1a1a; font-size:smaller;">(in K$)</span>
                         </label>
-                        <input class="form-control" type="string" name="salary" placeholder="Salary" required>
+                        <input class="form-control @error('salary') is-invalid @enderror" type="string" name="salary" placeholder="Salary" required>
+                        @error('salary')
+                        <p class="help-block is-invalid">{{$errors->first('salary')}}</p>
+                        @enderror
 
                     </div>
                     <div class="form-group col-md-6 ">

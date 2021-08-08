@@ -47,7 +47,7 @@
                             <div>
 
                                 <p>{{$company->industry->title}}.<br>
-                                    emplyees count : {{$company->employees_count}} .<br>
+                                    emplyees count : {{number_format($company->employees_count,0)}} .<br>
                                     {{$company->city}} ,{{$company->country}}.<br>
                                     {{$company->slogan}}
                                 </p>
@@ -92,7 +92,9 @@
                                 @method('DELETE')
                                 <div class="stylego">
                                     <a id="update " href="#" class="editlink" onclick="document.getElementById('stopnotification').submit(); return false;">
-                                        <i class="fa fa-bell-o fa-2x" aria-hidden="true"></i>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="red" class="bi bi-bell-slash" viewBox="0 0 16 16">
+                                            <path d="M5.164 14H15c-.299-.199-.557-.553-.78-1-.9-1.8-1.22-5.12-1.22-6 0-.264-.02-.523-.06-.776l-.938.938c.02.708.157 2.154.457 3.58.161.767.377 1.566.663 2.258H6.164l-1 1zm5.581-9.91a3.986 3.986 0 0 0-1.948-1.01L8 2.917l-.797.161A4.002 4.002 0 0 0 4 7c0 .628-.134 2.197-.459 3.742-.05.238-.105.479-.166.718l-1.653 1.653c.02-.037.04-.074.059-.113C2.679 11.2 3 7.88 3 7c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0c.942.19 1.788.645 2.457 1.284l-.707.707zM10 15a2 2 0 1 1-4 0h4zm-9.375.625a.53.53 0 0 0 .75.75l14.75-14.75a.53.53 0 0 0-.75-.75L.625 15.625z"/>
+                                        </svg>
                                         <h6>stop getting job Notification of this Company</h6>
                                     </a>
                                 </div>
@@ -103,7 +105,9 @@
                             @if($showMessageButton)
                                 <div class="stylego">
                                     <a id="update " href="#" class="editlink">
-                                        <i class="fa fa-bell-o fa-2x" aria-hidden="true"></i>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16" style="margin-right:10px;">
+                                        <path d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zM5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                        </svg>
                                         <h6>Message</h6>
                                     </a>
                                 </div>
@@ -133,17 +137,21 @@
                 @endif
                 <h4>About this Company:</h4>
 
-                <p class="pabout">
+                <p class="">
                     {{$company->about}}
                 </p>
+                    <hr>
+
                 <h4>Certificate:</h4>
                 <a href="{{asset('storage/certificates/'.$company->certificate)}}"> open certificate</a>
-                <h6 class="styleh">Company's Available Job opportunities:</h6>
+                    <br>
+                    <hr>
+                <h4 class="">Company's Available Job opportunities:</h4>
 
             </div>
 
             @if($company->publishedJobs->count()!=0)
-            @foreach($company->publishedJobs as $job)
+            @foreach($companyJobs as $job)
             <!--start1-->
             <div class="card cardppp"  >
                 <a id="update" href="/jobs/{{$job->id}}" class="editlink">
@@ -167,7 +175,11 @@
                                     </p>
                                     <h5 class="media-heading">required skills :
                                     @foreach($job->requiredSkills as $skill)
-                                        {{$skill->title}}
+                                            @if(!$loop->last)
+                                                {{ $skill->title   }}  ,
+                                            @else
+                                                {{ $skill->title   }} .
+                                            @endif
                                     @endforeach
                                     </h5>
                                     <h5 class="media-heading">required experience :
@@ -180,6 +192,9 @@
                                     <h5 class="media-heading">published at:
                                         {{$job->created_at->diffForHumans()}}
                                     </h5>
+                                    @if($job->expired)
+                                            <h6 style="color: red">EXPIRED</h6>
+                                        @endif
 
 
                                 </div>
@@ -190,6 +205,9 @@
                 </a>
             </div>
             <!--end1-->
+                <div class="d-flex justify-content-center">
+                    {!! $companyJobs->links()!!}
+                </div>
             @endforeach
             @else
             <!--start2-->
@@ -221,33 +239,12 @@
             <!--end2-->
             @endif
 
-            <!--start pagination-->
 
-            <nav aria-label="Page navigation example" class="page" style="margin-left:5px;">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <!--end pagination-->
+            <br><hr>
 
             <div class="styleabout">
 
-                <h6 class="styleh">Our Employees:</h6>
+                <h4 class="">Our Employees:</h4>
 
             </div>
             @foreach($company->employees as $employee)
@@ -283,28 +280,12 @@
             <!--end1employee-->
             @endforeach
 
+
             <!--start pagination-->
 
-            <nav aria-label="Page navigation example" class="page" style="margin-left:5px;">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
+            <div class="d-flex justify-content-center">
+                {!! $companyEmployees->links()!!}
+            </div>
             <!--end pagination-->
 
 

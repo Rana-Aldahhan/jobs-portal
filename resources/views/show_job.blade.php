@@ -201,23 +201,24 @@
 
   <div class="stylechosen">
 
-<h2>
+<h1 style="color:#1784ab">
 
-    {{$job->title }} <br> <br>
+    {{ucwords($job->title) }} <br> <br>
 
 
 
-</h2>
+</h1>
+      @auth()
       @if( ($job->publishable_id==auth()->user()->id && $job->publishable_type='App\Models\User' && !auth()->user()->logged_as_company)
            || ($job->publishable_id==auth()->user()->managing_company_id && $job->publishable_type='App\Models\Company' && auth()->user()->logged_as_company))
       <div class="row">
           <div class="col mb-3">
               <div class="form-group">
-                  <h3><span class="glyphicon glyphicon-thumbs-up"><svg class="octicon octicon-graph UnderlineNav-octicon d-none d-sm-inline" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>
-                                </span>Your monthly Users reaches :
-                  </h3>
+                  <h6><svg class="octicon octicon-graph UnderlineNav-octicon d-none d-sm-inline" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>
+                               Your monthly Users reaches :
+                  </h6>
                   <br>
-                  <div > <strong> number of other unique users reaches : {{$reachCount}}</strong></div><br>
+                  <div >  number of other unique users reaches :<strong> {{$reachCount}} </strong>unique views.</div><br>
 
 
 
@@ -226,6 +227,7 @@
           </div>
       </div>
       @endif
+      @endauth
 
       <h6>
           @if(!$job->remote)
@@ -268,7 +270,11 @@
     Required Skills:</h6>
 <p >
     @foreach($job->requiredSkills as $skill)
-        {{$skill->title}}
+        @if(!$loop->last)
+            {{ $skill->title   }}  ,
+        @else
+            {{ $skill->title   }} .
+        @endif
     @endforeach <br><br>
 </p>
 
@@ -323,11 +329,11 @@
       <br> <br> <br>
 <h6>
     <hr>
-    <hr>
+
     <i class="fa fa-address-card-o" aria-hidden="true"style="margin-left: 5px"></i>
     About the job publisher:</h6>
 
-      <div class="profile">
+      <div class="profile" >
           <img src="{{asset('storage/profiles/'.$job->publishable->profile_thumbnail)}}" alt="" class="img-fluid rounded-circle">
       </div>
 <p>

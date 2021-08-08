@@ -9,7 +9,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
     <link rel="stylesheet" href="{{asset('css/companymessaging.css')}}">
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-
+    <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
     <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">

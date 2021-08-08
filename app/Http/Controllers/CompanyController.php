@@ -18,8 +18,8 @@ class CompanyController extends Controller
             abort(403);
         $company=auth()->user()->managingCompany;
         $industry=$company->industry;
-        $employees=$company->employees;
-        $publishedJobs=$company->publishedJobs;
+        $employees=$company->employees->paginate(3);
+        $publishedJobs=$company->publishedJobs->paginate(3);
 
         return view('company-profile',['company'=>$company,'industry'=>$industry,
         'employees'=>$employees, 'publishedJobs'=>$publishedJobs]);
@@ -47,8 +47,8 @@ class CompanyController extends Controller
     public function show($id)
     {
         $company = Company :: find($id);
-        $companyJobs = $company->publishedJobs;
-        $companyEmployees= $company->employees;
+        $companyJobs = $company->publishedJobs->sortByDesc('created_at')->paginate(1);
+        $companyEmployees= $company->employees->paginate(3);
 
         $user=auth()->user();//can be null if not signed in
 
@@ -156,7 +156,8 @@ class CompanyController extends Controller
 
         //certificate processing
         if($request->hasFile('certificate')){
-            unlink(storage_path('app/public/profiles/'.$company->certificate));
+            if($company->certificate != null)
+                unlink(storage_path('app/public/certificates/'.$company->certificate));
             // Get filename with the extension
             $filenameWithExt = $request->file('certificate')->getClientOriginalName();
             // Get just filename
