@@ -260,24 +260,24 @@
                 <br>
                 <hr>
                 <br>
-                <h4 class="bar1">About Win_Win hiring</h4>
-                <p class="barp">Welcome to Win-Win hiring,this site aims to provide users with the right tools to help them find the most convenient job for them
+                <h4 class="bar">About Win_Win hiring</h4>
+                <p class="bar">Welcome to Win-Win hiring,this site aims to provide users with the right tools to help them find the most convenient job for them
                     as well as giving the users and companies the chance to post their own jobs opportunities and help them finding the right employee</p>
                 <br>
                 <hr>
                 <br>
                 <h4 class="bar">Vision</h4>
-                <p  class="bar1p">to create a better everday life for many People.</p>
+                <p  class="bar">to create a better everday life for many People.</p>
                 <br>
                 <hr>
                 <br>
-                <h4 class="bar2">our Mission</h4>
-                <p  class="bar2p"> We unleash the power of the self-employed and help them thrive.</p>
+                <h4 class="bar">our Mission</h4>
+                <p  class="bar"> We unleash the power of the self-employed and help them thrive.</p>
                 <br>
                 <hr>
                 <br>
-                <h4 class="bar2">Who Are We</h4>
-                <p  class="bar3p">Win-Win hiring founded by agroup of students at Damascus university in 2021,<br> and we do everything we can to strengthen your advantage and help you thrive <br>in all areas of your business.</p>
+                <h4 class="bar">Who Are We</h4>
+                <p  class="bar">Win-Win hiring founded by agroup of students at Damascus university in 2021,<br> and we do everything we can to strengthen your advantage and help you thrive <br>in all areas of your business.</p>
                 <br>
     </section><!-- End About Us Section -->
     <!-- ======= Footer ======= -->

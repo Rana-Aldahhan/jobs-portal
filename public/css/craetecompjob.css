@@ -5,6 +5,9 @@ License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 --*/
 /*-- reset --*/
+body {
+    font-family: "Nunito", sans-serif;
+}
 .main {
     margin-top: 200px;
 }
@@ -105,7 +108,7 @@ body {
     background: linear-gradient(to top, #424242, #757575);
     background-size: cover;
     background-attachment: fixed;
-    font-family: "Roboto", sans-serif;
+    font-family: "Nunito", sans-serif;
 }
 
 h1 {
@@ -115,7 +118,7 @@ h1 {
     font-weight: 100;
     text-transform: capitalize;
     letter-spacing: 4px;
-    font-family: "Roboto", sans-serif;
+    font-family: "Nunito", sans-serif;
 }
 
 /*-- main --*/
@@ -157,7 +160,7 @@ input[type="password"] {
     background-size: 100%;
     background-repeat: no-repeat;
     color: #fff;
-    font-family: "Roboto", sans-serif;
+    font-family: "Nunito", sans-serif;
 }
 
 input.email,

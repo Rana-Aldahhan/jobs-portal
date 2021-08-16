@@ -52,8 +52,12 @@
                         <ul>
                             <div>
 
-                                <p>{{$user->current_job_title}} at  {{$user->current_company_name}} <br>
+                                <p>@if($user->current_job_title != null || $user->current_company_name != null )
+                                    {{$user->current_job_title}} at  {{$user->current_company_name}} <br>
+                                    @endif
+                                    @if($user->city != null || $user->country!=null)
                                     {{$user->country}}, {{$user->city}}
+                                    @endif
                                 </p>
 
                                 <p style=" @if($user->looking_for_job) color:#548235; @else color:#e57373; @endif" >
@@ -174,16 +178,23 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    @if($user->about != null)
                     <h4>About:</h4>
 
                     <p class="">
                         {{$user->about}}
                     </p>
-                        <hr>
+                            <hr>
+                        @endif
 
+                        @if($user->school != null || $user->skills->count()!=0 || $user->industry != null ||
+                       $user->years_of_experience != null || $user->languages->count()!=0 || $user->resume != null   )
                         <h4>Education and experience:</h4>
+                        @endif
+
                     <h6> @if($user->school != null)Studied at :{{$user->school->name}} @endif</h6>
 
+                        @if($user->skills->count()!=0)
                     <h6>Skills:</h6>
 
                     <p>
@@ -195,7 +206,9 @@
                             @endif
                         @endforeach
                     </p>
+                        @endif
 
+                        @if($user->industry != null)
                     <h6>Field:</h6>
 
                     <p>
@@ -203,12 +216,17 @@
                         {{$user->Industry->title}}
                         @endif
                     </p>
+                        @endif
 
+                        @if($user->years_of_experience != null)
                     <h6>Work Experience:</h6>
 
                     <p>
                         {{$user->years_of_experience}} years.
                     </p>
+                        @endif
+
+                        @if($user->languages->count()!=0)
                         <h6>Languages:</h6>
                         <p>
                             @foreach($user->languages as $language)
@@ -220,16 +238,20 @@
                                 @endif
                             @endforeach
                         </p>
+                        @endif
 
+                        @if($user->resume != null)
                         <h6>Resume:</h6>
 
                         <p>  <a href="{{asset('storage/resumes/'.$user->resume)}}">
                                 view resume
                             </a>
                         </p>
-
+                        @endif
                         <hr>
-                    <div class="row">
+
+                        @if($user->workPlaces->count()!=0)
+                        <div class="row">
                         <div class="col mb-3">
                             <div class="form-group">
                                 <h4><span class="glyphicon glyphicon-thumbs-up"><svg class="octicon octicon-graph UnderlineNav-octicon d-none d-sm-inline" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>
@@ -247,7 +269,7 @@
                         </div>
                     </div>
                     <hr>
-
+                        @endif
 
 
 
@@ -296,7 +318,7 @@
 
 
                     @else
-                        <p> this user has no colleagues yet!</p>
+                        <p> this user has no colleagues on this site yet!</p>
                     @endif
 
 
@@ -357,10 +379,15 @@
                             </td>
                             <hr>
                     @endforeach
+                            @if($userPublishedJobs->count() !=0)
                             <div class="d-flex justify-content-center">
                                 {!! $userPublishedJobs->links()!!}
                             </div>
+                        @else
+                                this user doesn't have any published freelancer yet!
+                        @endif
                             <!--published jobs end-->
+                            <br> <br><hr><br><br><br>
 
 
                     <h4 style="font-weight: 600;">Contact Info:</h4>
@@ -372,23 +399,26 @@
 
 
                         <div class="info">
+                            @if($user->city != null || $user->country!=null)
                             <div class="address">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
                                 <h4>Location:</h4>
                                 <p>{{ucwords($user->city)}} , {{ucwords($user->country)}}</p>
                             </div>
+                            @endif
 
                             <div class="email">
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
                                 <h4>Email:</h4>
                                 <p>{{$user->email}}</p>
                             </div>
-
+                                @if($user->phone_number != null )
                             <div class="phone">
                                 <i class="fa fa-volume-control-phone" aria-hidden="true"></i>
                                 <h4>Call:</h4>
                                 <p>{{$user->phone_number}}</p>
                             </div>
+                                @endif
 
                         </div>
                     </div>

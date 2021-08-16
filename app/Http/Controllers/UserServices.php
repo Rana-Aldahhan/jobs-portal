@@ -61,6 +61,25 @@ class UserServices extends Controller
                 $recomendedPeople->union($additionalRecomendedPeople);
                 $recomendedPeople = $recomendedPeople->flatten();
             }
+            if(!is_null($request->companyIndustry))
+            {
+                $recomendedCompanies = Company :: where('industry_id' , $request->companyIndustry) ->get();
+            }
+            if(!is_null($request->peopleIndustry )){
+
+                $recomendedPeople = User::where('industry_id',$request->peopleIndustry)->get();
+            }
+            if(!is_null($request->peopleEducation)){
+                $school= School :: where('name' ,$request->peopleEducation)->get()->first() ;
+
+                if($school !=null)
+                {
+                    $additionalRecomendedPeople= User :: where('school_id' ,$school->id)->get();
+                    $recomendedPeople=$additionalRecomendedPeople ->union( $recomendedPeople);
+                    $recomendedPeople = $recomendedPeople->flatten();
+
+                }
+            }
         }
         else//case not logged in, recommend people and companies of the selected industry ,school
         {
@@ -74,11 +93,13 @@ class UserServices extends Controller
                 $recomendedPeople = User::where('industry_id',$request->peopleIndustry)->get();
             }
             if(!is_null($request->peopleEducation)){
-                $school= School :: where('name' ,$request->peopleEducation)->first() ;
+                $school= School :: where('name' ,$request->peopleEducation)->get()->first() ;
+
                 if($school !=null)
                 {
+
                 $additionalRecomendedPeople= User :: where('school_id' ,$school->id)->get();
-                $recomendedPeople ->union($additionalRecomendedPeople);
+                $recomendedPeople=$additionalRecomendedPeople ->union( $recomendedPeople);
                 $recomendedPeople = $recomendedPeople->flatten();
                 }
             }
@@ -333,7 +354,6 @@ class UserServices extends Controller
         return view('people_search_results', ['searchResults'=> $searchResults]);
     }
     public function filterJobs(Request  $request){
-
         //validation
         $this->validate($request ,[
             'required_experience'=>'numeric|nullable',
@@ -341,6 +361,58 @@ class UserServices extends Controller
         ]);
         $user=auth()->user();
         $jobSearchResults=JobOpportunity:: where('expired',false)->get();
+        $bool=true;
+        $jobSearchResults=JobOpportunity::when($bool, function (){return JobOpportunity::where('expired',false);})
+        ->when(!$request->isNotFilled('remote') ,function ($query){return $query->where('remote',request('remote')) ;})
+        ->when(!$request->isNotFilled('city'),function ($query){return $query->where('city',request('city'));})
+        ->when(!$request->isNotFilled('country'),function ($query){return $query->where('country',request('country'));})
+        ->when(!$request->isNotFilled('industry'),function ($query){return $query->where('industry_id',request('industry'));})
+        ->when(!$request->isNotFilled('typeOfPosition'),function ($query){return $query->where('positionType_id',request('typeOfPosition'));})
+        ->when(!$request->isNotFilled('required_experience'),function ($query){return $query->where('required_experience','<=',request('required_experience'));})
+        ->when(!$request->isNotFilled('salary'),function ($query){return $query->where('salary','>=',request('salary'));})
+        ->when(!$request->isNotFilled('transport'),function ($query){return $query->where('transportation ',request('transport'));})
+        ->get();
+        //TODO make jobs two kind : matched jobs (count in both sort condition below must be 0) , and similler jobs
+
+        if(!is_null(request('sortBy')))
+        {
+            if(request('sortBy') == 'date')
+                $jobSearchResults=$jobSearchResults->sortByDesc('created_at');
+            if(request('sortBy') == 'salary')
+                $jobSearchResults=$jobSearchResults->sortByDesc('salary');
+            if(request('sortBy') == 'convenient')
+            {
+                if(!is_null($request->input('skills') ))
+                {
+                    $jobSearchResults=$jobSearchResults->reject(function ($job){
+                        return  collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count() ==0;
+                    });
+                    $jobSearchResults = $jobSearchResults->sortByDesc(
+                        [function ($job){
+                            return collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count();
+                        },
+                            function($job){
+                                return $job->requiredSkills->count()== request('skills')->count();
+                            }
+                        ]);
+                }
+            }
+        }
+        $jobSearchResults->load(['industry','typeOfPosition','requiredSkills','publishable']);
+
+       // reject all jobs published by the logged user
+        if(Auth::check()) {
+            $jobSearchResults = $jobSearchResults->reject(function ($job) {
+                return $job->publishable_id == auth()->user()->id && $job->publishable_type=='App\Models\User';
+            });
+        }
+        $jobSearchResults = $jobSearchResults->paginate(5);
+
+        return view('job_search_results',['user'=>$user,'jobSearchResults'=>$jobSearchResults]);
+    }
+    public function sortJobs($results)
+    {
+        // old filter job function
 
         //filter results to match the request
         //dd($request);
@@ -350,13 +422,14 @@ class UserServices extends Controller
             });
         });*/
 
-        if(!$request->isNotFilled('remote'))
+        /*if(!$request->isNotFilled('remote'))
         {
             $jobSearchResults=$jobSearchResults->filter(function ($job ){
                 return $job->remote == request('remote');
             });
            // $jobSearchResults=$jobSearchResults->where('remote',1)->paginate(1);
         }
+
         if(!$request->isNotFilled('city'))
         {
             $jobSearchResults=$jobSearchResults->filter(function ($job ){
@@ -401,20 +474,23 @@ class UserServices extends Controller
                 return $job->transportation == request('transport');
             });
         }
-        //TODO make jobs two kind : matched jobs (count in both sort condition below must be 0) , and similler jobs
+        */
 
-       /* if(!is_null($request->input('skills') )) {
-            $jobSearchResults = $jobSearchResults->sortBy([
-                function ($job){
-                    return count( collect( request('skills') )->diff( $job->requiredSkills ->modelKeys() )  );
-                },
-                function ($job) {
-                return count( collect( $job->requiredSkills ->modelKeys() )->diff( request('skills')));
-            }
-                ]);
-        }
-       */
+
+
+        /* if(!is_null($request->input('skills') )) {
+             $jobSearchResults = $jobSearchResults->sortBy([
+                 function ($job){
+                     return count( collect( request('skills') )->diff( $job->requiredSkills ->modelKeys() )  );
+                 },
+                 function ($job) {
+                 return count( collect( $job->requiredSkills ->modelKeys() )->diff( request('skills')));
+             }
+                 ]);
+         }
+        */
         // new skill code
+        /*
         if(!is_null($request->input('skills') ))
         {
             $jobSearchResults=$jobSearchResults->reject(function ($job){
@@ -429,44 +505,7 @@ class UserServices extends Controller
                     }
             ]);
         }
-        if(!is_null(request('sortBy')))
-        {
-            if(request('sortBy') == 'date')
-                $jobSearchResults=$jobSearchResults->sortByDesc('created_at');
-            if(request('sortBy') == 'salary')
-                $jobSearchResults=$jobSearchResults->sortByDesc('salary');
-            if(request('sortBy') == 'convenient')
-            {
-                if(!is_null($request->input('skills') ))
-                {
-                    $jobSearchResults=$jobSearchResults->reject(function ($job){
-                        return  collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count() ==0;
-                    });
-                    $jobSearchResults = $jobSearchResults->sortByDesc(
-                        [function ($job){
-                            return collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count();
-                        },
-                            function($job){
-                                return $job->requiredSkills->count()== request('skills')->count();
-                            }
-                        ]);
-                }
-            }
-        }
-        $jobSearchResults->load(['industry','typeOfPosition','requiredSkills','publishable']);
-
-       // reject all jobs published by the logged user
-        if(Auth::check()) {
-            $jobSearchResults = $jobSearchResults->reject(function ($job) {
-                return $job->publishable_id == auth()->user()->id && $job->publishable_type=='App\Models\User';
-            });
-        }
-        //dd($jobSearchResults);
-        $jobSearchResults = $jobSearchResults->paginate(5);
-        return view('job_search_results',['user'=>$user,'jobSearchResults'=>$jobSearchResults]);
-    }
-    public function sortJobs($results)
-    {
+        */
         dd('smth');
         $jobSearchResults=$results;
         $user=auth()->user();
@@ -533,7 +572,7 @@ class UserServices extends Controller
             abort(403);
         }
         $user=auth()->user();
-        $company=Company::find($id);
+        $company=Company::findOrFail($id);
         $messages=$user->sentMessages()->where('receivable_type','App\Models\Company')
             ->where('receivable_id',$id)->get();
         $messages->push($user->receivedMessages()->where('sendable_type','App\Models\Company')
@@ -571,7 +610,7 @@ class UserServices extends Controller
     }
     //user-job functionalities
     public function applyJob($id){
-        $job= JobOpportunity :: find($id);
+        $job= JobOpportunity::findOrFail($id);
         //attach user to this job
         $user=auth()->user();
         $user->appliedJobs()->attach($id);
@@ -596,7 +635,7 @@ class UserServices extends Controller
     public function withdrawApplication($id){
         $user=auth()->user();
         $user->appliedJobs()->detach($id);
-        $job=JobOpportunity :: find($id);
+        $job=JobOpportunity::findOrFail($id);
         $notification=Notification::where ('causable_id',$user->id)
                                     ->where('causable_type','App\Models\User')
                                     ->where('notifiable_id',$job->publishable_id)
@@ -665,7 +704,7 @@ class UserServices extends Controller
         return redirect('/users/'.$id);
     }
     public function showMessagesWithUser($id){
-        $messagedUser=User::find($id);
+        $messagedUser=User::findOrFail($id);
         $messages=[];
         $user=auth()->user();
         if(auth()->user()->logged_as_company==false)//case logged in as user
@@ -826,7 +865,7 @@ class UserServices extends Controller
         {
             abort(403,'unauthorized access');
         }
-        $reportedCompany=Company :: find($id);
+        $reportedCompany=Company::findOrFail($id);
         $reports=$reportedCompany->incomingReports->load('sendable');
         $reports=$reports->sortByDesc('created_at');
 
@@ -842,7 +881,7 @@ class UserServices extends Controller
         {
             abort(403,'unauthorized access');
         }
-        $reportedUser=User :: find($id);
+        $reportedUser=User::findOrFail($id);
         $reports=$reportedUser->incomingReports->load('sendable');
         $reports=$reports->sortByDesc('created_at');
         return view('user-reports',['user'=>$user,'reportedUser'=>$reportedUser,'reports'=>$reports]);

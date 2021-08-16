@@ -130,7 +130,7 @@
                           <h6> Withdraw application</h6>
                       </a>
                       </form>
-                      @else
+                      @elseif(!$job->expired)
                           <a class="candidate-list-favourite order-2 text-dark" >
 
                               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="green" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16" style="margin-right:10px;">

@@ -4,6 +4,7 @@ body,html{
     background: #7F7FD5;
     background: -webkit-linear-gradient(to right, #EEEEEE,  #90A4AE, #9E9E9E);
     background: linear-gradient(to right,   #EEEEEE,  #90A4AE, #9E9E9E);
+    font-family: "Nunito", sans-serif;
 }
 
 .chat{

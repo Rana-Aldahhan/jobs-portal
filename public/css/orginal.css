@@ -1,5 +1,5 @@
 body {
-    font-family: "Open Sans", sans-serif;
+    font-family: "Nunito", sans-serif;
 }
 @media (min-width: 768px) and (max-width: 1000px) {
     .navbar-toggle {
@@ -419,7 +419,7 @@ ul li {
 # Footer
 --------------------------------------------------------------*/
 #footer {
-    background: #073839;
+    background: #212121;
     padding: 30px 0;
     color: #fff;
     font-size: 14px;

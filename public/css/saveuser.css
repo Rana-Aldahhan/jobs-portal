@@ -1,3 +1,4 @@
+body{font-family: "Nunito", sans-serif;}
 #div {
     width: 270px;
     transition: all ease-in-out 0.5s;
@@ -64,7 +65,6 @@
     color: #b1a5a5;
 }
 .container h4 {
-    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
     font-size: 25px;
     color: #607d8b;
     letter-spacing: 3px;

@@ -1,11 +1,11 @@
+body{font-family: "Nunito", sans-serif;}
 .tm-brand {
     font-size: 2rem;
     color: #b71c1c;
     text-align: center;
     padding-bottom: 50px;
     padding-top: 50px;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+
 }
 
 .tm-brand-box {
@@ -48,29 +48,24 @@
     color: #d32f2f;
     font-size: 18px;
     margin-top: 170px;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+
 }
 .stylep1 {
     color: #616161;
     font-size: 18px;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+
 }
 .md-form {
     margin-top: 20px;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+
 }
 label {
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+
 }
 h5 {
     margin-top: 20px;
     color: #e57373;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+
 }
 .stylecircle {
     margin-left: 20px;

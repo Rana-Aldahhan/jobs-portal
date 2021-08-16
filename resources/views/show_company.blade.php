@@ -141,9 +141,10 @@
                     {{$company->about}}
                 </p>
                     <hr>
-
+                    @if($company->certificate !=null)
                 <h4>Certificate:</h4>
                 <a href="{{asset('storage/certificates/'.$company->certificate)}}"> open certificate</a>
+                    @endif
                     <br>
                     <hr>
                 <h4 class="">Company's Available Job opportunities:</h4>
@@ -205,10 +206,11 @@
                 </a>
             </div>
             <!--end1-->
+
+            @endforeach
                 <div class="d-flex justify-content-center">
                     {!! $companyJobs->links()!!}
                 </div>
-            @endforeach
             @else
             <!--start2-->
             <div class="card cardppp"  >
@@ -225,7 +227,7 @@
 
 
                                     <h5 class="media-heading"></h5>
-                                    <p> there is no jobs published for this company</p>
+                                    <p> there is no jobs published for this company </p>
 
 
                                 </div>
@@ -242,9 +244,9 @@
 
             <br><hr>
 
-            <div class="styleabout">
+            <div class="styleabout" >
 
-                <h4 class="">Our Employees:</h4>
+                <h4 class="">Our Employees in this site:</h4>
 
             </div>
             @foreach($company->employees as $employee)
@@ -279,14 +281,20 @@
             </div>
             <!--end1employee-->
             @endforeach
-
-
+            @if($company->employees->count()==0)
+                <p>
+                    no employees of our company is in this site yet!
+                </p>
+            @else
             <!--start pagination-->
+                <div class="d-flex justify-content-center">
+                    {!! $companyEmployees->links()!!}
+                </div>
+                <!--end pagination-->
+            @endif
 
-            <div class="d-flex justify-content-center">
-                {!! $companyEmployees->links()!!}
-            </div>
-            <!--end pagination-->
+
+
 
 
 

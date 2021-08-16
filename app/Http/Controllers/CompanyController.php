@@ -46,7 +46,7 @@ class CompanyController extends Controller
 
     public function show($id)
     {
-        $company = Company :: find($id);
+        $company = Company::findOrFail($id);
         $companyJobs = $company->publishedJobs->sortByDesc('created_at')->paginate(1);
         $companyEmployees= $company->employees->paginate(3);
 
@@ -92,7 +92,7 @@ class CompanyController extends Controller
 
     public function edit()
     {
-        $company=Company::find(auth()->user()->managing_company_id);
+        $company=Company::findOrFail(auth()->user()->managing_company_id);
         $company->load('industry','managingUsers');
         $industries=Industry::all();
         return view('company-profile-edit' , ['company'=>$company,'industries'=>$industries]);
@@ -103,7 +103,7 @@ class CompanyController extends Controller
     public function update(Request $request)
     {
         //fetch company record
-        $company=Company::find(auth()->user()->managing_company_id);
+        $company=Company::findOrFail(auth()->user()->managing_company_id);
 
         //validation
         $this->validate($request , [
@@ -191,7 +191,7 @@ class CompanyController extends Controller
     public function destroy($id)
     {
         //case of website's admin deleting a company
-         $company=Company::find($id);
+         $company=Company::findOrFail($id);
          DB::table('company_user_acceptants')->where('acceptor_id',$id)->delete();
          DB::table('company_user_views')->where('viewing_id',$id)->delete();
             foreach ($company->publishedJobs as $job)

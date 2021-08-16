@@ -104,7 +104,7 @@
 
                     <div class="form-group col-md-6 ">
                         <label for="validationTooltip01"> Type of Job Position  </label>
-                        <select class="custom-select" required>
+                        <select class="custom-select"  name="typeOfPosition" required>
                             <option hidden disabled selected value> select job position type </option>
                             @foreach($typeOfPosition as $position)
                                 <option value="{{$position->id}}">{{$position->name}}</option>
@@ -150,14 +150,16 @@
 
 
 
-                    <div class="form-button pt-4">
-                        <button id="submit" type="submit" class="btn btn-primary btn-block btn-lg" value="Register" name="publish" >
-                             <span>Search</span></button>
+                    <div class="form-button pt-4"style="margin-right: 70px;">
+                        <button id="submit" type="submit" class="btn btn-primary btn-block btn-lg" value="Register" name="publish">
+                            <span >Search</span>
+                        </button>
                     </div>
 
 
 
                 </div>
+
             </div>
         </form>
     </div>

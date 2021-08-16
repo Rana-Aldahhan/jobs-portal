@@ -196,7 +196,7 @@ class UserController extends Controller
     public function edit()//edit's form
     {
         $id= auth()->user()->id;
-        $user= User :: find( $id);
+        $user= User::findOrFail( $id);
         $skills = Skill :: all();
         $languages = Language :: all();
         $industries=Industry::all();
@@ -216,7 +216,7 @@ class UserController extends Controller
     {
         //dd($request);
         $id= auth()->user()->id;
-        $user= User :: find( $id);
+        $user= User::findOrFail( $id);
 
         //validation
         $this->validate($request,[
@@ -395,7 +395,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         //case of website's admin deleting a user
-        $user=User::find($id);
+        $user=User::findOrFail($id);
         DB::table('application')->where('user_id',$id)->delete();
         DB::table('colleagues')->where('user1_id',$id)->orWhere('user2_id',$id)->delete();
         DB::table('company_user_acceptants')->where('acceptant_id',$id)->delete();
@@ -422,6 +422,11 @@ class UserController extends Controller
         DB::table('user_user_acceptants')->where('acceptor_id',$id)->orWhere('acceptant_id',$id)->delete();
         DB::table('user_user_views')->where('viewer_id',$id)->orWhere('viewing_id',$id)->delete();
         DB::table('user_workplace')->where('user_id',$id)->delete();
+        $loggedUser = Auth::user();
+        $userToLogout = User::find($id);
+        Auth::setUser($userToLogout);
+        Auth::logout();
+        Auth::setUser($loggedUser);
         $user->delete();
         return redirect('manage-reports');
     }

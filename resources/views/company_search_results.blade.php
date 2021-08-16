@@ -41,11 +41,13 @@
 
 <!--start company-->
 @if($searchResults->count()!=0)
+    <div class="container">
+        <div class="card cardppp" style="margin-top: 80px" >
+            <div class="card-body">
     @foreach($searchResults as $company)
-<div class="container">
-<div class="card cardppp"  >
+
   <a id="update" href="/companies/{{$company->id}}" class="editlink">
-  <div class="card-body">
+
 
 
 <div class="container">
@@ -69,12 +71,17 @@
 
 
 </div>
-</div>
+
   </a>
-</div>
-</div>
+
+                    @if(!$loop->last)
+                        <hr >
+                @endif
     @endforeach
 <!-- end  company-->
+            </div>
+        </div>
+    </div>
 @else
 
 <!--start company2-->

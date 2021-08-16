@@ -1,3 +1,5 @@
+body{font-family: "Nunito", sans-serif;
+}
 #div {
     width: 300px;
     transition: all ease-in-out 0.5s;
@@ -29,7 +31,6 @@
     font-weight: 600;
     -moz-text-align-last: center;
     text-align-last: center;
-    font-family: "Poppins", sans-serif;
 }
 
 #div .profile h1 a,
@@ -135,7 +136,7 @@
 }
 
 .styleabout h4 {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: "Nunito", sans-serif;
     font-size: 25px;
     color: #26a69a;
     padding-bottom: 2px;
@@ -146,7 +147,7 @@
 }
 
 .styleabout .styleh {
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    font-family: "Nunito", sans-serif;
     "Lucida Sans", Arial, sans-serif;
     font-size: 25px;
     color: #546e7a;
@@ -157,8 +158,7 @@
 }
 
 .styleabout h6 {
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+    font-family: "Nunito", sans-serif;
     font-size: 18px;
     color: #757575;
     padding-bottom: 10px;
@@ -248,8 +248,7 @@
 }
 /********************chosenwork****************************/
 .stylechosen h6 {
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+    font-family: "Nunito", sans-serif;
     font-size:25px;
     color: #455a64;
 }

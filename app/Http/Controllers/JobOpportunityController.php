@@ -39,8 +39,8 @@ class JobOpportunityController extends Controller
     }
     public function approveApplicant($jobID, $userID){
         $approvingUser=auth()->user();
-        $approvedUser=User:: find($userID);
-        $job=JobOpportunity :: find($jobID);
+        $approvedUser=User:: findOrFail($userID);
+        $job=JobOpportunity::findOrFail($jobID);
         if($approvingUser->logged_as_company==false)//case a user is accepting another user
         {
             $approvedUser->appliedJobs()->updateExistingPivot($jobID, ['approved' => true]);
@@ -94,7 +94,7 @@ class JobOpportunityController extends Controller
 
     }
     public function ignoreApplicant($jobID,$userID){
-        $ignoredUser=User::find($userID);
+        $ignoredUser=User::findOrFail($userID);
         $ignoredUser->appliedJobs()->detach($jobID);
         $user=auth()->user();
         if(!$user->logged_as_company)
@@ -147,7 +147,7 @@ class JobOpportunityController extends Controller
         $showApplyButton=true;
         $showWithDrawApplicationButton=false;
         $show_edit_delete_applicants_buttons=false;
-        $job=JobOpportunity :: find($id);
+        $job=JobOpportunity::findOrFail($id);
         $requiredSkills=$job->requiredSkills;
         $jobIndustry=$job->industry;
         $typeOfPosition=$job->typeOfPosition;
@@ -229,7 +229,8 @@ class JobOpportunityController extends Controller
             }
         }
 
-
+        if($job->expired)
+            $showApplyButton=false;
         return view('show_job' , ['user'=>$user , 'job'=>$job , 'publisher'=>$publisher,
         'requiredSkills'=>$requiredSkills,'jobIndustry'=>$jobIndustry,
         'typeOfPosition'=>$typeOfPosition,
@@ -244,7 +245,7 @@ class JobOpportunityController extends Controller
 
     public function edit($id)
     {
-        $job=JobOpportunity :: find($id);
+        $job=JobOpportunity::findOrFail($id);
         $requiredSkills=$job->requiredSkills;
         $typeOfPosition=$job->typeOfPosition;
         $industry=$job->industry;
@@ -276,7 +277,7 @@ class JobOpportunityController extends Controller
             'skills'=>'required',
         ]);
 
-        $job=JobOpportunity :: find($id);
+        $job=JobOpportunity::findOrFail($id);
 
         $job->title=request()->input('title');
         $job->description=$request->input('description');
@@ -312,7 +313,7 @@ class JobOpportunityController extends Controller
      */
     public function destroy($id)
     {
-        $job=JobOpportunity :: find($id);
+        $job=JobOpportunity::findOrFail($id);
         $job->delete();
 
         if(auth()->user()->logged_as_company==false)

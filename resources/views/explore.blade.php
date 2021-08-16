@@ -52,7 +52,7 @@
 
                 <div class="card caedhh border-light mb-3" style="max-width: 40rem; margin-left:40px;">
 
-                    <img src="{{asset('img/person_auto_x2.png')}}" alt="Person With Blue Shirt"style="margin-top-130px;height:200px;width:200px">
+
 
                     <div class="card-header">  <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
@@ -64,7 +64,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Search" name="companySearchName">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-default" type="submit" onclick="document.getElementById('companysearch').submit(); return false;">
+                                    <button class="btn btn-default" style="background-color: #30363b" type="submit" onclick="document.getElementById('companysearch').submit(); return false;">
                                         <i class="fa fa-search"style="color:white"></i>
                                     </button>
                                 </div>
@@ -83,11 +83,13 @@
 
 
 <!-- Left-aligned -->
-@if(is_null(auth()->user()))
+
 <div class="container">
-    <div class="card"style="margin-top:10px;width: 40rem;margin-left:70px">
-        <div class="card-body">
+    <div class="row">
+    <div class="card"style="margin-top:10px;width: 40rem;margin-left:60px">
+
             <form action="/explore" id="companyfield">
+                <div class="col">
                 <label for="field">Choose a Field:</label>
                 <select id="field" name="companyIndustry" >
                     <option hidden disabled selected value> --- select an industry --- </option>
@@ -99,12 +101,16 @@
                         @endif
                     @endforeach
                 </select>
-                <button id="submit" type="submit" class="btn btn-outline-danger  btnform"style="margin-left:300px" onclick="document.getElementById('companyfield').submit(); return false;">show recommendations</button>
+                </div>
+                <div class="col">
+                    <button id="submit" type="submit" class="btn btn-outline-danger  btnform" onclick="document.getElementById('companyfield').submit(); return false;">show recommendations</button>
+                </div>
             </form>
+            </div>
         </div>
     </div>
 </div>
-@endif
+
 <!--start company-->
 @if($recomendedCompanies->count()!=0)
 @foreach($recomendedCompanies as $company)
@@ -182,7 +188,7 @@
             <div class="col .col-12">
 
                 <div class="card caedhh border-light mb-3" style="max-width: 50rem;margin-left:40px;">
-                    <img src="{{asset('img/person_auto_x2.png')}}" alt="Person With Blue Shirt"style="margin-top-130px;height:200px;width:200px">
+
                     <div class="card-header">
                         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
                             <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -196,7 +202,9 @@
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Search" name="peopleSearchName" >
                                 <div class="input-group-btn">
-                                    <button class="btn btn-default" type="submit"  onclick="document.getElementById('peoplesearch').submit(); return false;">
+                                    <button class="btn btn-default" type="submit"
+                                            style="background-color: #30363b"
+                                            onclick="document.getElementById('peoplesearch').submit(); return false;">
                                         <i class="fa fa-search"style="color:white"></i>
                                     </button>
                                 </div>
@@ -209,10 +217,10 @@
     </div>
 </div>
 
-@if(is_null(auth()->user()))
+
 <!-- Left-aligned -->
 <div class="container">
-    <div class="card"style="margin-top:10px;width: 40rem;margin-left:70px">
+    <div class="card"style="margin-top:10px;width: 40rem;margin-left:60px">
         <div class="card-body">
             <form action="/explore" id="userfield">
                 <label for="fname">People Education:</label>
@@ -234,7 +242,7 @@
         </div>
     </div>
 </div>
-@endif
+
 
 <!--start people-->
 @if($recomendedPeople->count()!=0)

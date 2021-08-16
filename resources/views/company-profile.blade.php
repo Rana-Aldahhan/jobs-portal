@@ -106,10 +106,13 @@
                         </div>
 
                         <div class="row">
-                            <p><strong><span class="glyphicon glyphicon-thumbs-up"></span>slogan </strong>
+                            @if($company->slogan !=null)
+                            <p><strong><span class="glyphicon glyphicon-thumbs-up">slogan </span></strong>
                             <div class="col">
-
+                                {{$company->slogan}}
                             </div>
+                            </p>
+                            @endif
                             <br>
                             <a href="/company-profile/edit">
                             <button class="btn btn-info" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brush-fill" viewBox="0 0 16 16">
@@ -134,6 +137,7 @@
             </div>
             <br><br><br>
             <hr>
+            @if($company->certificate !=null)
             <div class="row">
                 <div class="col mb-3">
                     <div class="form-group">
@@ -144,6 +148,7 @@
                 </div>
             </div>
             <hr>
+            @endif
             <h2>Contact info</h2>
 
             <form >

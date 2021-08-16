@@ -123,6 +123,7 @@
                                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                                 </svg> Name : {{$user->name}} .</label>
                         </div>
+                        @if($user->current_job_title != null || $user->current_company_name != null )
                         <div class="row">
                             <label><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                                     <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
@@ -131,6 +132,9 @@
                             <label> at {{$user->current_company_name }} .</label>
 
                         </div>
+                        @endif
+
+                        @if($user->city != null || $user->country!=null)
                         <div class="row">
                             <label><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
@@ -139,6 +143,7 @@
 
 
                         </div>
+                        @endif
 
                         <div class="row">
                             <p><strong><span class="glyphicon glyphicon-thumbs-up"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-stars" viewBox="0 0 16 16">
@@ -159,6 +164,7 @@
                 </div>
             </div>
 
+            @if($user->about != null)
             <div class="row">
                 <div class="col mb-3">
                     <div class="form-group">
@@ -170,6 +176,8 @@
                 </div>
             </div>
             <hr>
+            @endif
+
 
             <div class="row">
                 <div class="col mb-3">
@@ -188,11 +196,15 @@
             </div>
             <hr>
 
+
+            @if($user->school != null || $user->skills->count()!=0 || $user->industry != null ||
+           $user->years_of_experience != null || $user->languages->count()!=0 || $user->resume != null   )
             <h2>Education and experience</h2>
+            @endif
             <div class="tab-content pt-3 ">
                 <div class="tab-pane active ">
 
-
+                    @if($user->school != null)
                     <div class="row ">
                         <div class="col col-md-2">
                             <p><strong><span class="glyphicon glyphicon-thumbs-up"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-award-fill" viewBox="0 0 16 16">
@@ -207,7 +219,10 @@
                             @endif
                         </div>
                     </div>
+                    @endif
 
+
+                    @if($user->industry != null)
                     <div class="row ">
                         <div class="col col-md-2">
                             <p><strong><span class="glyphicon glyphicon-thumbs-up"  for="inputState"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-calendar-check-fill" viewBox="0 0 16 16" >
@@ -219,7 +234,9 @@
                             {{$user->industry->title}}
                         </div>
                     </div>
+                        @endif
 
+                        @if($user->years_of_experience != null)
                     <div class="row ">
                         <div class="col col-md-3">
                             <p><strong><span class="glyphicon glyphicon-thumbs-up"  for="inputState"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-calendar-check-fill" viewBox="0 0 16 16" >
@@ -231,6 +248,9 @@
                             {{$user->years_of_experience}}
                         </div>
                     </div>
+                        @endif
+
+                        @if($user->skills->count()!=0)
 
                     <div class="row ">
                         <div class="col col-md-2">
@@ -252,7 +272,10 @@
                             </p>
                         </div>
                     </div>
+                        @endif
 
+
+                        @if($user->languages->count()!=0)
                     <div class="row ">
                         <div class="col col-md-2">
                             <p><strong><span class="glyphicon glyphicon-thumbs-up"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-emoji-wink-fill" viewBox="0 0 16 16">
@@ -273,7 +296,10 @@
                             </p>
                         </div>
                     </div>
+                        @endif
 
+
+                        @if($user->resume != null)
                     <div class="row ">
                         <div class="col col-md-2">
                             <p><strong><span class="glyphicon glyphicon-thumbs-up"  for="inputState"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-calendar-check-fill" viewBox="0 0 16 16" >
@@ -287,11 +313,14 @@
                         </div>
                         </a>
                     </div>
+                        @endif
+
 
                     <br>
                     <hr>
                     <br>
 
+                        @if($user->workPlaces->count()!=0)
                     <div class="row">
                         <div class="col mb-3">
                             <div class="form-group">
@@ -310,6 +339,7 @@
                         </div>
                     </div>
                     <hr>
+                        @endif
                     <h2>Contact info</h2>
 
                     <div class= "form-group row ">
@@ -321,7 +351,7 @@
                         </div>
                     </div>
 
-
+                        @if($user->phone_number != null )
                     <div class="form-group row">
                         <p><strong><span class="glyphicon glyphicon-thumbs-up"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-telephone-inbound-fill" viewBox="0 0 16 16">
 <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511zM15.854.146a.5.5 0 0 1 0 .708L11.707 5H14.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 1 0v2.793L15.146.146a.5.5 0 0 1 .708 0z"/>
@@ -330,7 +360,7 @@
                             {{$user->phone_number}}
                         </div>
                     </div>
-
+                        @endif
 
 
                 </div>
@@ -363,13 +393,12 @@
                             </div>
                         </div>
                     </div>
-                        <div class="d-flex justify-content-center">
-                            {!! $colleagues->links()!!}
-                        </div>
+
                     <br>
                     @endforeach
-
-
+                       <div class="d-flex justify-content-center">
+                           {!! $colleagues->links()!!}
+                       </div>
                 @else
                         <br>
                         <p> you don't have any colleague yet!</p>
