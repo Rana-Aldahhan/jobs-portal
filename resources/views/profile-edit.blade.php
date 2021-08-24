@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>edit profile</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
@@ -115,7 +115,7 @@
 
     </div>
         <!--create profile -->
-        <form class="form" novalidate="" method="POST" action="/profile/edit" enctype="multipart/form-data">
+        <form class="form" novalidate="" method="POST" action="/profile/edit" enctype="multipart/form-data" style="margin-right: -150px">
             @csrf
             @method('PUT')
             <div class="col-lg-10 sp1 bc1 " style="padding-left: 50px">
@@ -148,7 +148,7 @@
                                 <label> Name:</label>
                                 <div class="col">
                                     <div class="form-group col-md-4 ">
-                                        <input class="form-control fc @error('name') is-invalid @enderror" type="text" name="name" placeholder="name" value="{{$user->name}}">
+                                        <input class="form-control fc @error('name') is-invalid @enderror" type="text" name="name" placeholder="name" value="{{$user->name}}" style="width: auto;">
                                         @error('name')
                                         <p class="help-block is-invalid">{{$errors->first('name')}}</p>
                                         @enderror

@@ -363,6 +363,7 @@ class UserServices extends Controller
         $jobSearchResults=JobOpportunity:: where('expired',false)->get();
         $bool=true;
         $jobSearchResults=JobOpportunity::when($bool, function (){return JobOpportunity::where('expired',false);})
+        ->when(!$request->isNotFilled('title') ,function ($query){return $query->where('title','like','%'.request('title').'%') ;})
         ->when(!$request->isNotFilled('remote') ,function ($query){return $query->where('remote',request('remote')) ;})
         ->when(!$request->isNotFilled('city'),function ($query){return $query->where('city',request('city'));})
         ->when(!$request->isNotFilled('country'),function ($query){return $query->where('country',request('country'));})
@@ -371,9 +372,15 @@ class UserServices extends Controller
         ->when(!$request->isNotFilled('required_experience'),function ($query){return $query->where('required_experience','<=',request('required_experience'));})
         ->when(!$request->isNotFilled('salary'),function ($query){return $query->where('salary','>=',request('salary'));})
         ->when(!$request->isNotFilled('transport'),function ($query){return $query->where('transportation ',request('transport'));})
-        ->get();
-        //TODO make jobs two kind : matched jobs (count in both sort condition below must be 0) , and similler jobs
+        ->orderByDesc('created_at')->get();
 
+        $jobSearchResults->load(['industry','typeOfPosition','requiredSkills','publishable']);
+        //TODO make jobs two kind : matched jobs (count in both sort condition below must be 0) , and similler jobs
+        if(!is_null($request->input('skills') )) {
+            $jobSearchResults = $jobSearchResults->reject(function ($job) {
+                return collect($job->requiredSkills->modelKeys())->intersect(request('skills'))->count() == 0;
+            });
+        }
         if(!is_null(request('sortBy')))
         {
             if(request('sortBy') == 'date')
@@ -384,21 +391,38 @@ class UserServices extends Controller
             {
                 if(!is_null($request->input('skills') ))
                 {
-                    $jobSearchResults=$jobSearchResults->reject(function ($job){
-                        return  collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count() ==0;
-                    });
-                    $jobSearchResults = $jobSearchResults->sortByDesc(
-                        [function ($job){
+                    /*$jobSearchResults = $jobSearchResults->sortByDesc(
+                        [
+                            function ($job){
                             return collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count();
-                        },
+                            },
                             function($job){
                                 return $job->requiredSkills->count()== request('skills')->count();
-                            }
+                            } ,
+                            function ($job){
+                                return collect($job->requiredSkills ->modelKeys())->diff( request('skills') )->count();
+                            },
+                            function ($job){
+                                return $job->created_at;
+                            },
+
                         ]);
+                    */
+                    //trial code
+                    $jobSearchResults = $jobSearchResults->sortByDesc(
+                            function ($job){
+                                return collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count();
+                            })->groupBy(
+                            function ($job){
+                                return collect($job->requiredSkills ->modelKeys())->intersect( request('skills') )->count();
+                            })->map(function ($group){
+                            return $group->sortBy(function ($job){
+                                return collect($job->requiredSkills ->modelKeys())->diff( request('skills') )->count();
+                            });})
+                            ->flatten();
                 }
             }
         }
-        $jobSearchResults->load(['industry','typeOfPosition','requiredSkills','publishable']);
 
        // reject all jobs published by the logged user
         if(Auth::check()) {

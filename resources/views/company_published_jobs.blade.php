@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Published Jobs</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
     <link rel="stylesheet" href="{{asset('css/orginal.css')}}">
-    <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+
     <link rel="stylesheet" href="{{asset('css/saveuser.css')}}">
 
 
@@ -41,7 +41,7 @@
     <div class="container">
         <div style="padding-top: 130px">
             @if($publishedJobs->count()!=0)
-                <h2 style="text-align: center;" >All the published job opportunities published by this company</h2>
+                <h2 style="text-align: center;" >All job opportunities published by this company</h2>
             @else
                 <h2 style="text-align: center;" > No job opportunities has been published by this company yet!
                     <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> </h2>
@@ -51,7 +51,7 @@
 
 
             @foreach($publishedJobs as $job)
-                <div class="card w-100">
+                <div class="card w-75" style="margin-left: 150px">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-2 col-sm-auto mb-3">

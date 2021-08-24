@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chat</title>
+    <title>Report panel</title>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -40,15 +40,14 @@
 @section('cont')
 
 @endsection
-@extends('footeruser')
-@section('con')
+
 
 <!--end navbar-->
-<div class="container-fluid h-100">
-    <br><br>
+<div class="container-fluid h-100" style="margin-top: 50px; margin-bottom: 70px">
+
     <div class="row justify-content-center h-100">
 
-        <div class="col-md-6 col-xl-6 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
+        <div class="col-md-6 col-xl-5 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
                 <h4 class="styleh">company reports</h4>
                 <p   style="text-align: center;" >companies are sorted by the most reported</p>
                 <div class="card-body contacts_body">
@@ -75,7 +74,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-xl-6 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
+        <div class="col-md-6 col-xl-5 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
                 <h4 class="styleh">user reports</h4>
                 <p   style="text-align: center;" >companies are sorted by the most reported</p>
                 <div class="card-body contacts_body">
@@ -104,13 +103,15 @@
 
     </div>
 <p>
-    <br><br><br><br>
+
 
 </p>
-    @endsection
+
 
 </div>
-
+@extends('footeruser')
+@section('con')
+@endsection
 
 
 

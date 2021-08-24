@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html class="companyBody">
 <head>
-    <title>Chat</title>
+    <title>Messages with {{$messagedUser->name}}</title>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -9,7 +9,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
     <link rel="stylesheet" href="{{asset('css/companymessaging.css')}}">
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
     <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
@@ -21,7 +21,7 @@
     <!------ Include the above in your HEAD tag ---------->
 </head>
 <!--Coded With Love By Mutiullah Samim-->
-<body>
+<body class="companyBody">
 
 <!--navbar user-->
 @extends('userheader')
@@ -31,11 +31,11 @@
 @endsection
 
 <!--end navbar-->
-<div class="container-fluid h-100">
+<div class="container-fluid h-100" style="margin-top: 50px;margin-bottom: 100px">
     <div class="row justify-content-center h-100">
 
         <div class="col-md-8 col-xl-10 chat">
-            <div class="card">
+            <div class="card" style="margin-left: 100px;margin-right: 100px;">
                 <div class="card-header msg_head">
                     <div class="d-flex bd-highlight">
                         <div class="img_cont">
@@ -111,6 +111,10 @@
 
     </div>
 </div>
+
+@extends('footeruser')
+@section('con')
+@endsection
 
 <script>
     $(document).ready(function(){

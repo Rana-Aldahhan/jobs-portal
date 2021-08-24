@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Home</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
     <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
     <link rel="stylesheet" href="{{asset('css/orginal.css')}}">
-    <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
     <link rel="stylesheet" href="{{asset('css/saveuser.css')}}">
 
 
@@ -245,7 +244,6 @@
       <!-- You can delete the links only if you purchased the pro version. -->
       <!-- Licensing information: https://bootstrapmade.com/license/ -->
       <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/free-one-page-bootstrap-template-amoeba/ -->
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
   </div>
 </footer>

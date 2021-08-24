@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Job search </title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
@@ -46,6 +46,12 @@
 
 
 
+                    <div class="form-group col-md-6 ">
+                        <label for="inputLastName">Title
+                        </label>
+                        <input class="form-control" type="string" name="title" placeholder="job title" required>
+
+                    </div>
 
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="checkbox1" value="1" name="remote">
@@ -164,6 +170,10 @@
         </form>
     </div>
 </div>
+@extends('footeruser')
+@section('con')
+@endsection
+
 
 
 <script>

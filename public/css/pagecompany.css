@@ -5,11 +5,14 @@ body {
 ul .comp {
     /*padding: 10px;*/
     margin-left: 70px;
-    padding-top: 10px;
+    padding-top: 20px;
 }
 
 .navbar {
-    min-height: 32px !important;
+    min-height: 50px !important;
+}
+.navbar-nav {
+    float: none !important;
 }
 .navbar ul .nav-link:hover {
     background-color: #ff7043;
@@ -41,7 +44,7 @@ ul .comp {
 
 .dropicon {
     padding-top: 50px;
-    padding-left: 20px;
+    padding-left: 2 0px;
 }
 
 .ddrop {
@@ -51,20 +54,23 @@ ul .comp {
 }
 .space {
     margin-bottom: 10px;
+    padding-right: 50px;
 }
 .ddrop:hover {
     color: #ff8a65;
     text-decoration: underline;
     text-decoration-color: #ff8a65;
+
 }
 button {
     background-color: #343a40;
-    margin-right: 70px;
+    /* margin-right: 70px;*/
 }
 .imgprofile {
     max-width: 200px;
     max-height: 50px;
     margin-top: 10px;
+    margin-left: 230px;
 }
 /*end icovs navbar*/
 
@@ -435,4 +441,18 @@ button {
     text-align: center;
     font-size: 13px;
     color: #fff;
+}
+.badge-notify {
+    position: relative;
+    top: -43px;
+    right: -10px;
+    background-color: red;
+    font-size: 10px;
+}
+.badgeMessage-notify {
+    position: relative;
+    top: -43px;
+    right: -18px;
+    background-color: red;
+    font-size: 10px;
 }

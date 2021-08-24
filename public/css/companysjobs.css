@@ -21,7 +21,7 @@ body{font-family: "Nunito", sans-serif;
     margin: 15px auto;
     display: block;
     width: 120px;
-    border: 8px solid #2c2f3f;
+
 }
 
 #div .profile h1 {
@@ -138,7 +138,7 @@ body{font-family: "Nunito", sans-serif;
 .styleabout h4 {
     font-family: "Nunito", sans-serif;
     font-size: 25px;
-    color: #26a69a;
+    color: #008080;
     padding-bottom: 2px;
     font-weight: 600;
 }
@@ -257,4 +257,8 @@ body{font-family: "Nunito", sans-serif;
     color: #424242;
 
     padding-bottom: 10px;
+}
+p{
+    margin-left: 30px ;
+    margin-top: 10px;
 }

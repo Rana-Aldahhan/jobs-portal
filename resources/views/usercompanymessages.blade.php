@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chat</title>
+    <title>Messages with {{$company->name}}</title>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -33,11 +33,11 @@
 @endsection
 
 <!--end navbar-->
-<div class="container-fluid h-100">
+<div class="container-fluid h-100" style="margin-top: 50px;margin-bottom: 100px">
     <div class="row justify-content-center h-100">
 
-        <div class="col-md-8 col-xl-10 chat">
-            <div class="card">
+        <div class="col-md-8 col-xl-10 chat" >
+            <div class="card" style="margin-left: 100px;margin-right: 100px;">
                 <div class="card-header msg_head">
                     <div class="d-flex bd-highlight">
                         <div class="img_cont">
@@ -113,6 +113,10 @@
 
     </div>
 </div>
+
+@extends('footeruser')
+@section('con')
+@endsection
 
 <script>
     $(document).ready(function(){

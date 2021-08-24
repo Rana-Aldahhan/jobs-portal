@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{$job->title}}</title>
 
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
@@ -14,6 +14,17 @@
   <link rel="stylesheet" href="{{asset('css/orginal.css')}}">
 
   <link rel="stylesheet" href="{{asset('css/companysjobs.css')}}">
+
+    @auth()
+        @if(!auth()->user()->logged_as_company)
+            <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+        @else
+            <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
+        @endif
+    @endauth
+    @guest()
+        <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+    @endguest
 
 </head>
 <body>
@@ -36,16 +47,14 @@
   <div id="div">
   <div class="d-flex flex-column">
 
-    <div class="profile">
+    <div class="profile" style="margin-top:35px;align-content: center">
       <img src="{{asset('storage/profiles/'.$job->publishable->profile_thumbnail)}}" alt="" class="img-fluid rounded-circle">
-      <p style="font-size:18px;color:#009688;text-align:center">{{$job->title}}</p>
-
-
+      <p style="font-size:18px;color:#1784ab ;">{{$job->title}}</p>
     </div>
 
     <nav class="nav-menu">
-      <ul>
-       <div>
+      <ul >
+       <div >
 
        <p>
            @if($job->remote !=1)
@@ -54,7 +63,7 @@
            remote:yes
            @endif
        </p>
-       <p>posted {{$job->created_at->diffForHumans()}}</p>
+       <p class="alert-success" style="color: #1e7e34">posted {{$job->created_at->diffForHumans()}}</p>
        </div>
 
           <p style="color:red;">
@@ -68,9 +77,10 @@
           @if($show_edit_delete_applicants_buttons)
               <div class="stylego">
                   <a id="update " href="/jobs/{{$job->id}}/applicants" class="editlink">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bookmark-star" viewBox="0 0 16 16" style="margin-right:10px;">
-                          <path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.178.178 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.178.178 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.178.178 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.178.178 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.178.178 0 0 0 .134-.098L7.84 4.1z"/>
-                          <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16" style="margin-right:10px;">
+                          <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                          <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                          <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
                       </svg>
                       <h6>Show applicants</h6>
                   </a>
@@ -78,9 +88,8 @@
           <hr>
               <div class="stylego">
                   <a id="update " href="/jobs/{{$job->id}}/edit" class="editlink">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bookmark-star" viewBox="0 0 16 16" style="margin-right:10px;">
-                          <path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.178.178 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.178.178 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.178.178 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.178.178 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.178.178 0 0 0 .134-.098L7.84 4.1z"/>
-                          <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-brush" viewBox="0 0 16 16" style="margin-right:10px;">
+                          <path d="M15.825.12a.5.5 0 0 1 .132.584c-1.53 3.43-4.743 8.17-7.095 10.64a6.067 6.067 0 0 1-2.373 1.534c-.018.227-.06.538-.16.868-.201.659-.667 1.479-1.708 1.74a8.118 8.118 0 0 1-3.078.132 3.659 3.659 0 0 1-.562-.135 1.382 1.382 0 0 1-.466-.247.714.714 0 0 1-.204-.288.622.622 0 0 1 .004-.443c.095-.245.316-.38.461-.452.394-.197.625-.453.867-.826.095-.144.184-.297.287-.472l.117-.198c.151-.255.326-.54.546-.848.528-.739 1.201-.925 1.746-.896.126.007.243.025.348.048.062-.172.142-.38.238-.608.261-.619.658-1.419 1.187-2.069 2.176-2.67 6.18-6.206 9.117-8.104a.5.5 0 0 1 .596.04zM4.705 11.912a1.23 1.23 0 0 0-.419-.1c-.246-.013-.573.05-.879.479-.197.275-.355.532-.5.777l-.105.177c-.106.181-.213.362-.32.528a3.39 3.39 0 0 1-.76.861c.69.112 1.736.111 2.657-.12.559-.139.843-.569.993-1.06a3.122 3.122 0 0 0 .126-.75l-.793-.792zm1.44.026c.12-.04.277-.1.458-.183a5.068 5.068 0 0 0 1.535-1.1c1.9-1.996 4.412-5.57 6.052-8.631-2.59 1.927-5.566 4.66-7.302 6.792-.442.543-.795 1.243-1.042 1.826-.121.288-.214.54-.275.72v.001l.575.575zm-4.973 3.04.007-.005a.031.031 0 0 1-.007.004zm3.582-3.043.002.001h-.002z"/>
                       </svg>
                       <h6>Edit </h6>
                   </a>
@@ -91,21 +100,52 @@
                       @csrf
                       @method('DELETE')
                   <a id="update " href="" class="editlink" onclick="document.getElementById('delete').submit(); return false;">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bookmark-star" viewBox="0 0 16 16" style="margin-right:10px;">
-                          <path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.178.178 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.178.178 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.178.178 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.178.178 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.178.178 0 0 0 .134-.098L7.84 4.1z"/>
-                          <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16" style="margin-right:10px;">
+                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
                       </svg>
                       <h6>Delete</h6>
                   </a>
                   </form>
               </div>
+              @if(!$job->expired)
+                  <hr>
+                  <div class="stylego">
+                      <form method="post" action="/jobs/{{$job->id}}/expire" id="expire">
+                          @csrf
+                          @method('Put')
+                          <a id="update " href="" class="editlink" onclick="document.getElementById('expire').submit(); return false;">
+                              <i class="fa fa-ban fa-2x" aria-hidden="true" style="color: #9c27b0"></i>
+                              <h6>Mark as expired</h6>
+                          </a>
+                      </form>
+                  </div>
+              @else
+                  <hr>
+                  <div class="stylego">
+                      <form method="post" action="/jobs/{{$job->id}}/activate" id="activate">
+                          @csrf
+                          @method('Put')
+                          <a id="update " href="" class="editlink" onclick="document.getElementById('activate').submit(); return false;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16" style="margin-right:10px;">
+                                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                  <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                              </svg>
+                              <h6>Reactivate job</h6>
+                          </a>
+                      </form>
+                  </div>
+              @endif
+
+
+
           @else
               @if($showApplyButton)
                   <div class="stylego">
                       <form method="post" action="/jobs/{{$job->id}}/apply" id="apply">
                           @csrf
                       <a id="update " href="jobs/{{$job->id}}/apply" class="editlink"  onclick="document.getElementById('apply').submit(); return false;">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16" style="margin-right:10px;">
                               <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
                               <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
                           </svg>
@@ -123,9 +163,9 @@
                           @csrf
                           @method("DELETE")
                       <a id="update " href="#" class="editlink" onclick="document.getElementById('unapply').submit(); return false;">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-                              <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
-                              <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-in-down-left" viewBox="0 0 16 16" style="margin-right:10px;">
+                              <path fill-rule="evenodd" d="M9.636 2.5a.5.5 0 0 0-.5-.5H2.5A1.5 1.5 0 0 0 1 3.5v10A1.5 1.5 0 0 0 2.5 15h10a1.5 1.5 0 0 0 1.5-1.5V6.864a.5.5 0 0 0-1 0V13.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                              <path fill-rule="evenodd" d="M5 10.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1H6.707l8.147-8.146a.5.5 0 0 0-.708-.708L6 9.293V5.5a.5.5 0 0 0-1 0v5z"/>
                           </svg>
                           <h6> Withdraw application</h6>
                       </a>
@@ -139,7 +179,6 @@
                               </svg>
                               <span class="candidate-list-time order-1" style="color: green">  Application Approved</span>
                           </a>
-
                       @endif
                   </div>
 
@@ -169,9 +208,8 @@
                               @csrf
                               @method('DELETE')
                           <a id="update " href="" class="editlink" onclick="document.getElementById('unsave').submit(); return false;">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bookmark-star" viewBox="0 0 16 16" style="margin-right:10px;">
-                                  <path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.178.178 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.178.178 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.178.178 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.178.178 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.178.178 0 0 0 .134-.098L7.84 4.1z"/>
-                                  <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bookmark-x-fill" viewBox="0 0 16 16"  style="margin-right:10px;">
+                                  <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z"/>
                               </svg>
                               <h6>Remove from saved list</h6>
                           </a>
@@ -197,11 +235,11 @@
   <!--end nav2-->
 <!--start about-->
 
-  <div class="col-lg-8 " style="margin-top:150px;">
+  <div class="col-lg-8 " style="margin-top:150px; margin-left: -60px;">
 
   <div class="stylechosen">
 
-<h1 style="color:#1784ab">
+<h1 style="color:#1784ab ; ">
 
     {{ucwords($job->title) }} <br> <br>
 
@@ -229,14 +267,31 @@
       @endif
       @endauth
 
-      <h6>
+
+
           @if(!$job->remote)
+          <h6>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                  <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+              </svg>
+
               {{ucwords($job->city)}} ,{{ucwords($job->country)}}.
+              <p></p>
+          </h6>
+
           @else
-              <p style="color: #1d643b">remote.</p>
+
+              <h6 >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-laptop" viewBox="0 0 16 16">
+                      <path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5h11zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2h-11zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5z"/>
+                  </svg>
+                  remote:
+                    <p style="color: #1d643b">
+                        yes.
+                    </p>
+              </h6>
+
           @endif
-              <br> <br>
-      </h6>
 
       <h6>
 
@@ -326,71 +381,70 @@
   {{$job->description}}
 </p>
 
-      <br> <br> <br>
-<h6>
-    <hr>
+     <br><hr>
 
-    <i class="fa fa-address-card-o" aria-hidden="true"style="margin-left: 5px"></i>
-    About the job publisher:</h6>
+      <section id="contact"  class="contact">
+          <div class="container">
+          <h6>
 
-      <div class="profile" >
-          <img src="{{asset('storage/profiles/'.$job->publishable->profile_thumbnail)}}" alt="" class="img-fluid rounded-circle">
-      </div>
-<p>
+              <i class="fa fa-address-card-o" aria-hidden="true"style="margin-left: 5px"></i>
+              About the job publisher:</h6>
+              <br>
+          <div class="info">
+          <div class="profile" >
+              <img src="{{asset('storage/profiles/'.$job->publishable->profile_thumbnail)}}" alt="" class="img-fluid rounded-circle" style="width:250px ; height:250px ;">
+          </div>
+          <p>
 
-    <a href="@if($job->publishable_type=='App\Models\User') \users\{{$job->publishable_id}} @else \companies\{{$job->publishable_id}} @endif">
-       <h3> {{$job->publishable->name }} <br> </h3>
-    </a>
-    {{$job->publishable->about}} <br> <br>
+              <a href="@if($job->publishable_type=='App\Models\User') \users\{{$job->publishable_id}} @else \companies\{{$job->publishable_id}} @endif">
+          <h3> {{$job->publishable->name }} <br> </h3>
+          </a>
+          {{$job->publishable->about}} <br> <br>
 
-</p>
-
-
-<h6>Industry:</h6>
-<p >
-    @if(!is_null($job->publishable->industry))
-    {{$job->publishable->industry->title}}
-    @endif
-</p>
-      <br> <br>
-<h6>
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-credit-card-2-front" viewBox="0 0 16 16"style="margin-left: 5px">
-        <path d="M14 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
-        <path d="M2 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"/>
-      </svg>
-    About The Job Publisher:</h6>
-<p >
-    {{$job->publishable->about}}<br> <br>
-</p>
+          </p>
 
 
-<section id="contact" class="contact">
-    <div class="container">
-
-        <h4>Contact The Publisher:</h4>
-      <div class="info">
-
-            <div class="address">
-            <i class="fa fa-map-marker" aria-hidden="true"></i>
-              <h4>Location:</h4>
-              <p>{{$job->publishable->city}} , {{$job->publishable->country}}</p>
-            </div>
-
-            <div class="email">
-            <i class="fa fa-envelope-o" aria-hidden="true"></i>
-              <h4>Email:</h4>
-              <p>{{$job->publishable->email}}</p>
-            </div>
-
-            <div class="phone">
-            <i class="fa fa-volume-control-phone" aria-hidden="true"></i>
-              <h4>Call:</h4>
-              <p>{{$job->publishable->phone_number}}</p>
-            </div>
+          <h6>Industry:
+          <p >
+              @if(!is_null($job->publishable->industry))
+                  {{$job->publishable->industry->title}}
+              @endif
+          </p>
+          </h6>
 
           </div>
           </div>
-            </section>
+
+
+
+          <section id="contact" class="contact">
+              <div class="container">
+
+                  <h4>Contact The Publisher:</h4>
+                  <div class="info">
+
+                      <div class="address">
+                          <i class="fa fa-map-marker" aria-hidden="true"></i>
+                          <h4>Location:</h4>
+                          <p>{{$job->publishable->city}} , {{$job->publishable->country}}</p>
+                      </div>
+
+                      <div class="email">
+                          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                          <h4>Email:</h4>
+                          <p>{{$job->publishable->email}}</p>
+                      </div>
+
+                      <div class="phone">
+                          <i class="fa fa-volume-control-phone" aria-hidden="true"></i>
+                          <h4>Call:</h4>
+                          <p>{{$job->publishable->phone_number}}</p>
+                      </div>
+
+                  </div>
+              </div>
+          </section>
+      </section>
 
 
 

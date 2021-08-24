@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Your published jobs</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
@@ -114,7 +114,9 @@
         <div class="card w-100">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-8 col-sm-auto mb-3">
+                    <div class="col-lg-1 col-sm-auto mb-3" >
+                    </div>
+                    <div class="col-lg-7 col-sm-auto mb-3" >
 
                         <a class="nav-link" href="/jobs/{{$job->id}}"> <h5 class="card-title">{{$job->title}}</h5> </a>
                         @if($job->expired)
@@ -124,7 +126,11 @@
                         <p class="card-text">Publisher : {{$user->name}} <br>@if($job->remote==1) Remote : yes.@else {{$job->city}},{{$job->country}} @endif
                             <br><br> required skills:
                             @foreach($job->requiredSkills as $skill)
-                             {{ $skill->title }} ,
+                                @if(!$loop->last)
+                                {{ $skill->title }} ,
+                                @else
+                                    {{ $skill->title }}.
+                                @endif
                             @endforeach
 
                             <br>Required experience:

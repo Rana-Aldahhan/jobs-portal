@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html class="companyBody">
 <head>
-    <title>Chat</title>
+    <title>Messaging</title>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
-    <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+
     <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
 
 
@@ -21,7 +21,7 @@
     <!------ Include the above in your HEAD tag ---------->
 </head>
 <!--Coded With Love By Mutiullah Samim-->
-<body>
+<body class="companyBody">
 
 <!--navbar user-->
 @extends('userheader')
@@ -32,17 +32,12 @@
 
 <!--end navbar-->
 
-<div class="container-fluid h-100">
+<div class="container-fluid h-100" style="margin-top: 50px;margin-bottom: 100px">
     <div class="row justify-content-center h-100">
         <div class="col-md-4 col-xl-6 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
 
                 <div class="card-header">
-                    <div class="input-group">
-                        <input type="text" placeholder="Search..." name="" class="form-control search">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
-                        </div>
-                    </div>
+
                 </div>
                 <h4 class="styleh">Users you can message</h4>
                 <div class="card-body contacts_body">
@@ -59,11 +54,17 @@
                                         <span href="/users/{{$messagedUser->id}}/messages">{{$messagedUser->name}}</span>
                                         <p>@if($company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')
                                         ->where('seen',0)->count() >0)
+                                                <span style="background-color: red;color: antiquewhite;font-size:12px">
                                                 {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')
-                                        ->where('seen',0)->count()}} new messages <br>
-                                                {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->body}}
-                                            @else {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->body}} ,
+                                        ->where('seen',0)->count()}} new messages </span> <br>
+                                                {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->body}} ,
                                                 {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->created_at->diffForHumans()}}
+                                            @else @if($company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last() !=null)
+                                                {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->body}} ,
+                                                {{$company->receivedMessages()->where('sendable_id',$messagedUser->id)->where('sendable_type','App\Models\User')->get()->last()->created_at->diffForHumans()}}
+                                                @else
+                                                    no messages yet!
+                                                @endif
                                             @endif
                                         </p>
                                     </div>
@@ -89,6 +90,11 @@
 
     </div>
 </div>
+
+@extends('footeruser')
+@section('con')
+@endsection
+
 
 <script>
     $(document).ready(function(){

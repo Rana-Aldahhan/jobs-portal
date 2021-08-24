@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Explore</title>
 
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
@@ -83,33 +83,34 @@
 
 
 <!-- Left-aligned -->
-
 <div class="container">
-    <div class="row">
-    <div class="card"style="margin-top:10px;width: 40rem;margin-left:60px">
-
+    <div class="card"style="margin-top:10px;width: 57rem;margin-left:60px; ">
+        <div class="card-body">
             <form action="/explore" id="companyfield">
-                <div class="col">
-                <label for="field">Choose a Field:</label>
-                <select id="field" name="companyIndustry" >
-                    <option hidden disabled selected value> --- select an industry --- </option>
-                    @foreach($industries as $industry)
-                        @if(!is_null(request()->input('companyIndustry')))
-                            <option value="{{$industry->id}}" @if($industry->id == request()->input('companyIndustry')) selected @endif>{{$industry->title}}</option>
-                        @else
-                            <option value="{{$industry->id}}">{{$industry->title}}</option>
-                        @endif
-                    @endforeach
-                </select>
-                </div>
-                <div class="col">
-                    <button id="submit" type="submit" class="btn btn-outline-danger  btnform" onclick="document.getElementById('companyfield').submit(); return false;">show recommendations</button>
+                <div class="row">
+                    <div class="col-7">
+                        <label for="field">Choose a Field:</label>
+                        <select id="field" name="companyIndustry" >
+                            <option hidden disabled selected value> --- select an industry --- </option>
+                            @foreach($industries as $industry)
+                                @if(!is_null(request()->input('companyIndustry')))
+                                    <option value="{{$industry->id}}" @if($industry->id == request()->input('companyIndustry')) selected @endif>{{$industry->title}}</option>
+                                @else
+                                    <option value="{{$industry->id}}">{{$industry->title}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-5">
+                        <button id="submit" type="submit" class="btn btn-outline-danger  btnform" onclick="document.getElementById('companyfield').submit(); return false;">show recommendations</button>
+                    </div>
                 </div>
             </form>
-            </div>
         </div>
     </div>
 </div>
+
+
 
 <!--start company-->
 @if($recomendedCompanies->count()!=0)
@@ -217,31 +218,37 @@
     </div>
 </div>
 
-
-<!-- Left-aligned -->
 <div class="container">
-    <div class="card"style="margin-top:10px;width: 40rem;margin-left:60px">
+    <div class="card"style="margin-top:10px;width: 57rem;margin-left:60px; ">
         <div class="card-body">
             <form action="/explore" id="userfield">
-                <label for="fname">People Education:</label>
-                <input type="text" id="fname" name="peopleEducation" value="{{request()->input('peopleEducation')}}">
-                <br>
-                <label for="field">Choose a Field:</label>
-                <select id="field" name="peopleIndustry" >
-                    <option hidden disabled selected value> --- select an industry --- </option>
-                    @foreach($industries as $industry)
-                        @if(!is_null(request()->input('peopleIndustry')))
-                            <option value="{{$industry->id}}" @if($industry->id == request()->input('peopleIndustry')) selected @endif>{{$industry->title}}</option>
-                        @else
-                        <option value="{{$industry->id}}">{{$industry->title}}</option>
-                        @endif
-                    @endforeach
-                </select>
-                <button id="submit" type="submit" class="btn btn-outline-danger  btnform"style="margin-left:300px" onclick="document.getElementById('userfield').submit(); return false;">show recommendations</button>
+                <div class="row">
+                    <div class="col-7">
+                        <label for="field">Choose a Field:</label>
+                        <select id="field" name="peopleIndustry" >
+                            <option hidden disabled selected value> --- select an industry --- </option>
+                            @foreach($industries as $industry)
+                                @if(!is_null(request()->input('peopleIndustry')))
+                                    <option value="{{$industry->id}}" @if($industry->id == request()->input('peopleIndustry')) selected @endif>{{$industry->title}}</option>
+                                @else
+                                    <option value="{{$industry->id}}">{{$industry->title}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        <br>
+                        <label for="fname">People Education:</label>
+                        <input type="text" id="fname" name="peopleEducation" style="margin-top: 20px" value="{{request()->input('peopleEducation')}}">
+                    </div>
+                    <div class="col-5">
+                        <button id="submit" type="submit" class="btn btn-outline-danger  btnform"
+                                onclick="document.getElementById('userfield').submit(); return false;">show recommendations</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
 
 
 <!--start people-->
@@ -293,7 +300,7 @@
 
 
                         <div class="media-body">
-                            <h5 class="media-heading">About this person</h5>
+
                             <p>  No recommendations found for other users !</p>
                         </div>
                     </div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{$company->name}}</title>
 
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
@@ -14,6 +14,16 @@
     <link rel="stylesheet" href="{{asset('css/searchresults.css')}}">
     <link rel="stylesheet" href="{{asset('css/explore.css')}}">
     <link rel="stylesheet" href="{{asset('css/companysjobs.css')}}">
+    @auth()
+        @if(!auth()->user()->logged_as_company)
+            <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+        @else
+            <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
+        @endif
+    @endauth
+    @guest()
+        <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+    @endguest
 
 </head>
 <body>
@@ -147,14 +157,14 @@
                     @endif
                     <br>
                     <hr>
-                <h4 class="">Company's Available Job opportunities:</h4>
+                <h4 class="">{{$company->name}}'s Available Job opportunities:</h4>
 
             </div>
 
             @if($company->publishedJobs->count()!=0)
             @foreach($companyJobs as $job)
             <!--start1-->
-            <div class="card cardppp"  >
+            <div class="card cardColleague " >
                 <a id="update" href="/jobs/{{$job->id}}" class="editlink">
                     <div class="card-body">
 
@@ -208,12 +218,13 @@
             <!--end1-->
 
             @endforeach
+                <br>
                 <div class="d-flex justify-content-center">
                     {!! $companyJobs->links()!!}
                 </div>
             @else
             <!--start2-->
-            <div class="card cardppp"  >
+            <div class="card cardColleague"  >
                 <a id="update" href="#" class="editlink">
                     <div class="card-body">
                         <div class="container">
@@ -246,12 +257,12 @@
 
             <div class="styleabout" >
 
-                <h4 class="">Our Employees in this site:</h4>
+                <h4 class="">{{$company->name}}'s Employees in this site:</h4>
 
             </div>
             @foreach($company->employees as $employee)
             <!--start1employee-->
-            <div class="card cardppp" >
+            <div class="card cardColleague" >
                 <a id="update" href="/users/{{$employee->id}}" class="editlink">
                     <div class="card-body">
                         <div class="container">
@@ -292,6 +303,47 @@
                 </div>
                 <!--end pagination-->
             @endif
+            <br><br>
+
+            <h4 class="styleabout">Contact {{$company->name}} :</h4>
+            <section id="contact" class="contact">
+                <div class="container">
+
+
+                    <div class="info">
+                        @if($company->city != null || $company->country!=null)
+                            <div class="address">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <h4>Location:</h4>
+                                <p>{{ucwords($company->city)}} , {{ucwords($company->country)}}</p>
+                            </div>
+                        @endif
+
+                        <div class="email">
+                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                            <h4>Email:</h4>
+                            <p>{{$company->email}}</p>
+                        </div>
+                        @if($company->phone_number != null )
+                            <div class="phone">
+                                <i class="fa fa-volume-control-phone" aria-hidden="true"></i>
+                                <h4>Call:</h4>
+                                <p>{{$company->phone_number}}</p>
+                            </div>
+                        @endif
+                            @if($company->website_url != null )
+                                <div class="phone">
+                                    <i class="fa fa-globe" aria-hidden="true"></i>
+                                    <h4>Website:</h4>
+                                    <a href="{{$company->website_url}}"><p>{{$company->website_url}}</p>
+                                    </a>
+
+                                </div>
+                            @endif
+
+                    </div>
+                </div>
+            </section>
 
 
 

@@ -86,7 +86,11 @@
                                     <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
                                 </svg>required skills:
                             @foreach($job->requiredSkills as $skill)
-                                {{$skill->title}}
+                                @if(!$loop->last)
+                                {{$skill->title}} ,
+                                    @else
+                                        {{$skill->title}} .
+                                    @endif
                             @endforeach
                             </li>
                             <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stack pr-1" viewBox="0 0 16 16">

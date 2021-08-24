@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Create company account</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
@@ -45,8 +45,13 @@
 
 <form enctype="multipart/form-data" class="needs-validation formstyle" novalidate method="post" action="\create-company" >
     @csrf
-    <h4 class="hstyle">welcome to the create company wizard</h4>
-    <div class="container">
+    <h2 class="hstyle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
+            <path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z"/>
+        </svg>
+        create company account</h2>
+    <div class="container" style="margin-top: 50px; margin-left: 240px ;padding-right: 100px">
         <div class="form-row  ">
             <div class="col col-md-2">
                 <label for="validationCustom02"style="margin-top:40px">logo:</label>
@@ -213,7 +218,7 @@
                 <label for="validationTooltip01"> E-mail </label>
             </div>
             <div class="col-md-4 mb-3">
-                <input type="text" class="form-control @error('email') is-invalid @enderror" id="validationTooltip01" placeholder="" value="{{old('email')}}" name="email" required>
+                <input type="text"  class="form-control @error('email') is-invalid @enderror" id="validationTooltip01" placeholder="email" value="{{old('email')}}" name="email" required>
                 @error('email')
                 <p class="help-block is-invalid">{{$errors->first('email')}}</p>
                 @enderror
@@ -226,7 +231,7 @@
 
             </div>
             <div class="col-md-4 mb-3">
-                <input type="text" class="form-control @error('website_url') is-invalid @enderror" id="validationTooltip01" placeholder="" value="{{old('website_url')}}" name="website_url" required>
+                <input type="text" class="form-control @error('website_url') is-invalid @enderror" id="validationTooltip01" placeholder="website URL" value="{{old('website_url')}}" name="website_url" required>
                 @error('website_url')
                 <p class="help-block is-invalid">{{$errors->first('website_url')}}</p>
                 @enderror
@@ -239,14 +244,14 @@
             <input type="file" class="custom-file-input1" id="customFile"name="certificate"style="padding-left:120px"  value="{{old('certificate')}}"/>
         </div>
         <div class="form-row  ">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
                 <div class="form-group">
                     <label>About</label>
-                    <textarea class="form-control" rows="5" placeholder=""  name="about" > {{old('about')}}</textarea>
+                    <textarea class="form-control" rows="5" cols="15" placeholder=""  name="about" > {{old('about')}}</textarea>
                 </div>
             </div>
         </div>
-        <button class="btn btn-outline-info" type="submit">create the company</button>
+        <button class="btn btn-outline-info" type="submit" style="margin-left: -5px">create the company</button>
 
     </div>
 </form>

@@ -22,7 +22,7 @@ class JobOpportunityController extends Controller
         $applicants=$job->applicants;
         $applicants=$applicants->sortByDesc(function ($user){
             return $user->pivot->created_at;
-        });
+        })->paginate(3);
         if(!auth()->user()->logged_as_company) {
             if($job->publishable_id == $user->id && $job->publishable_type=='App\Models\User')
             return view('applicants', ['user' => $user, 'job' => $job, 'applicants' => $applicants]);
@@ -83,9 +83,9 @@ class JobOpportunityController extends Controller
             $notification->notification_url = '/jobs/' . $jobID;
              $notification->save();
 
-            $job->expired=true;
+           /* $job->expired=true;
             $job->save();
-
+                */
             if($job->publishable_id == $approvingCompany->id && $job->publishable_type=='App\Models\Company')
                 return redirect('/manage-company-jobs');
             else
@@ -102,6 +102,46 @@ class JobOpportunityController extends Controller
         else
             return redirect('/company/manage-jobs');
 
+    }
+    public function expireJob($id){
+
+        $job=JobOpportunity::findOrFail($id);
+        $job->expired=true;
+        $job->save();
+        if(!auth()->user()->logged_as_company)//case logged as user
+        {
+            if ($job->publishable_id == auth()->user()->id && $job->publishable_type == 'App\Models\User')
+                return redirect('/jobs/'.$id);
+            else
+                abort(403, 'unauthorized access');
+        }
+        else//logged as company
+        {
+            if ($job->publishable_id == auth()->user()->managing_company_id && $job->publishable_type == 'App\Models\Company')
+                return redirect('/jobs/'.$id);
+            else
+                abort(403, 'unauthorized access');
+        }
+
+    }
+    public function activateJob($id){
+        $job=JobOpportunity::findOrFail($id);
+        $job->expired=false;
+        $job->save();
+        if(!auth()->user()->logged_as_company)//case logged as user
+        {
+            if ($job->publishable_id == auth()->user()->id && $job->publishable_type == 'App\Models\User')
+                return redirect('/jobs/'.$id);
+            else
+                abort(403, 'unauthorized access');
+        }
+        else//logged as company
+        {
+            if ($job->publishable_id == auth()->user()->managing_company_id && $job->publishable_type == 'App\Models\Company')
+                return redirect('/jobs/'.$id);
+            else
+                abort(403, 'unauthorized access');
+        }
     }
     /**
      * Display a listing of the resource.
@@ -314,6 +354,11 @@ class JobOpportunityController extends Controller
     public function destroy($id)
     {
         $job=JobOpportunity::findOrFail($id);
+        DB::table('applications')->where('job_id',$job->id)->delete();
+        DB::table('job_skill')->where('job_id',$job->id)->delete();
+        DB::table('saved_jobs')->where('job_id',$job->id)->delete();
+        DB::table('user_job_views')->where('viewer_id',$job->id)->delete();
+        DB ::table('notifications')->where('notification_url','/jobs/'.$id)->delete();
         $job->delete();
 
         if(auth()->user()->logged_as_company==false)
@@ -321,7 +366,7 @@ class JobOpportunityController extends Controller
             return redirect('/published-jobs');
         }
         else {
-            return redirect('/company/manage-jobs');
+            return redirect('/manage-company-jobs');
         }
     }
 }

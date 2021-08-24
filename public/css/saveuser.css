@@ -22,7 +22,7 @@ body{font-family: "Nunito", sans-serif;}
     margin: 15px auto;
     display: block;
     width: 120px;
-    border: 8px solid #2c2f3f;
+
 }
 @media (max-width: 1199px) {
     #div {

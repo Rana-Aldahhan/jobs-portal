@@ -9,7 +9,7 @@ div ul {
     font-size: 18px;
 }
 .ddrop:hover {
-   /* background-color: #70b9b0;*/
+   background-color: #70b9b0;
     color: black;
     border-radius: 30px;
     text-decoration: none;
@@ -24,4 +24,18 @@ button {
     max-height: 50px;
     margin-top: 10px;
     margin-left: 40px;
+}
+.badge-notify {
+    position: relative;
+    top: -43px;
+    right: -10px;
+    background-color: red;
+    font-size: 10px;
+}
+.badgeMessage-notify {
+    position: relative;
+    top: -43px;
+    right: -18px;
+    background-color: red;
+    font-size: 10px;
 }

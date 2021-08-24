@@ -6,6 +6,14 @@ body,html{
     background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
     font-family: "Nunito", sans-serif;
 }
+.companyBody{
+    height: 100%;
+    margin: 0;
+    background: #da5525;
+    background: -webkit-linear-gradient(to right, #eae89a, #eeeb74, #ea8c6a);
+    background: linear-gradient(to right, #f3f197, #eeeb74, #f88c65);
+    font-family: "Nunito", sans-serif;
+}
 
 .chat{
     margin-top: 100px;
@@ -121,7 +129,7 @@ body,html{
     margin-left: 15px;
 }
 .user_info span{
-    font-size: 20px;
+    font-size: 18px;
     color: white;
 }
 .user_info p{
@@ -217,9 +225,10 @@ body,html{
 }
 .styleh{
 
-    font-size: 30px;
+    font-size: 25px;
     color: #F5F5F5;
 
     text-align: center;
+
 
 }

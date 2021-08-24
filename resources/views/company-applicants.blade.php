@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Applicants for {{$job->title}}</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
   <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
   <link rel="stylesheet" href="{{asset('css/approvecomp.css')}}">
+
 
 
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -52,7 +53,7 @@
                             <div class="clearfix margin-bottom-20"></div>
                             <p>{{$applicant->about}}</p>
                             <hr>
-                            @if(!$job->expired)
+                            @if(!$job->expired && !$applicant->appliedJobs()->find($job->id)->pivot->approved)
                                 <ul class="list-inline share-list">
                                     <li>
                                         <form  method="post" action="/jobs/{{$job->id}}/applicants/{{$applicant->id}}" id="approve{{$loop->index}}">
@@ -99,7 +100,7 @@
                             <p>{{$applicant->about}}</p>
                             <hr>
                             <ul class="list-inline share-list">
-                                @if(!$job->expired)
+                                @if(!$job->expired && !$applicant->appliedJobs()->find($job->id)->pivot->approved)
                                     <ul class="list-inline share-list">
                                         <li>
                                             <form  method="post" action="/jobs/{{$job->id}}/applicants/{{$applicant->id}}" id="approve{{$loop->index}}">
@@ -127,7 +128,7 @@
                                     </ul>
                             @endif
                             @if($applicant->appliedJobs()->find($job->id)->pivot->approved)
-                                        <li> <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check2-circle " viewBox="0 0 16 16">
+                                        <li> <a ><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check2-circle " viewBox="0 0 16 16">
                                                     <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
                                                     <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
                                                 </svg> Approved</a></li>

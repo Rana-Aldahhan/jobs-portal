@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Notifications</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
     <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
-    <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+
     <link rel="stylesheet" href="{{asset('css/explore.css')}}">
     <link rel="stylesheet" href="{{asset('css/noticomp.css')}}">
 
@@ -80,23 +80,23 @@
                             <li class="list-group-item" @if(!$notification->seen)style="background-color:#cedbde" @endif>
                                 <a class="nav-link" href="{{$notification->notification_url}}">
                                     @if($notification->type == 'message')
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-chat-left-text-fill" viewBox="0 0 16 16" style="color:#455A64;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-chat-left-text-fill" viewBox="0 0 16 16" style="margin-right:10px;">
                                             <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
                                         </svg>
                                     @elseif($notification->type == 'colleague')
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16" style="color:#455A64;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16" style="margin-right:10px;">
                                             <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                                             <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
                                         </svg>
                                     @elseif($notification->type == 'new job')
-                                        <i class="fa fa-briefcase" aria-hidden="true"></i>
+                                        <i class="fa fa-briefcase fa-2x" aria-hidden="true" style="margin-right:10px;"></i>
                                     @elseif($notification->type == 'approved')
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check2-circle" viewBox="0 0 16 16" style="color:#455A64;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-check2-circle" viewBox="0 0 16 16"style="margin-right:10px;">
                                             <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
                                             <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
                                         </svg>
                                     @elseif($notification->type == 'applicant')
-                                        <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                                        <i class="fa fa-id-card-o fa-2x" aria-hidden="true" style="margin-right:10px;"></i>
                                     @endif
 
                                     {{$notification->body}}

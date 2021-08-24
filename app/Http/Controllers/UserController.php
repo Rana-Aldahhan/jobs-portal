@@ -104,7 +104,7 @@ class UserController extends Controller
         $sentColleagues=$user->sentColleagues()->wherePivot('approved',1)->get();
         $receivedColleagues=$user->receivedColleagues()->wherePivot('approved',1)->get();
         $colleagues =$sentColleagues->push($receivedColleagues)->flatten()->paginate(3);
-        $userPublishedJobs=$user->publishedJobs->paginate(3);
+        $userPublishedJobs=$user->publishedJobs->sortBy('created_at')->paginate(3);
         $showAddColleagues=true;// cancel colleagues request
         $showCancelRequest=false;
         $showApproveRequest=false;//show remove request
@@ -396,25 +396,25 @@ class UserController extends Controller
     {
         //case of website's admin deleting a user
         $user=User::findOrFail($id);
-        DB::table('application')->where('user_id',$id)->delete();
+        DB::table('applications')->where('user_id',$id)->delete();
         DB::table('colleagues')->where('user1_id',$id)->orWhere('user2_id',$id)->delete();
         DB::table('company_user_acceptants')->where('acceptant_id',$id)->delete();
         DB::table('company_user_views')->where('viewer_id',$id)->delete();
         foreach ($user->publishedJobs as $job)
         {
-            DB::table('application')->where('job_id',$job->id)->delete();
+            DB::table('applications')->where('job_id',$job->id)->delete();
             DB::table('job_skill')->where('job_id',$job->id)->delete();
             DB::table('saved_jobs')->where('job_id',$job->id)->delete();
             DB::table('user_job_views')->where('viewer_id',$job->id)->delete();
         }
         $user->publishedJobs()->delete();
-        DB::table('languages_user')->where('user_id',$id)->delete();
-        DB::table('messages')->where(['sendable_id','sendable_type'],[$id,'App\Models\User'])
-                    ->orWhere(['receivable_id','receivable_type'],[$id,'App\Model\User'])->delete();
-        DB::table('notifications')->where(['causable_id','causable_type'],[$id,'App\Models\User'])
-            ->orWhere(['notifiable_id','notifiable_type'],[$id,'App\Model\User'])->delete();
-        DB::table('reports')->where(['sendable_id','sendable_type'],[$id,'App\Models\User'])
-            ->orWhere(['receivable_id','receivable_type'],[$id,'App\Model\User'])->delete();
+        DB::table('language_user')->where('user_id',$id)->delete();
+        DB::table('messages')->where([['sendable_id',$id],['sendable_type','App\Models\User']])
+                    ->orWhere([['receivable_id',$id],['receivable_type','App\Model\User']])->delete();
+        DB::table('notifications')->where([['causable_id',$id],['causable_type','App\Models\User']])
+            ->orWhere([['notifiable_id',$id],['notifiable_type','App\Model\User']])->delete();
+        DB::table('reports')->where([['sendable_id',$id],['sendable_type','App\Models\User']])
+            ->orWhere([['receivable_id',$id],['receivable_type','App\Model\User']])->delete();
         DB::table('saved_jobs')->where('user_id',$id)->delete();
         DB::table('skill_user')->where('user_id',$id)->delete();
         DB::table('user_job_views')->where('viewing_id',$id)->delete();
@@ -427,6 +427,7 @@ class UserController extends Controller
         Auth::setUser($userToLogout);
         Auth::logout();
         Auth::setUser($loggedUser);
+        Auth::loginUsingId($loggedUser->id);
         $user->delete();
         return redirect('manage-reports');
     }

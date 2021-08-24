@@ -4,21 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>create new job</title>
 
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
     <link rel="stylesheet" href="{{asset('css/orginal.css')}}">
-    <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+    @auth()
+    @if(!auth()->user()->logged_as_company)
+        <link rel="stylesheet" href="{{asset('css/withsigin.css')}}">
+    @else
+        <link rel="stylesheet" href="{{asset('css/pagecompany.css')}}">
+    @endif
+    @endauth
     <link rel="stylesheet" href="{{asset('css/createuserjob.css')}}">
 
 
     <script src="{{asset('js/jquery-3.6.0.min.js')}}"></script>
     <script src="{{asset('js/chosen.jquery.min.js')}}"></script>
     <link rel="stylesheet" href="{{asset('css/chosen.min.css')}}">
-
 
 </head>
 <body>
@@ -55,7 +60,7 @@
 
 
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="checkbox1" value="1" name="remote">
+                        <input class="form-check-input" type="checkbox" id="checkbox1" value="1" name="remote" @if(old('remote') !=null) checked @endif>
 
                         <label class="form-check-label" for="inlineCheckbox1">&nbsp;&nbsp;Remote?
                         </label>
@@ -80,7 +85,7 @@
 
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="1" name="transport">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="1" name="transport" @if(old('transport') !=null) checked @endif>
 
 
                             <label class="form-check-label" for="inlineCheckbox1">&nbsp;&nbsp;Available Transport?</label>
@@ -105,7 +110,11 @@
                         <label for="validationTooltip01"> Industry field <span>*</span> </label>
                         <select class="custom-select" required name="industry">
                             @foreach($industries as $industry)
+                                @if($industry->id == old('industry'))
+                                    <option value="{{$industry->id}}" selected> {{$industry->title}} </option>
+                                @else
                                 <option value="{{$industry->id}}"> {{$industry->title}} </option>
+                                @endif
                             @endforeach
                         </select>
                         @error('industries')
@@ -118,7 +127,11 @@
 
                         <select   class="form-control chosen-select  " name="skills[]" multiple required="">
                             @foreach($skills as $skill)
+                                @if(old('skills')!=null && collect(old('skills'))->contains($skill->id))
+                                    <option value="{{$skill->id}}" selected>{{$skill->title}}</option>
+                                @else
                                 <option value="{{$skill->id}}">{{$skill->title}}</option>
+                                @endif
                             @endforeach
 
                         </select>
@@ -132,7 +145,11 @@
 
                         <select   class="custom-select" name="position" required="">
                             @foreach($typeOfPosition as $position)
+                                @if($industry->id == old('position'))
+                                    <option value="{{$position->id}}" selected>{{$position->name}}</option>
+                                @else
                                 <option value="{{$position->id}}">{{$position->name}}</option>
+                                @endif
                             @endforeach
 
                         </select>
@@ -172,7 +189,7 @@
                     <div class="form-group mt-0 ">
                         <label for="exampleFormControlTextarea1">Job's Description <span>*</span></label>
                         <textarea class="form-control @error('description') is-invalid @enderror" id="exampleFormControlTextarea1" rows="6" cols="6"
-                                  name="description"   >   </textarea>
+                                  name="description"   >  {{old('description')}} </textarea>
                         @error('description')
                         <p class="help-block is-invalid">{{$errors->first('description')}}</p>
                         @enderror
@@ -193,6 +210,10 @@
         </form>
     </div>
 </div>
+
+@extends('footeruser')
+@section('con')
+@endsection
 
 
 <script>
