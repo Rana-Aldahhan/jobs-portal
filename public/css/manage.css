@@ -1,9 +1,8 @@
 body,html{
     height: 100%;
     margin: 0;
-    background: #7F7FD5;
-    background: -webkit-linear-gradient(to right, #EEEEEE,  #90A4AE, #9E9E9E);
-    background: linear-gradient(to right,   #EEEEEE,  #90A4AE, #9E9E9E);
+
+
     font-family: "Nunito", sans-serif;
 }
 
@@ -11,11 +10,7 @@ body,html{
     margin-top: 100px;
     margin-bottom: auto;
 }
-.card{
-    height: 600px;
-    border-radius: 15px !important;
-    background-color: rgba(0,0,0,0.4) !important;
-}
+
 .contacts_body{
     padding:  0.75rem 0 !important;
     overflow-y: auto;
@@ -81,8 +76,8 @@ body,html{
     background-color: rgba(0,0,0,0.3);
 }
 .user_img{
-    height: 70px;
-    width: 70px;
+    height: 90px;
+    width: 90px;
     border:1.5px solid #f5f6fa;
 
 }
@@ -95,8 +90,8 @@ body,html{
 }
 .img_cont{
     position: relative;
-    height: 70px;
-    width: 70px;
+    height: 90px;
+    width: 90px;
 }
 .img_cont_msg{
     height: 40px;
@@ -110,7 +105,7 @@ body,html{
 }
 .user_info span{
     font-size: 20px;
-    color: white;
+    color: #11052C;
 }
 .user_info p{
     font-size: 10px;
@@ -206,8 +201,25 @@ body,html{
 .styleh{
 
     font-size: 30px;
-    color: #F5F5F5;
-margin-top: 50px;
+    color: #11052C;
+    margin-top: 30px;
     text-align: center;
 
 }
+.b1{
+    height: 600px;
+    border-radius: 15px !important;
+
+}
+.cardppp {
+
+    margin-top: 20px;
+    margin-bottom: 40px;
+    margin-left: 60px;
+    margin-right: 140px;
+
+}
+.b{  font-size: 30px;
+    color: #11052C;
+    margin-top: 130px;
+    text-align: center;}

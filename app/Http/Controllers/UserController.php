@@ -224,8 +224,8 @@ class UserController extends Controller
             'email' => ['required','email',Rule::unique('users')->ignore($user->id) ],
             'birth-date' => 'date|nullable' ,
             'phone-number' => 'numeric|nullable' ,
-            'city' => 'required|regex:/^[\pL\s\-]+$/u|nullable' ,
-            'country' => 'required|regex:/^[\pL\s\-]+$/u|nullable' ,
+            'city' => 'regex:/^[\pL\s\-]+$/u|nullable' ,
+            'country' => 'regex:/^[\pL\s\-]+$/u|nullable' ,
             'school'=>'regex:/^[\pL\s\-]+$/u|nullable',
             'years-of-experience' => 'numeric|nullable',
             'current-job-title' => 'regex:/^[\pL\s\-]+$/u|nullable',
@@ -342,6 +342,8 @@ class UserController extends Controller
         $user->about= request()->input('about');
         $user->birth_date=request()->input('birth_date');
         //search for a school with the same input name
+        if(request()->input('school') !=null)
+        {
         $school=School :: where('name' ,request()->input('school'))->get();
         //case there is a school of the same name
         if($school->count()!=0)
@@ -368,6 +370,7 @@ class UserController extends Controller
             $school->save();
             $school = School:: where('name',request()->input('school'))->get();//edit
             $user->school_id=$school[0]->id;
+        }
         }
         $user->years_of_experience= request()->input('years-of-experience');
         $user->email=request()->input('email');

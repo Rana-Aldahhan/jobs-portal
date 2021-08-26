@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Report panel</title>
+    <title>Manage reports</title>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -47,53 +47,53 @@
 
     <div class="row justify-content-center h-100">
 
-        <div class="col-md-6 col-xl-5 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
+        <div class="col-md-6 col-xl-5 chat"><div class="card mb-sm-3 mb-md-0 contacts_card b1">
                 <h4 class="styleh">company reports</h4>
                 <p   style="text-align: center;" >companies are sorted by the most reported</p>
                 <div class="card-body contacts_body">
                     <ul class="contacts">
                         @foreach($reportedCompanies as $company)
-                        <li class="">
-                            <a href="/manage-reports/companies/{{$company->id}}">
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src="{{asset('storage/profiles/'.$company->profile_thumbnail)}}" class="rounded-circle user_img">
+                            <li class="">
+                                <a href="/manage-reports/companies/{{$company->id}}">
+                                    <div class="d-flex bd-highlight">
+                                        <div class="img_cont">
+                                            <img src="{{asset('storage/profiles/'.$company->profile_thumbnail)}}" class="rounded-circle user_img">
 
-                                </div>
-                                <div class="user_info">
-                                    <span>{{$company->name}}</span>
-                                    <p>{{$company->incomingReports->count()}} reports on this company</p>
+                                        </div>
+                                        <div class="user_info">
+                                            <span>{{$company->name}}</span>
+                                            <p style="color:#5a6067;">{{$company->incomingReports->count()}} reports on this company</p>
 
-                                </div>
-                            </div>
-                            </a>
-                        </li>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6 col-xl-5 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
+        <div class="col-md-6 col-xl-5 chat"><div class="card mb-sm-3 mb-md-0 contacts_card b1">
                 <h4 class="styleh">user reports</h4>
                 <p   style="text-align: center;" >companies are sorted by the most reported</p>
                 <div class="card-body contacts_body">
                     <ul class="contacts">
                         @foreach($reportedUsers as $user)
-                        <li>
-                            <a href="/manage-reports/users/{{$user->id}}">
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src="{{asset('storage/profiles/'.$user->profile_thumbnail)}}" class="rounded-circle user_img">
+                            <li>
+                                <a href="/manage-reports/users/{{$user->id}}">
+                                    <div class="d-flex bd-highlight">
+                                        <div class="img_cont">
+                                            <img src="{{asset('storage/profiles/'.$user->profile_thumbnail)}}" class="rounded-circle user_img">
 
-                                </div>
-                                <div class="user_info">
-                                    <span>{{$user->name}}</span>
-                                    <p>{{$user->incomingReports->count()}} reports on this user</p>
-                                </div>
-                            </div>
-                            </a>
-                        </li>
+                                        </div>
+                                        <div class="user_info">
+                                            <span>{{$user->name}}</span>
+                                            <p style="color:#5a6067;">{{$user->incomingReports->count()}} reports on this user</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
                         @endforeach
 
                     </ul>
@@ -102,10 +102,10 @@
             </div></div>
 
     </div>
-<p>
+    <p>
 
 
-</p>
+    </p>
 
 
 </div>

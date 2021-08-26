@@ -188,7 +188,7 @@
 
             <div class="col .col-12">
 
-                <div class="card caedhh border-light mb-3" style="max-width: 50rem;margin-left:40px;">
+                <div class="card caedhh border-light mb-3" style="max-width: 40rem;margin-left:40px;">
 
                     <div class="card-header">
                         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">

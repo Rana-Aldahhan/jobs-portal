@@ -16,6 +16,12 @@
     <link rel="stylesheet" href="{{asset('css/editcompany.css')}}">
 
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
 
 </head>
@@ -190,12 +196,14 @@
 
                     <hr>
                     <br>
-                    <div class="form-row  ">
-                        <label class="form-label" for="customFile">certificates:</label>
+                    <div class="row  ">
+                        <div class="col col-md-3">
+                            <label for="inputState">certificates:</label>
+                        </div>
                         <div class="col-md-4 mb-3">
                             <form action="/action_page.php">
                                 <div class="custom-file mb-3">
-                                    <input type="file" style="margin-left: 70px" id="myFile" name="certificate" class="@error('certificate') is-invalid @enderror"
+                                    <input type="file"  id="customFile" name="certificate" class="custom-file-input"
                                            value="{{$company->certificate}}" >
                                     <label class="custom-file-label" for="customFile">{{$company->certificate}}</label>
                                     @error('certificate')
@@ -205,6 +213,8 @@
                             </form>
                         </div>
                     </div>
+
+
                     <br>
                     <hr>
                     <br>
@@ -284,7 +294,13 @@
 @endsection
 
 <!-- End #footer -->
-
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>

@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mystyle.css')}}">
     <link rel="stylesheet" href="{{asset('css/orginal.css')}}">
-    <link rel="stylesheet" href="{{asset('css/searchresults.css')}}">
     <link rel="stylesheet" href="{{asset('css/explore.css')}}">
     <link rel="stylesheet" href="{{asset('css/companysjobs.css')}}">
     @auth()
