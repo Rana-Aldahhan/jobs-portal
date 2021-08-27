@@ -201,7 +201,6 @@ class UserServices extends Controller
 
     }
     public function postCompany(Request $request){
-
         //validation
         $this->validate($request , [
             'name'=>'required',
@@ -241,13 +240,12 @@ class UserServices extends Controller
             $fileNameToStore= $filename.'_'.time().'.'.$extension;
             // Upload Image
             $path = $request->file('logo')->storeAs('public/profiles', $fileNameToStore);
+            $company->profile_thumbnail=$fileNameToStore;
         }
         else {
                 $fileNameToStore = 'companydefault.png';
+                $company->profile_thumbnail=$fileNameToStore;
         }
-
-        $company->profile_thumbnail=$fileNameToStore;
-
         //certificate processing
         $certificateFileNameToStore=null;
         if($request->hasFile('certificate')){
@@ -341,7 +339,7 @@ class UserServices extends Controller
             if (auth()->user()->logged_as_company==true)
                 abort(403);
         }
-        $searchResults = Company:: where ('name' ,'like','%'. $request->input('companySearchName'.'%'))->get()->paginate(2);
+        $searchResults = Company:: where ('name' ,'like','%'. $request->input('companySearchName').'%')->get()->paginate(4);
         return view('company_search_results', ['searchResults'=>$searchResults]);
     }
     public function peopleSearchResults(Request $request){
@@ -350,7 +348,8 @@ class UserServices extends Controller
             if (auth()->user()->logged_as_company==true)
                 abort(403);
         }
-        $searchResults = User:: where ('name' ,'like','%'. $request->input('peopleSearchName').'%')->get()->paginate(2);
+        $searchResults = User:: where ('name' ,'like','%'. $request->input('peopleSearchName').'%')->get();
+        $searchResults=$searchResults->reject(function ($result){return $result== auth()->user();})->paginate(4);
         return view('people_search_results', ['searchResults'=> $searchResults]);
     }
     public function filterJobs(Request  $request){
@@ -577,6 +576,9 @@ class UserServices extends Controller
         return view('report',['id'=>$id]);
     }
     public function sendCompanyReport(Request $request,$id){
+        $this->validate($request ,[
+            'reportInformation'=>'required'
+        ]);
         $report = new Report();
         $report->reason=$request->input('reportReason');
         $report->information=$request->input('reportInformation');
@@ -812,6 +814,9 @@ class UserServices extends Controller
     }
     public function sendUserReport(Request $request,$id){
        // dd($request);
+        $this->validate($request ,[
+            'reportInformation'=>'required'
+        ]);
         $report = new Report();
         $report->reason=$request->input('reportReason');
         $report->information=$request->input('reportInformation');

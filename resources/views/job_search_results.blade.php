@@ -113,6 +113,7 @@
 @endforeach
 
 
+
             </div>
         </div>
         </td>
@@ -124,6 +125,9 @@
          </div>
 
 </div>
+     @if($jobSearchResults->count()==0)
+         <br> <br> <br> <br> <br> <br> <br><br> <br><br> <br><br> <br><br>
+     @endif
 </div>
 </div>
 </div>

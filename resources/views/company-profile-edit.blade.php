@@ -83,7 +83,7 @@
         </div>
         <!--end nav2-->
 
-        <form action="/company-profile/edit" method="post" enctype="multipart/form-data">
+        <form action="/company-profile/edit" method="post" enctype="multipart/form-data" style="margin-right: -150px">
             @csrf
             @method('PUT')
             <div class="col-lg-10 sp1 " style="padding-left: 50px">

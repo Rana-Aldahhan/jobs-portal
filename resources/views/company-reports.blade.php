@@ -82,7 +82,7 @@
                     <div class="media-left">
 
                         <div class="img_cont">
-                            <a href="/users/{{$report->sendable->id}}">
+                            <a href="@if($report->sendable_type=='App\Models\User')/users/@else/companies/@endif{{$report->sendable->id}}">
                                 <img src="{{asset('storage/profiles/'.$report->sendable->profile_thumbnail)}}" class="rounded-circle user_img">
                             </a>
                             <p> </p>

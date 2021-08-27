@@ -81,9 +81,11 @@
             <div class="md-form mb-4 pink-textarea active-pink-textarea">
 
                 <label for="form21">Additional Information:</label>
-                <textarea id="form21" class="md-textarea form-control" rows="5" style="width: 600px; height:100px;"  name="reportInformation"></textarea>
-
+                <textarea id="form21" class="md-textarea form-control  @error('reportInformation') is-invalid @enderror" rows="5" style="width: 600px; height:100px;"  name="reportInformation"></textarea>
             </div>
+            @error('reportInformation')
+            <p class="help-block is-invalid">{{$errors->first('reportInformation')}}</p>
+            @enderror
         </div>
 
         <div class="container">

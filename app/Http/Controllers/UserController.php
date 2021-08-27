@@ -93,7 +93,7 @@ class UserController extends Controller
     public function show($id)
     {
         $loggedUser=auth()->user();//can be null
-        if($loggedUser!= null && $id == $loggedUser->id)
+        if($loggedUser!= null && $id == $loggedUser->id && !$loggedUser->logged_as_company)
             return redirect('/profile');
 
         $user=User::findOrFail($id);
