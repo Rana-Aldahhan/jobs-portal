@@ -205,7 +205,7 @@ class UserServices extends Controller
         $this->validate($request , [
             'name'=>'required',
             'email' => ['required','email',Rule::unique('companies')],
-            'website_url'=>['URL',Rule::unique('companies')],
+            'website_url'=>['URL',Rule::unique('companies'),'nullable'],
             'phone_number'=>['required','numeric',Rule::unique('companies')],
             'employees_count'=>'numeric|required',
             'city'=>'regex:/^[\pL\s\-]+$/u|required',

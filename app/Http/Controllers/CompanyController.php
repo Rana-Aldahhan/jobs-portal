@@ -208,10 +208,15 @@ class CompanyController extends Controller
             ->orWhere([['notifiable_id',$id],['notifiable_type','App\Model\Company']])->delete();
         DB::table('reports')->where([['sendable_id',$id],['sendable_type','App\Models\Company']])
             ->orWhere([['receivable_id',$id],['receivable_type','App\Model\Company']])->delete();
-        foreach ($company->employees as $user)
+        foreach ($company->employees as $user) {
             $user->currentCompany()->disassociate();
-        foreach ($company->managingUsers as $user)
+            $user->save();
+        }
+        foreach ($company->managingUsers as $user) {
             $user->managingCompany()->disassociate();
+            $user->logged_as_company=false;
+            $user->save();
+        }
         DB::table('user_notifying_company')->where('company_id',$id)->delete();
          $company->delete();
          return redirect('manage-reports');

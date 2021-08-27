@@ -48,7 +48,8 @@ class JobOpportunityController extends Controller
             $approvedUser->userAcceptors()->attach($approvingUser);
             //notification
             $notification = new Notification();
-            $notification->body = 'The user ' . $approvingUser->name . ' has approved your job application to the job with the title ' . $job->title . '/n published : ' . $job->created_at->diffForHumans();
+            $notification->body = 'The user ' . $approvingUser->name . ' has approved your job application to the job with the title ' . $job->title . '\n published : ' . $job->created_at->diffForHumans()
+            .' now you can both message!';
             $notification->type = 'approved';
             $notification->causable_id = $approvingUser->id;
             $notification->causable_type = 'App\Models\User';
@@ -56,9 +57,8 @@ class JobOpportunityController extends Controller
             $notification->notifiable_type = 'App\Models\User';
             $notification->notification_url = '/jobs/' . $jobID;
             $notification->save();
-
-            $job->expired = true;
-            $job->save();
+            /* $job->expired=true;
+            $job->save();*/
 
             if ($job->publishable_id == auth()->user()->id && $job->publishable_type == 'App\Models\User')
                 return redirect('/published-jobs');
@@ -74,7 +74,8 @@ class JobOpportunityController extends Controller
              //notification
              $notification = new Notification();
             $notification->type='approved';
-             $notification->body= 'The company ' .$approvingCompany->name . ' has approved your job application to the job with the title' . $job->title .  '/n published : ' . $job->created_at->diffForHumans();
+             $notification->body= 'The company ' .$approvingCompany->name . ' has approved your job application to the job with the title' . $job->title .  '/n published : ' . $job->created_at->diffForHumans()
+                 .' now you can both message!';
              $notification->causable_id=$approvingCompany->id;
              $notification->causable_type='App\Models\Company';
              $notification->notifiable_id=$userID;
