@@ -42,12 +42,12 @@
     <div style="margin-left: 150px">
     <div class="container">
         <div class="stylep">
-            <p >Please Fill In The Form Below to Send Your Report: </p>
+            <p style="font-size: 20px;">Please Fill In The Form Below to Send Your Report: </p>
         </div>
     </div>
     <div class="container">
         <div class="stylep1">
-            <p >Reason of The Report: </p>
+            <p style="font-size: 17px;">Reason of The Report: </p>
         </div>
     </div>
     <form method="post" action=

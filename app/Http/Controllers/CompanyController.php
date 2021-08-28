@@ -109,9 +109,10 @@ class CompanyController extends Controller
         $this->validate($request , [
             'name'=>'required',
             'email' => ['required','email',Rule::unique('companies','email')->ignore($company->id)],
-            'website_url'=>['URL',Rule::unique('companies','website_url')->ignore($company->id)],
+            'website_url'=>['URL',Rule::unique('companies','website_url')->ignore($company->id),'nullable'],
             'phone_number'=>['required','numeric',Rule::unique('companies','phone_number')->ignore($company->id)],
             'employees_count'=>'numeric|required',
+            'slogan'=>'nullable',
             'city'=>'regex:/^[\pL\s\-]+$/u|required',
             'country'=>'regex:/^[\pL\s\-]+$/u|required',
             'admin1'=>'email|nullable|exists:users,email',

@@ -173,7 +173,7 @@
                         <div class="col">
                             <div class="form-group col-md-5 ">
                                 <input type="text" style="margin-left: 90px" class="form-control" id="validationCustom02" placeholder="slogan"
-                                       value="{{$company->slogan}}" name="slogan" required>
+                                       value="{{$company->slogan}}" name="slogan">
                             </div>
                         </div>
                     </div>
@@ -181,7 +181,7 @@
                     <div class="row">
                         <label style="padding-right: 30px"> Company's industry:</label>
 
-                        <select class="custom-select" name="industry" required>
+                        <select class="custom-select" name="industry" >
                             @foreach($industries as $industry)
                                 @if($company->industry_id== $industry->id)
                                     <option value="{{$company->industry_id}}" selected> {{$industry->title}} </option>
@@ -231,7 +231,7 @@
                         <div class="form-group row ">
                             <label for="inputEmail3" class="col-sm-2 col-form-label">Email:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control @error('email') is-invalid @enderror" id="validationTooltip01" placeholder="" value="{{$company->email}}" name="email" required>
+                                <input type="text" class="form-control @error('email') is-invalid @enderror" id="validationTooltip01" placeholder="" value="{{$company->email}}" name="email" >
                                 @error('email')
                                 <p class="help-block is-invalid">{{$errors->first('email')}}</p>
                                 @enderror
@@ -242,7 +242,7 @@
                         <div class="form-group row">
                             <label for="inputPassword3" class="col-sm-2 col-form-label">Phone :</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="validationTooltip01" placeholder="phone" value="{{$company->phone_number}}" name="phone_number" required>
+                                <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="validationTooltip01" placeholder="phone" value="{{$company->phone_number}}" name="phone_number" >
                                 @error('phone_number')
                                 <p class="help-block is-invalid">{{$errors->first('phone_number')}}</p>
                                 @enderror
@@ -251,7 +251,7 @@
                         <div class="form-group row">
                             <label for="inputPassword3" class="col-sm-2 col-form-label">website :</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control @error('website_url') is-invalid @enderror" id="validationTooltip01" placeholder="" value="{{$company->website_url}}" name="website_url" required>
+                                <input type="text" class="form-control @error('website_url') is-invalid @enderror" id="validationTooltip01" placeholder="" value="{{$company->website_url}}" name="website_url" >
                                 @error('website_url')
                                 <p class="help-block is-invalid">{{$errors->first('website_url')}}</p>
                                 @enderror
